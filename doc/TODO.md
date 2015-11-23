@@ -2,14 +2,8 @@
 
 ## General 
 
-   - Memory leak issues
-     - I think it has to do with the parts of the code where we add the NMRFileManager 
-       to multiple classes; I think we are losing those pointers to the *void*...
-       This has been addressed, but does not fix the memory leak. 
-     - It looks like the problem occurs when we load data into the program (NMRFileManager::Load)
-       This is probably due to all the zero crossing analysis when computing the voltage
-       offset corrections; we probably need to eliminate those vectors, turning them 
-       into arrays. 
+   - The change to arrays did not change the time for processing all that much; additionally, 
+     we are in disagreement with the original code (see ~/NMR/new_ana/ files) by ~ 20 mHz or so.  
 
    - Segmentation fault problems
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
