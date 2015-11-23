@@ -479,11 +479,12 @@ namespace NMRMath{
 
    }
    //______________________________________________________________________________
-   void CountZeroCrossings(int verbosity,int method,int NPTS,int step,
-                           bool UseTimeRange,double tMin,double tMax,
-                           NMRPulse *aPulse,
-                           double *X,double *Y,double *EY, 
-                           std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross){
+   int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
+                          bool UseTimeRange,double tMin,double tMax,
+                          NMRPulse *aPulse,
+                          double *X,double *Y,double *EY, 
+                          int *NCrossing,int *CrossingIndex,double *tCross,double *vCross){
+                          // std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross){
 
       if(verbosity>=3) std::cout << "[NMRMath]: Counting zero crossings..." << std::endl;
 
@@ -508,7 +509,8 @@ namespace NMRMath{
       double t_current=0,t_previous=0,t_next=0;
       double v_current_err=0,v_next_err=0,v_previous_err=0;
 
-      int i=0; 
+      int i=0;  // index for NMRPulse data 
+      int j=0;  // index for tCross, vCross data 
       do{
          t_current     = aPulse->GetTime(i);
          t_next        = aPulse->GetTime(i+1);
@@ -534,10 +536,17 @@ namespace NMRMath{
                   // get time of crossing  
                   t0 = GetTimeOfCrossing(verbosity,method,NPTSUseable,X,Y,EY,t_current,v_current,v_current_err,t_next,v_next,v_next_err); 
                   // fill vectors 
-                  NCrossing.push_back(counter);
-                  CrossingIndex.push_back(i); 
-                  tCross.push_back(t0);
-                  vCross.push_back(v0);
+                  // NCrossing.push_back(counter);
+                  // CrossingIndex.push_back(i); 
+                  // tCross.push_back(t0);
+                  // vCross.push_back(v0);
+                  // fill arrays
+                  NCrossing[j]     = counter;
+                  CrossingIndex[j] = i;
+                  tCross[j]        = t0;  
+                  vCross[j]        = v0;  
+                  // increment array index
+                  j++; 
                }
             }else{
                // don't use the fit range 
@@ -548,10 +557,17 @@ namespace NMRMath{
                // get time of crossing  
                t0 = GetTimeOfCrossing(verbosity,method,NPTSUseable,X,Y,EY,t_current,v_current,v_current_err,t_next,v_next,v_next_err); 
                // fill vectors 
-               NCrossing.push_back(counter);
-               CrossingIndex.push_back(i); 
-               tCross.push_back(t0);
-               vCross.push_back(v0);
+               // NCrossing.push_back(counter);
+               // CrossingIndex.push_back(i); 
+               // tCross.push_back(t0);
+               // vCross.push_back(v0);
+               // fill arrays
+               NCrossing[j]     = counter;
+               CrossingIndex[j] = i;
+               tCross[j]        = t0;  
+               vCross[j]        = v0;  
+               // increment array index
+               j++; 
             }
             // check t0
             if(t0<0 || delta_v>0.100){   // we shouldn't see a 100 mV jump during the zero crossing 
@@ -560,15 +576,16 @@ namespace NMRMath{
                   std::cout << "                               t0      = " << t0      << std::endl;
                   std::cout << "                               delta_v = " << delta_v << std::endl;
                }
-               counter--;
-               i += step;
+               counter--;   // don't count the crossing, decrement counter 
+               j--;         // don't count the crossing, decrement crossing index 
+               i += step;   // move to next bin 
                // delete last entry of vector 
-               NCrossing.pop_back();
-               CrossingIndex.pop_back(); 
-               tCross.pop_back(); 
-               vCross.pop_back(); 
+               // NCrossing.pop_back();
+               // CrossingIndex.pop_back(); 
+               // tCross.pop_back(); 
+               // vCross.pop_back(); 
                // clear analysis arrays 
-               ClearAnaArrays(NPTSUseable,X,Y,EY);                   // clears fX, fY, fEY  (sets to zero) 
+               ClearAnaArrays(NPTSUseable,X,Y,EY);           // clears X, Y, EY  (sets to zero) 
                if(verbosity>=4){ 
                   std::cout << "[NMRMath::CountZeroCrossings]: zero crossing counter reset to: " << counter << std::endl;
                   std::cout << "[NMRMath::CountZeroCrossings]: moving to index:                " << i       << std::endl;
@@ -576,9 +593,9 @@ namespace NMRMath{
                continue; 
             }
             // passed t0 check, fill vectors 
-            i += step; 
+            i += step;  // move to next bin  
             // set up for next data point 
-            ClearAnaArrays(NPTSUseable,X,Y,EY);                   // clears fX, fY, fEY  (sets to zero) 
+            ClearAnaArrays(NPTSUseable,X,Y,EY);             // clears X, Y, EY  (sets to zero) 
             counter_prev   = counter;
             t_previous     = t_current;
             v_previous     = v_current; 
@@ -589,6 +606,7 @@ namespace NMRMath{
       if(verbosity>=3) std::cout << "[NMRMath::CountZeroCrossings]: Done." << std::endl;
       ClearAnaArrays(NPTSUseable,X,Y,EY);                   // clears fX, fY, fEY  (sets to zero) 
 
+      return counter;   // return number of zero crossings  
    }
 
 }

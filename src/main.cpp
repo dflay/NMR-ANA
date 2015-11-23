@@ -7,9 +7,9 @@
 #include "NMRPulse.h"
 #include "NMRPulseAnalyzed.h"
 #include "NMRRun.h"
-// #include "NMRZeroCrossing.h"
 #include "NMRFileManager.h"
 #include "NMRAnalysis.h"
+// #include "NMRZeroCrossing.h"
 // #include "NMRFourierTransform.h"
 // #include "NMRInputManager.h"
 

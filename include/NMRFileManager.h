@@ -52,9 +52,14 @@ class NMRFileManager{
       double *fTime,*fVoltage;                                                          // time (s), voltage (V)
       double *fX,*fY,*fEY;                                                              // for offset corrections  
 
+      // for zero crossing calcs 
+      int *fNCrossing,*fCrossingIndex;
+      double *fTcross,*fVcross;
+
       struct stat fSB;                                                                  // for checking on file states   
 
       void ClearDataArrays();                                                           // set arrays to zero  
+      void ClearNZCArrays();                                                           // set arrays to zero  
       void DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NMRPulse *aPulse,double &RMSNoise,double &VMax);  // apply voltage offset of arbitrary order to a pulse  
       void ApplyOffset(double offset);                                                  // apply voltage offset to data 
       void ApplyOffset(double offset,NMRPulse *aPulse);                                 // apply voltage offset to data 
@@ -72,6 +77,7 @@ class NMRFileManager{
       int CheckOffset(double,double,double,double,double); 
 
       double GetTMax();
+      double GetTDiff(int nzc,double *tCross,double &delta_t_even_nc,double &delta_t_odd_nc);
       double GetTDiff(vector<double> tCross,double &delta_t_even_nc,double &delta_t_odd_nc);
       double GetPulseTimeStamp(int run,int pulse);  
       double GetOffset(double t_min,double t_max,double t_thr); 

@@ -20,6 +20,11 @@ NMRFileManager::NMRFileManager(){
    fX             = new double[N]; 
    fY             = new double[N]; 
    fEY            = new double[N]; 
+   const int MAX = 1E+6;
+   fNCrossing      = new int[MAX];
+   fCrossingIndex  = new int[MAX];
+   fTcross         = new double[MAX];
+   fVcross         = new double[MAX];
    ClearDataArrays(); 
 }
 //______________________________________________________________________________
@@ -31,6 +36,10 @@ NMRFileManager::~NMRFileManager(){
    delete[] fX; 
    delete[] fY; 
    delete[] fEY;
+   delete[] fNCrossing;
+   delete[] fCrossingIndex;
+   delete[] fTcross;
+   delete[] fVcross; 
    delete[] fDataDir; 
    delete[] fOutputBaseDir; 
    delete[] fOutputDir;
@@ -85,6 +94,15 @@ void NMRFileManager::ClearDataArrays(){
       fX[i]         = 0; 
       fY[i]         = 0; 
       fEY[i]        = 0; 
+   }
+}
+//______________________________________________________________________________
+void NMRFileManager::ClearNZCArrays(){
+   for(int i=0;i<fSIZE;i++){
+      fNCrossing[i]     = 0; 
+      fCrossingIndex[i] = 0;
+      fTcross[i]        = 0; 
+      fVcross[i]        = 0; 
    }
 }
 //______________________________________________________________________________
@@ -960,12 +978,14 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    double t_diff_abs=0,t_diff_abs_2=0; 
 
    // first calculation 
-   NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,myPulse,fX,fY,fEY,NCrossing,CrossingIndex,tCross,vCross);
-   double t_diff_old = GetTDiff(tCross,t_even,t_odd); 
-   NCrossing.clear(); 
-   CrossingIndex.clear(); 
-   tCross.clear();
-   vCross.clear();
+   int nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+                                         myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
+   double t_diff_old = GetTDiff(nzc,fTcross,t_even,t_odd); 
+   ClearNZCArrays(); 
+   // NCrossing.clear(); 
+   // CrossingIndex.clear(); 
+   // tCross.clear();
+   // vCross.clear();
 
    if(fOffsetFail){
       delete myPulse;
@@ -988,12 +1008,14 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
 
    ApplyOffset(offset_new,myPulse);
  
-   NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,myPulse,fX,fY,fEY,NCrossing,CrossingIndex,tCross,vCross);
-   double t_diff_new = GetTDiff(tCross,t_even,t_odd); 
-   NCrossing.clear(); 
-   CrossingIndex.clear(); 
-   tCross.clear();
-   vCross.clear();
+   nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+                                     myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
+   double t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 
+   ClearNZCArrays();
+   // NCrossing.clear(); 
+   // CrossingIndex.clear(); 
+   // tCross.clear();
+   // vCross.clear();
   
    if(fOffsetFail){
       delete myPulse;
@@ -1058,8 +1080,9 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       rc = CheckOffset(offset_old,offset_new,t_diff_old,t_diff_new,slope); 
       if(rc>0) break; 
       ApplyOffset(offset_new,myPulse); 
-      NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,myPulse,fX,fY,fEY,NCrossing,CrossingIndex,tCross,vCross);
-      t_diff_new = GetTDiff(tCross,t_even,t_odd); 
+      nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+                                        myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
+      t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 
       slope      = (t_diff_new - t_diff_old)/(offset_new - offset_old);
       root_diff  = fabs(offset_new - offset_old); 
       if(fVerbosity>4){ 
@@ -1081,16 +1104,17 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       t_diff_abs_2 = fabs(t_diff_new-t_diff_old); 
       t_diff_old   = t_diff_new;
       offset_old   = offset_new;
+      ClearNZCArrays();
       counter++; 
       // fill vectors 
       // V.push_back(offset_new); 
       // T.push_back(t_diff_new);
       // Slope.push_back(slope);   
       // clear vectors  
-      NCrossing.clear(); 
-      CrossingIndex.clear(); 
-      tCross.clear();
-      vCross.clear();
+      // NCrossing.clear(); 
+      // CrossingIndex.clear(); 
+      // tCross.clear();
+      // vCross.clear();
    }while( (t_diff_abs>err)&&(counter<20) ); 
 
    if(counter==20){
@@ -1302,6 +1326,32 @@ double NMRFileManager::GetTDiff(vector<double> tCross,double &delta_t_even_nc,do
    }
    // std::cout << "dt_odd  = " << delta_t_odd_nc  << std::endl;
    // std::cout << "dt_even = " << delta_t_even_nc << std::endl;
+   double t_diff = delta_t_odd_nc-delta_t_even_nc;
+   return t_diff;
+}
+//______________________________________________________________________________
+double NMRFileManager::GetTDiff(int nzc,double *tCross,double &delta_t_even_nc,double &delta_t_odd_nc){
+   delta_t_odd_nc=0;
+   delta_t_even_nc=0;
+   int counter_odd=0,counter_even=0;
+   if(nzc<2){
+      if(fVerbosity>=4) std::cout << "[NMRFileManager::GetTDiff]: NOT ENOUGH DATA POINTS!" << std::endl;
+      if(fVerbosity>=4) std::cout << "[NMRFileManager::GetTDiff]: Number of data points: " << nzc << std::endl;
+      fOffsetFail = true;  
+      return -1; 
+   }else{
+      for(int i=1;i<nzc;i++){
+         if(i%2==0){
+            delta_t_odd_nc  += (tCross[i]-tCross[i-1]);   // we're going by even/odd Zc -- not Nc, so we interchange odd/even wrt Nc. 
+            counter_odd++;
+         }else if(i%2!=0){
+            delta_t_even_nc += (tCross[i]-tCross[i-1]);
+            counter_even++;
+         }
+      }
+      delta_t_odd_nc  /= ( (double)counter_odd );
+      delta_t_even_nc /= ( (double)counter_even);
+   }
    double t_diff = delta_t_odd_nc-delta_t_even_nc;
    return t_diff;
 }

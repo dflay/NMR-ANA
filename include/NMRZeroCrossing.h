@@ -9,6 +9,8 @@
 #include "NMRMath.h"
 #include "NMRFileManager.h"
 
+#define MAX_SIZE 1E+6 
+
 class NMRZeroCrossing{
 
    private:
@@ -20,6 +22,7 @@ class NMRZeroCrossing{
       int fNPTSUseable;                                       // number of points to use in least squares fitting (useable; we may have less -- see StoreData method) 
       int fStep;                                              // number of points to skip in counting zero crossings
       int *fZC;                                               // number of zero crossings 
+      int fNZC;                                               // number of zero crossings (single pulse) 
       
       double fTMin,fTMax;                                     // time range to consider when fUseTimeRange is true 
       double *fX,*fY,*fEY;                                    // "analysis arrays": store data for fitting here  
@@ -30,11 +33,16 @@ class NMRZeroCrossing{
       
       NMRFileManager *fFileManager;                           // a file manager used to print diagnostic data to files 
 
-      vector<int> fNCrossing,fCrossingIndex;                  // crossing indices 
+      int *fNCrossing,*fCrossingIndex;
 
-      vector<double> fTcross,fVcross;                         // time and voltage of crossing 
-      vector<double> fFreqAtCrossing;                         // frequencies for each crossing  
-      vector<double> fNumCycles;                              // Number of cycles at each crossing   
+      double *fTcross,*fVcross;
+      double *fFreqAtCrossing,*fNumCycles;
+
+      // vector<int> fNCrossing,fCrossingIndex;                  // crossing indices 
+
+      // vector<double> fTcross,fVcross;                         // time and voltage of crossing 
+      // vector<double> fFreqAtCrossing;                         // frequencies for each crossing  
+      // vector<double> fNumCycles;                              // Number of cycles at each crossing   
 
       void Reset(); 
       void ClearAnaArrays(); 
@@ -92,7 +100,8 @@ class NMRZeroCrossing{
       }     
 
       int Calculate(NMRPulse *aPulse);                                       // runs the calculation based on choices 
-      int GetNumAnaBins()                      const {return fNCrossing.size();}  
+      // int GetNumAnaBins()                      const {return fNCrossing.size();}  
+      int GetNumAnaBins()                      const {return fNZC;}  
       int GetCrossingNumber(int i)             const {return fNCrossing[i];}  
       int GetCrossingIndex(int i)              const {return fCrossingIndex[i];}  
       int GetNumZeroCrossingsMidpoint()        const {return fZC[0];} 

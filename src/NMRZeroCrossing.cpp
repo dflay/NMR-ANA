@@ -12,7 +12,8 @@ NMRZeroCrossing::NMRZeroCrossing(){
    fTMax            = 0;
    fExpFreq         = 0; 
    fSampleFreq      = 0; 
-   fVerbosity       = 0; 
+   fVerbosity       = 0;
+   fNZC             = 0;
    // fFileManager     = new NMRFileManager(); 
    const int N = 3;
    fZC   = new int[N];
@@ -28,6 +29,14 @@ NMRZeroCrossing::NMRZeroCrossing(){
    fY  = new double[NN]; 
    fEY = new double[NN];
    ClearAnaArrays();
+   const int MAX = MAX_SIZE; 
+   fNCrossing      = new int[MAX]; 
+   fCrossingIndex  = new int[MAX]; 
+   fTcross         = new double[MAX]; 
+   fVcross         = new double[MAX];
+   fFreqAtCrossing = new double[MAX];  
+   fNumCycles      = new double[MAX];
+   ClearVectors(); 
 }
 //______________________________________________________________________________
 NMRZeroCrossing::~NMRZeroCrossing(){
@@ -37,6 +46,12 @@ NMRZeroCrossing::~NMRZeroCrossing(){
    delete[] fFREQ;
    delete[] fZC; 
    delete[] fNC;
+   delete[] fNCrossing;
+   delete[] fCrossingIndex;
+   delete[] fTcross;
+   delete[] fVcross;
+   delete[] fFreqAtCrossing; 
+   delete[] fNumCycles; 
    delete fFileManager; 
 }
 //______________________________________________________________________________
@@ -100,12 +115,20 @@ void NMRZeroCrossing::ClearAnaArrays(){
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::ClearVectors(){
-   fNCrossing.clear();
-   fCrossingIndex.clear();
-   fTcross.clear();
-   fVcross.clear();
-   fFreqAtCrossing.clear();
-   fNumCycles.clear();
+   // fNCrossing.clear();
+   // fCrossingIndex.clear();
+   // fTcross.clear();
+   // fVcross.clear();
+   // fFreqAtCrossing.clear();
+   // fNumCycles.clear();
+   for(int i=0;i<MAX_SIZE;i++){
+      fNCrossing[i]      = 0;
+      fCrossingIndex[i]  = 0; 
+      fTcross[i]         = 0; 
+      fVcross[i]         = 0;
+      fFreqAtCrossing[i] = 0;  
+      fNumCycles[i]      = 0; 
+   }
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::PrintVectorData(int Type,int PulseNumber){
@@ -121,7 +144,7 @@ void NMRZeroCrossing::PrintVectorData(int Type,int PulseNumber){
    fFileManager->DeleteFile(outpath); 
 
    double elapsed_time = 0; 
-   const int N = fNCrossing.size();
+   const int N = fNZC; // fNCrossing.size();
    for(int i=0;i<N;i++){
       if(i==0){
          elapsed_time = 0;
@@ -190,7 +213,8 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::CountZeroCrossings(int method,NMRPulse *aPulse){
-   NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseTimeRange,fTMin,fTMax,aPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross); 
+   fNZC = NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseTimeRange,fTMin,fTMax,
+                                      aPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
 }
 //______________________________________________________________________________
 int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFullRange){
@@ -199,7 +223,7 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
 
    int ret_code = 0; 
   
-   int SIZE = fNCrossing.size();  
+   int SIZE = fNZC; // fNCrossing.size();  
    int NumCrossings = SIZE;
 
    if(NumCrossings==0) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: NumCrossings is zero!" << std::endl;
@@ -248,8 +272,10 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
 	 delta_t = fTcross[i] - fTcross[0]; 
 	 ifreq   = iNc/delta_t; 
       }
-      fNumCycles.push_back(iNc);  
-      fFreqAtCrossing.push_back(ifreq); 
+      // fNumCycles.push_back(iNc);  
+      // fFreqAtCrossing.push_back(ifreq); 
+      fNumCycles[i]      = iNc;
+      fFreqAtCrossing[i] = ifreq; 
    }
 
    if(fVerbosity>=4) printf("[NMRZeroCrossing::CalculateFrequencies]: NumCycles =   %.3f \t delta_t = %.7f us \t f = %.7f Hz \n",NC,1E+6*delta_t,FreqFullRange); 

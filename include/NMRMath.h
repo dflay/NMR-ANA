@@ -41,11 +41,12 @@ namespace NMRMath{
    double GetTimeOfCrossing(int verbosity,int method,int NPTSUseable,double X[],double Y[],double EY[], 
                             double t_current,double v_current,double v_current_err,
                             double t_next   ,double v_next   ,double v_next_err);
-   void CountZeroCrossings(int verbosity,int method,int NPTS,int step,
+   int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
                            bool UseTimeRange,double tMin,double tMax,
                            NMRPulse *aPulse,
                            double *X,double *Y,double *EY,
-                           std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross); 
+                           int *NCrossing,int *CrossingIndex,double *tCross,double *vCross); 
+                           // std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross); 
    
 }
 
