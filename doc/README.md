@@ -1,20 +1,20 @@
-======================================== README ========================================
+# README
 
->> Table of Contents 
+## Table of Contents 
 
    1. Introduction 
    2. C++ Classes 
    3. Running an Analysis 
    4. Authors and Contact Information  
 
->> 1. Introduction
+## 1. Introduction
 
    This code carries out the data (frequency) analysis for NMR signals via a C++ framework. 
    The analysis is realized by the use of a number of classes for specific tasks; the time 
    and voltage data of a given NMR pulse is organized into the NMRPulse (and derived) class(es), 
    while the multiple analysis options have their own specialized classes. 
 
->> 2. C++ Classes 
+## 2. C++ Classes 
 
    NMRPulse:              A basic class containing pulse information: time and voltage data are stored 
                           in arrays; additionally, variables exist for the maximum amplitude, RMS noise and 
@@ -46,7 +46,7 @@
 
    NMRUtility:            A namespace for miscellaneous functions. 
 
->> 3. Running an Analysis  
+## 3. Running an Analysis  
 
    See ./src/main.cpp for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
    number of things to the classes, listed below:
@@ -60,17 +60,17 @@
 
    All of these parameters are listed in the parameter input file, located in ./input/parameters.dat.  
 
-   To compile the code, in a terminal type: "make" (no quotes).  To run the program, type "./nmr_ana" (no quotes).    
+   To compile the code, in a terminal type: `make` (no quotes).  To run the program, type `./nmr_ana`.
 
->> 4. Adding Analysis Classes 
- 
-   - To add an analysis class to the code, the user should integrate their class into the NMRAnalysis class;
-     see NMRZeroCrossing for an example.  
+## 4. Adding Analysis Classes 
 
->> 5. Authors and Contact Information 
+   To add an analysis class to the code, the user should integrate their class into the NMRAnalysis class;
+   see NMRZeroCrossing for an example.  
 
-   Authors:     David Flay 
-   Affiliation: UMass Amherst 
+## 5. Authors and Contact Information 
+
+   Authors:     David Flay and Zac Meadows  
+   Affiliation: UMass Amherst   
    Contact:     David, flay@umass.edu 
 
 
