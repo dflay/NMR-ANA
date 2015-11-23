@@ -16,6 +16,7 @@ class NMRZeroCrossing{
    private:
       bool fUseTimeRange;                                     // do zero crossings over a specified range in time 
       bool fUseMidpoint,fUseLinearInterp,fUseLeastSq;         // booleans for each method  
+      bool fUseIntegerCycles;                                 // use only integer number of cycles in calculation 
 
       int fVerbosity;         
       int fNPTS;                                              // number of points to use in least squares fitting 
@@ -80,6 +81,11 @@ class NMRZeroCrossing{
       void UseLeastSquares(bool v=true){
          if(v) std::cout << "[NMRZeroCrossing]: Will use least squares method." << std::endl;
          fUseLeastSq = v;
+      }
+
+      void UseIntegerCycles(bool v=true){
+         if(v) std::cout << "[NMRZeroCrossing]: Will use integer number of cycles ONLY." << std::endl;
+         fUseIntegerCycles = v;
       }
 
       void SetupForRun(int run){

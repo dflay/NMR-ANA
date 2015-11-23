@@ -1,19 +1,20 @@
 #include "NMRZeroCrossing.h"
 //______________________________________________________________________________
 NMRZeroCrossing::NMRZeroCrossing(){
-   fUseTimeRange    = false;
-   fUseMidpoint     = false;
-   fUseLinearInterp = false;
-   fUseLeastSq      = false;
-   fNPTS            = 1; 
-   fNPTSUseable     = 0; 
-   fStep            = 0; 
-   fTMin            = 0;
-   fTMax            = 0;
-   fExpFreq         = 0; 
-   fSampleFreq      = 0; 
-   fVerbosity       = 0;
-   fNZC             = 0;
+   fUseTimeRange     = false;
+   fUseMidpoint      = false;
+   fUseLinearInterp  = false;
+   fUseLeastSq       = false;
+   fUseIntegerCycles = false; 
+   fNPTS             = 1; 
+   fNPTSUseable      = 0; 
+   fStep             = 0; 
+   fTMin             = 0;
+   fTMax             = 0;
+   fExpFreq          = 0; 
+   fSampleFreq       = 0; 
+   fVerbosity        = 0;
+   fNZC              = 0;
    // fFileManager     = new NMRFileManager(); 
    const int N = 3;
    fZC   = new int[N];
