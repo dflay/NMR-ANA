@@ -16,39 +16,39 @@
 
 ## 2. C++ Classes 
 
-   NMRPulse:              A basic class containing pulse information: time and voltage data are stored 
+   - NMRPulse:            A basic class containing pulse information: time and voltage data are stored 
                           in arrays; additionally, variables exist for the maximum amplitude, RMS noise and 
                           the timestamp associated with when the pulse was acquired.  
 
-   NMRPulseAnalyzed:      An analyzed pulse; the frequency from multiple analyses can be stored to this object; it 
+   - NMRPulseAnalyzed:    An analyzed pulse; the frequency from multiple analyses can be stored to this object; it 
                           derives from NMRPulse.  
 
-   NMRRun:                A class to store a collection of pulses, along with statistics about those pulses;
+   - NMRRun:              A class to store a collection of pulses, along with statistics about those pulses;
                           for instance, the mean and standard deviations of the various data like frequencies, 
                           amplitudes, noise, etc. 
 
-   NMRZeroCrossing:       A frequency analysis class: counts zero crossings of an input pulse and can return 
+   - NMRZeroCrossing:     A frequency analysis class: counts zero crossings of an input pulse and can return 
                           up to three different types of results: midpoint method, linear interpolation and least squares fitting.  
 
-   NMRAnalysis:           A generic analysis class which has objects of analysis classes (like NMRZeroCrossing) as data members.
+   - NMRAnalysis:         A generic analysis class which has objects of analysis classes (like NMRZeroCrossing) as data members.
                           Carries out the specified analyses on a given pulse.     
 
-   NMRFileManager:        This class handles the input and output of all files; it loads data into NMRPulse and also prints 
+   - NMRFileManager:      This class handles the input and output of all files; it loads data into NMRPulse and also prints 
                           frequency results to output files.
 
-   InputManager:          A public member of NMRFileManager; stores all input parameter information (from ./input/parameters.dat) 
+   - InputManager:        A public member of NMRFileManager; stores all input parameter information (from ./input/parameters.dat) 
  
-   NMRFourierTransform:   A Fourier transform class; given an array of voltage data, will output the corresponding frequency
+   - NMRFourierTransform: A Fourier transform class; given an array of voltage data, will output the corresponding frequency
                           spectrum; the output is normalized such that the power spectrum is in Volts.  
 
-   NMRMath:               A namespace that has basic mathematical functions like obtaining the mean or standard deviation 
+   - NMRMath:             A namespace that has basic mathematical functions like obtaining the mean or standard deviation 
                           of an array and other more complicated functions like least squares fitting algorithms. 
 
-   NMRUtility:            A namespace for miscellaneous functions. 
+   - NMRUtility:          A namespace for miscellaneous functions. 
 
 ## 3. Running an Analysis  
 
-   See ./src/main.cpp for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
+   See `./src/main.cpp` for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
    number of things to the classes, listed below:
 
    - The run number and the number of pulses associated with the run. 
@@ -60,7 +60,7 @@
 
    All of these parameters are listed in the parameter input file, located in ./input/parameters.dat.  
 
-   To compile the code, in a terminal type: `make` (no quotes).  To run the program, type `./nmr_ana`.
+   To compile the code, in a terminal type: `make`.  To run the program, type `./nmr_ana`.
 
 ## 4. Adding Analysis Classes 
 
