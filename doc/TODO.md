@@ -1,11 +1,11 @@
-======================================== TODO ========================================
+# To Do
 
->> General 
+## General 
 
    - Memory leak issues
      - I think it has to do with the parts of the code where we add the NMRFileManager 
-       to multiple classes; I think we're losing those pointers to the "void"...
-       This has been addressed, but doesn't fix the memory leak. 
+       to multiple classes; I think we are losing those pointers to the *void*...
+       This has been addressed, but does not fix the memory leak. 
      - It looks like the problem occurs when we load data into the program (NMRFileManager::Load)
        This is probably due to all the zero crossing analysis when computing the voltage
        offset corrections; we probably need to eliminate those vectors, turning them 
@@ -13,7 +13,7 @@
 
    - Segmentation fault problems
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
-       over "nothing," and delete the objects at the end; in particular, the NMRAnalysis 
+       over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
        class is causing the problem.   
    
    - When using input parameter info, we should only access it through the NMRInputManager; 
@@ -24,7 +24,7 @@
 
    - Improve error handling (?) 
 
->> Classes to Complete or Add: 
+## Classes to Complete or Add: 
 
    - NMRMath (namespace)  
      - Add corrected standard deviation, variance, etc. (N -> N-1) 
@@ -37,15 +37,15 @@
      - Maybe?  It would include time-domain and frequency-domain plotting capabilities... 
      - Would be useful for once we integrate everything into the GUI 
 
->> Ideas and Thoughts 
+## Ideas and Thoughts 
 
    - [Important]: RMS noise calculation was not consistent with old code (fixed as of 10/22/15).  
      - Found the source of the problem: applying the offset corrections (higher orders)
        shifts the baseline signal to be much larger than expected.  This is probably
        because offset corrections are determined by looking at the data to be used during
-       zero crossing analysis (that is, 0 < t < 5 ms typically).  Perhaps it's best 
+       zero crossing analysis (that is, 0 < t < 5 ms typically).  Perhaps it is best 
        to get the RMS noise level after either the first or second order correction;
-       that is, BEFORE the linear offset correction (3rd order)?  It seems like it's ``fairer''
+       that is, BEFORE the linear offset correction (3rd order)?  It seems like it is fairer 
        to obtain the RMS noise after the 1st order correction.  Maybe we need to think about 
        this some more?   
 
@@ -55,5 +55,5 @@
      easily obtain the FFT of a pulse... 
 
    - GUI functionality 
-     - If we do this, we would want the classes to work in ROOT: don't need to compile,
+     - If we do this, we would want the classes to work in ROOT: do not need to compile,
        can build in compatability for TH1F, TGraph, etc.  
