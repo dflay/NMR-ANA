@@ -228,12 +228,14 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
 
    if(NumCrossings==0) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: NumCrossings is zero!" << std::endl;
 
-   /// if Zc is even, then number of cycles is odd; we want even cycles so we step back 1 bin
-   if(NumCrossings%2==0){
-      if(fVerbosity>=3) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: NumCrossings = " << NumCrossings << std::endl;
-      NumCrossings -= 1;   
-      if(fVerbosity>=3) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: Adjusted to NumCrossings = " << NumCrossings << std::endl;
-   } 
+   if(fUseIntegerCycles){
+      /// if Zc is even, then number of cycles is odd; we want even cycles so we step back 1 bin
+      if(NumCrossings%2==0){
+         if(fVerbosity>=3) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: NumCrossings = " << NumCrossings << std::endl;
+         NumCrossings -= 1;
+         if(fVerbosity>=3) std::cout << "[NMRZeroCrossing::CalculateFrequencies]: Adjusted to NumCrossings = " << NumCrossings << std::endl;
+      }
+   }
 
    TrueNumCrossings = NumCrossings;
 
