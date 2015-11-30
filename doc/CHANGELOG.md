@@ -1,5 +1,13 @@
 # CHANGELOG 
 
+## 11/30/15, David Flay
+
+   - Removed redundant index variable in NMRMath::CountZeroCrossings (use cntr only now). 
+
+## 11/22/15, David Flay
+
+   - Changed all remaining vectors in NMRMath, NMRFileManager and NMRZeroCrossing to arrays.   
+
 ## 10/29/15, David Flay
 
    - Changed the way the NMRInputManager is used in NMRFileManager; there are now no private
