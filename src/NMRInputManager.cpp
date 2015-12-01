@@ -1,23 +1,24 @@
 #include "NMRInputManager.h"
 //______________________________________________________________________________
 NMRInputManager::NMRInputManager(){
-   fUseZeroCrossing = false;
-   fUseTimeFit      = false;
-   fUsePhaseFit     = false;
-   fADCID           = 0;
-   fMonth           = 0;
-   fDay             = 0;
-   fYear            = 0;
-   fVerbosity       = 0;
-   fOffsetOrder     = 0; 
-   fRunNumber       = 0;
-   fStartRun        = 0;
-   fEndRun          = 0;
-   fNumPulses       = 0;
-   fStartTimeZC     = 0;
-   fEndTimeZC       = 0;
-   fExpFreq         = 0;
-   fSampleFreq      = 0;
+   fUseZeroCrossing  = false;
+   fUseTimeFit       = false;
+   fUsePhaseFit      = false;
+   fUseIntegerCycles = false; 
+   fADCID            = 0;
+   fMonth            = 0;
+   fDay              = 0;
+   fYear             = 0;
+   fVerbosity        = 0;
+   fOffsetOrder      = 0; 
+   fRunNumber        = 0;
+   fStartRun         = 0;
+   fEndRun           = 0;
+   fNumPulses        = 0;
+   fStartTimeZC      = 0;
+   fEndTimeZC        = 0;
+   fExpFreq          = 0;
+   fSampleFreq       = 0;
 }
 //______________________________________________________________________________
 NMRInputManager::~NMRInputManager(){
@@ -27,45 +28,47 @@ NMRInputManager::~NMRInputManager(){
 NMRInputManager::NMRInputManager(const NMRInputManager &a){
    // copy constructor 
    // shallow copy (don't need deep copy, no pointers in class) 
-   fUseZeroCrossing = a.GetZeroCrossingStatus(); 
-   fUseTimeFit      = a.GetTimeFitStatus(); 
-   fUsePhaseFit     = a.GetPhaseFitStatus(); 
-   fADCID           = a.GetADCID(); 
-   fMonth           = a.GetMonth(); 
-   fDay             = a.GetDay(); 
-   fYear            = a.GetYear(); 
-   fVerbosity       = a.GetVerbosity(); 
-   fOffsetOrder     = a.GetOffsetOrder(); 
-   fRunNumber       = a.GetRunNumber(); 
-   fStartRun        = a.GetStartRunNumber(); 
-   fEndRun          = a.GetEndRunNumber(); 
-   fNumPulses       = a.GetNumPulses(); 
-   fStartTimeZC     = a.GetStartTimeZC(); 
-   fEndTimeZC       = a.GetEndTimeZC(); 
-   fExpFreq         = a.GetExpectedFrequency(); 
-   fSampleFreq      = a.GetSampleFrequency(); 
+   fUseZeroCrossing  = a.GetZeroCrossingStatus(); 
+   fUseTimeFit       = a.GetTimeFitStatus(); 
+   fUsePhaseFit      = a.GetPhaseFitStatus(); 
+   fUseIntegerCycles = a.GetIntegerCycleStatus(); 
+   fADCID            = a.GetADCID(); 
+   fMonth            = a.GetMonth(); 
+   fDay              = a.GetDay(); 
+   fYear             = a.GetYear(); 
+   fVerbosity        = a.GetVerbosity(); 
+   fOffsetOrder      = a.GetOffsetOrder(); 
+   fRunNumber        = a.GetRunNumber(); 
+   fStartRun         = a.GetStartRunNumber(); 
+   fEndRun           = a.GetEndRunNumber(); 
+   fNumPulses        = a.GetNumPulses(); 
+   fStartTimeZC      = a.GetStartTimeZC(); 
+   fEndTimeZC        = a.GetEndTimeZC(); 
+   fExpFreq          = a.GetExpectedFrequency(); 
+   fSampleFreq       = a.GetSampleFrequency(); 
 }
 //______________________________________________________________________________
 NMRInputManager::NMRInputManager(const NMRInputManager *a){
    // copy constructor 
    // shallow copy (don't need deep copy, no pointers in class) 
-   fUseZeroCrossing = a->GetZeroCrossingStatus(); 
-   fUseTimeFit      = a->GetTimeFitStatus(); 
-   fUsePhaseFit     = a->GetPhaseFitStatus(); 
-   fADCID           = a->GetADCID(); 
-   fMonth           = a->GetMonth(); 
-   fDay             = a->GetDay(); 
-   fYear            = a->GetYear(); 
-   fVerbosity       = a->GetVerbosity(); 
-   fOffsetOrder     = a->GetOffsetOrder(); 
-   fRunNumber       = a->GetRunNumber(); 
-   fStartRun        = a->GetStartRunNumber(); 
-   fEndRun          = a->GetEndRunNumber(); 
-   fNumPulses       = a->GetNumPulses(); 
-   fStartTimeZC     = a->GetStartTimeZC(); 
-   fEndTimeZC       = a->GetEndTimeZC(); 
-   fExpFreq         = a->GetExpectedFrequency(); 
-   fSampleFreq      = a->GetSampleFrequency(); 
+   fUseZeroCrossing  = a->GetZeroCrossingStatus(); 
+   fUseTimeFit       = a->GetTimeFitStatus(); 
+   fUsePhaseFit      = a->GetPhaseFitStatus(); 
+   fUseIntegerCycles = a->GetIntegerCycleStatus(); 
+   fADCID            = a->GetADCID(); 
+   fMonth            = a->GetMonth(); 
+   fDay              = a->GetDay(); 
+   fYear             = a->GetYear(); 
+   fVerbosity        = a->GetVerbosity(); 
+   fOffsetOrder      = a->GetOffsetOrder(); 
+   fRunNumber        = a->GetRunNumber(); 
+   fStartRun         = a->GetStartRunNumber(); 
+   fEndRun           = a->GetEndRunNumber(); 
+   fNumPulses        = a->GetNumPulses(); 
+   fStartTimeZC      = a->GetStartTimeZC(); 
+   fEndTimeZC        = a->GetEndTimeZC(); 
+   fExpFreq          = a->GetExpectedFrequency(); 
+   fSampleFreq       = a->GetSampleFrequency(); 
 }
 //______________________________________________________________________________
 void NMRInputManager::GetInputParameters(const char *inpath){
@@ -76,25 +79,25 @@ void NMRInputManager::GetInputParameters(const char *inpath){
    int k=0,ival=0; 
    double ivalue=0; 
 
-   // const char *mode        = "r"; 
-   const char *day              = "day"; 
-   const char *month            = "month"; 
-   const char *year             = "year"; 
-   const char *run              = "run_number"; 
-   const char *start_run        = "start_run"; 
-   const char *end_run          = "end_run"; 
-   const char *npulses          = "number_of_pulses"; 
-   const char *tstart           = "t_start"; 
-   const char *tend             = "t_end"; 
-   const char *adc              = "adc_id"; 
-   const char *verb             = "verbosity"; 
-   const char *offset           = "offset_correction_order";
-   const char *exp_freq         = "expected_frequency"; 
-   const char *sample_freq      = "sampling_frequency"; 
-   const char *zc_status        = "zero_crossing"; 
-   const char *time_fit_status  = "time_fit"; 
-   const char *phase_fit_status = "phase_fit"; 
-   const char *eof              = "end_of_file";  
+   const char *day                  = "day"; 
+   const char *month                = "month"; 
+   const char *year                 = "year"; 
+   const char *run                  = "run_number"; 
+   const char *start_run            = "start_run"; 
+   const char *end_run              = "end_run"; 
+   const char *npulses              = "number_of_pulses"; 
+   const char *tstart               = "t_start"; 
+   const char *tend                 = "t_end"; 
+   const char *adc                  = "adc_id"; 
+   const char *verb                 = "verbosity"; 
+   const char *offset               = "offset_correction_order";
+   const char *exp_freq             = "expected_frequency"; 
+   const char *sample_freq          = "sampling_frequency"; 
+   const char *zc_status            = "zero_crossing"; 
+   const char *time_fit_status      = "time_fit"; 
+   const char *phase_fit_status     = "phase_fit"; 
+   const char *integer_cycle_status = "integer_cycles"; 
+   const char *eof                  = "end_of_file";  
  
    std::ifstream infile;
    infile.open(inpath,std::ios::in);
@@ -136,6 +139,11 @@ void NMRInputManager::GetInputParameters(const char *inpath){
                   ival = (int)ivalue;
                   if(ival==1) fUsePhaseFit = true;  
                } 
+               if( NMRUtility::AreEquivStrings(itag,integer_cycle_status)   ){
+                  ival = (int)ivalue;
+                  if(ival==1) fUseIntegerCycles = true;  
+               } 
+
             }else{
                break;
             }
@@ -149,21 +157,22 @@ void NMRInputManager::GetInputParameters(const char *inpath){
 //______________________________________________________________________________
 void NMRInputManager::Print(){
    std::cout << "============= Input Parameters =============" << std::endl;
-   printf("Month                = %d \n"  ,fMonth               );  
-   printf("Day                  = %d \n"  ,fDay                 );  
-   printf("Year                 = %d \n"  ,fYear                );  
-   printf("Run Number           = %d \n"  ,fRunNumber           );  
-   printf("Start Run            = %d \n"  ,fStartRun            );  
-   printf("End Run              = %d \n"  ,fEndRun              );     
-   printf("Number of Pulses     = %d \n"  ,fNumPulses           );  
-   printf("Start Time (ZC)      = %.3E \n",fStartTimeZC         );
-   printf("End Time (ZC)        = %.3E \n",fEndTimeZC           );      
-   printf("Expected Frequency   = %.3E \n",fExpFreq             );        
-   printf("Sample Frequency     = %.3E \n",fSampleFreq          );        
-   printf("ADC ID               = %d \n"  ,fADCID               );       
-   printf("Verbosity            = %d \n"  ,fVerbosity           );     
-   printf("Offset Order         = %d \n"  ,fOffsetOrder         );
-   printf("Zero Crossing Status = %d \n"  ,(int)fUseZeroCrossing);
-   printf("Time Fit Status      = %d \n"  ,(int)fUseTimeFit     );
-   printf("Phase Fit Status     = %d \n"  ,(int)fUsePhaseFit    );
+   printf("Month                = %d \n"  ,fMonth                );  
+   printf("Day                  = %d \n"  ,fDay                  );  
+   printf("Year                 = %d \n"  ,fYear                 );  
+   printf("Run Number           = %d \n"  ,fRunNumber            );  
+   printf("Start Run            = %d \n"  ,fStartRun             );  
+   printf("End Run              = %d \n"  ,fEndRun               );     
+   printf("Number of Pulses     = %d \n"  ,fNumPulses            );  
+   printf("Start Time (ZC)      = %.3E \n",fStartTimeZC          );
+   printf("End Time (ZC)        = %.3E \n",fEndTimeZC            );      
+   printf("Expected Frequency   = %.3E \n",fExpFreq              );        
+   printf("Sample Frequency     = %.3E \n",fSampleFreq           );        
+   printf("ADC ID               = %d \n"  ,fADCID                );       
+   printf("Verbosity            = %d \n"  ,fVerbosity            );     
+   printf("Offset Order         = %d \n"  ,fOffsetOrder          );
+   printf("Zero Crossing Status = %d \n"  ,(int)fUseZeroCrossing );
+   printf("Time Fit Status      = %d \n"  ,(int)fUseTimeFit      );
+   printf("Phase Fit Status     = %d \n"  ,(int)fUsePhaseFit     );
+   printf("Integer Cycle Status = %d \n"  ,(int)fUseIntegerCycles);
 }

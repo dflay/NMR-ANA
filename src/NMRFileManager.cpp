@@ -20,11 +20,10 @@ NMRFileManager::NMRFileManager(){
    fX             = new double[N]; 
    fY             = new double[N]; 
    fEY            = new double[N]; 
-   const int MAX = 1E+6;
-   fNCrossing      = new int[MAX];
-   fCrossingIndex  = new int[MAX];
-   fTcross         = new double[MAX];
-   fVcross         = new double[MAX];
+   fNCrossing     = new int[N];
+   fCrossingIndex = new int[N];
+   fTcross        = new double[N];
+   fVcross        = new double[N];
    ClearDataArrays(); 
 }
 //______________________________________________________________________________
@@ -192,7 +191,7 @@ int NMRFileManager::MakeDirectory(const char *path){
 //______________________________________________________________________________
 void NMRFileManager::InitInputDirectory(){
 
-   const char *d1 = "./data"; 
+   const char *d1 = "./data-test/"; 
    const int SIZE = 200; 
    char *d2 = new char[SIZE]; 
    char *d3 = new char[SIZE]; 
@@ -1074,6 +1073,9 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    offset_old = offset_new; 
    t_diff_old = t_diff_new; 
 
+   // clear arrays before starting
+   ClearNZCArrays();
+
    do{ 
       offset_new = offset_old - t_diff_old/slope;
       // check the new offset  
@@ -1131,6 +1133,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    if(fVerbosity>=3) std::cout << "[NMRFileManager::GetOffsetZC]: Done." << std::endl;
 
    delete myPulse; 
+   ClearNZCArrays();
 
    if(rc>0 || fOffsetFail==true){
       return 0;

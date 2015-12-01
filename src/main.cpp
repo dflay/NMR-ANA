@@ -66,6 +66,9 @@ int main(){
       aRun->ClearData();                // clear run data 
    }
 
+   // end of runs 
+   printf("=================================================================== \n");
+
    // delete objects (order shouldn't matter)  
    delete aPulse;
    delete aPulseAna;

@@ -89,7 +89,7 @@ void NMRRun::PrintPulseData(int index) const{
 //______________________________________________________________________________
 void NMRRun::PrintStatistics() const{
 
-   printf("========================== Run Statistics ========================== \n");
+   printf("========================= Run Statistics ========================== \n");
    printf("Run number:          %d    \n",fRunNumber);
    printf("Ampl:                mean = %12.7lf std. dev. = %.7lf \n",fMeanAmpl,fSigAmpl);
    printf("Noise RMS:           mean = %12.7lf std. dev. = %.7lf \n",fMeanNoiseRMS,fSigNoiseRMS);
@@ -99,7 +99,6 @@ void NMRRun::PrintStatistics() const{
    printf("Freq (ZC, least sq): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
    printf("Freq (fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
    printf("Freq (phase fit):    mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
-   printf("=================================================================== \n");
 
 }
 //______________________________________________________________________________
