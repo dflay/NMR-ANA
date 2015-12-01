@@ -1,5 +1,17 @@
 # CHANGELOG 
 
+## 12/1/15, David Flay
+
+   - General maintenence and added functionality to turn on/off the use of integer cycles 
+     in the zero crossing analysis; previously there was only a boolean variable for it 
+     in NMRZeroCrossing, but it was not being changed due to the value contained in NMRInputManager,
+     which itself did not have a corresponding variable.  Everything is now connected. 
+
+   - By changing the expected frequency from 10 kHz to 40 kHz, we now get identical results 
+     with respect to the old code (that used vectors in couting zero crossings).  Again,
+     *one must be careful setting the expected frequency of the data for accurate results*
+     (is there a way to make it so that we do not have to guess?)  
+
 ## 11/30/15, David Flay
 
    - Removed redundant index variable in NMRMath::CountZeroCrossings (use cntr only now). 

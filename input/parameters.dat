@@ -7,7 +7,7 @@
   number_of_pulses               100 
   t_start                        0
   t_end                          5E-3 
-  expected_frequency             10E+3
+  expected_frequency             40E+3
   sampling_frequency             10E+6 
   adc_id                         3316
   verbosity                      0
