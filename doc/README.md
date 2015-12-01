@@ -1,5 +1,3 @@
-# README
-
 ## Table of Contents 
 
    1. Introduction 
@@ -36,7 +34,7 @@
    - NMRFileManager:      This class handles the input and output of all files; it loads data into NMRPulse and also prints 
                           frequency results to output files.
 
-   - InputManager:        A public member of NMRFileManager; stores all input parameter information (from ./input/parameters.dat) 
+   - NMRInputManager:     A public member of NMRFileManager; stores all input parameter information (from `./input/parameters.dat`) 
  
    - NMRFourierTransform: A Fourier transform class; given an array of voltage data, will output the corresponding frequency
                           spectrum; the output is normalized such that the power spectrum is in Volts.  
@@ -58,7 +56,7 @@
    - The verbosity level, which controls how much information is printed to screen during an analysis.
    - The offset order, which determines what offset correction to apply to the data upon loading from input files.  
 
-   All of these parameters are listed in the parameter input file, located in ./input/parameters.dat.  
+   All of these parameters are listed in the parameter input file, located in `./input/parameters.dat`.  
 
    To compile the code, in a terminal type: `make`.  To run the program, type `./nmr_ana`.
 
