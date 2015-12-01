@@ -2,9 +2,6 @@
 
 ## General 
 
-   - The change to arrays did not change the time for processing all that much; additionally, 
-     we are in disagreement with the original code (see ~/NMR/new_ana/ files) by ~ 20 mHz or so.  
-
    - Segmentation fault problem
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
        over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
