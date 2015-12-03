@@ -34,11 +34,11 @@ class daq(Tkinter.Tk):
       RowOffset         = 0 
       ColumnOffset      = 0
 
-      self.Month        = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-      self.Day          = [1,2,3,4,5,6,7,8,9,10,
+      self.Month        = ['Month','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+      self.Day          = ['Day',1,2,3,4,5,6,7,8,9,10,
                            11,12,13,14,15,16,17,18,19,20,
                            21,22,23,24,25,26,27,28,29,30,31]
-      self.Year         = [2015,2016,2017] 
+      self.Year         = ['Year',2015,2016,2017,2018] 
 
       MechSwName   = ['Mechanical Switch 1','Mechanical Switch 2','Mechanical Switch 3','Mechanical Switch 4']
 
@@ -49,443 +49,497 @@ class daq(Tkinter.Tk):
       self.DateLabel     = Tkinter.Label(self,textvariable=self.DateLabel_str,anchor="w") 
       self.DateLabel.grid(column=ColumnOffset+0,row=RowOffset+0)   
 
-      # ----------------------------------------------------------------------------------
-      # FPGA 
-      # ID Label for pulse timing
-      self.FPGATimingLabelVariable = Tkinter.StringVar()
-      self.FPGATimingLabelVariable.set("Pulse Timing")
-      self.FPGATimingLabel = Tkinter.Label(self,textvariable=self.FPGATimingLabelVariable,anchor="w",font="Helvetica 11 bold")
-      self.FPGATimingLabel.grid(column=ColumnOffset+0,row=RowOffset+0) 
-      # global on/off 
-      self.GlobalOnOffLabelVariable = Tkinter.StringVar() 
-      self.GlobalOnOffLabelVariable.set("Global On/Off") 
-      GlobalOnOffLabel  = Tkinter.Label(self,textvariable=self.GlobalOnOffLabelVariable,anchor="w") 
-      GlobalOnOffLabel.grid(column=ColumnOffset+0,row=RowOffset+1) 
-      # ID Label
-      # 1 
-      self.MechLabelVariable1 = Tkinter.StringVar() 
-      self.MechLabelVariable1.set(MechSwName[0]) 
-      MechLabel1  = Tkinter.Label(self,textvariable=self.MechLabelVariable1,anchor="w") 
-      MechLabel1.grid(column=ColumnOffset+0,row=RowOffset+2) 
-      # 2 
-      self.MechLabelVariable2 = Tkinter.StringVar() 
-      self.MechLabelVariable2.set(MechSwName[1]) 
-      MechLabel2  = Tkinter.Label(self,textvariable=self.MechLabelVariable2,anchor="w") 
-      MechLabel2.grid(column=ColumnOffset+0,row=RowOffset+3) 
-      # 3 
-      self.MechLabelVariable3 = Tkinter.StringVar() 
-      self.MechLabelVariable3.set(MechSwName[2]) 
-      MechLabel3  = Tkinter.Label(self,textvariable=self.MechLabelVariable3,anchor="w") 
-      MechLabel3.grid(column=ColumnOffset+0,row=RowOffset+4) 
-      # 4 
-      self.MechLabelVariable2 = Tkinter.StringVar() 
-      self.MechLabelVariable2.set(MechSwName[3]) 
-      MechLabel4  = Tkinter.Label(self,textvariable=self.MechLabelVariable2,anchor="w") 
-      MechLabel4.grid(column=ColumnOffset+0,row=RowOffset+5) 
-      # RF 
-      # 1 
-      self.RFLabelVariable1 = Tkinter.StringVar() 
-      self.RFLabelVariable1.set("RF Switch 1") 
-      RFLabel1  = Tkinter.Label(self,textvariable=self.RFLabelVariable1,anchor="w") 
-      RFLabel1.grid(column=ColumnOffset+0,row=RowOffset+6) 
-      # 2 
-      self.RFLabelVariable2 = Tkinter.StringVar() 
-      self.RFLabelVariable2.set("RF Switch 2 (Transmit Gate)") 
-      RFLabel2  = Tkinter.Label(self,textvariable=self.RFLabelVariable2,anchor="w") 
-      RFLabel2.grid(column=ColumnOffset+0,row=RowOffset+7) 
-      # 3 
-      self.RFLabelVariable3 = Tkinter.StringVar() 
-      self.RFLabelVariable3.set("RF Switch 3 (Receive Gate)") 
-      RFLabel3  = Tkinter.Label(self,textvariable=self.RFLabelVariable3,anchor="w") 
-      RFLabel3.grid(column=ColumnOffset+0,row=RowOffset+8) 
-      # 4 
-      self.RFLabelVariable4 = Tkinter.StringVar() 
-      self.RFLabelVariable4.set("RF Clear") 
-      RFLabel4  = Tkinter.Label(self,textvariable=self.RFLabelVariable4,anchor="w") 
-      RFLabel4.grid(column=ColumnOffset+0,row=RowOffset+9) 
-      # RF gate 
-      self.RFLabelVariableGate = Tkinter.StringVar() 
-      self.RFLabelVariableGate.set("TOMCO Gate") 
-      self.RFLabelGate  = Tkinter.Label(self,textvariable=self.RFLabelVariableGate,anchor="w") 
-      self.RFLabelGate.grid(column=ColumnOffset+0,row=RowOffset+10) 
-
-      # entry fields (offset)  
-      # Mech 1 
-      TimeOffsetStart   = "Enter time offset"
-      TimeDurationStart = "Enter time duration"
-      mo_str_1 = Tkinter.StringVar()
-      mo_str_2 = Tkinter.StringVar()
-      mo_str_3 = Tkinter.StringVar()
-      mo_str_4 = Tkinter.StringVar()
-      self.entryMechOffsetVariable   = [mo_str_1,mo_str_2,mo_str_3,mo_str_4] 
-      for element in self.entryMechOffsetVariable: 
-         element.set(u"Enter time offset") 
-      # 1 
-      self.entryMechOffset1 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[0]) 
-      self.entryMechOffset1.grid(column=ColumnOffset+1,row=RowOffset+2,sticky='EW')
-      # 2 
-      self.entryMechOffset2 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[1]) 
-      self.entryMechOffset2.grid(column=ColumnOffset+1,row=RowOffset+3,sticky='EW')
-      # 3 
-      self.entryMechOffset3 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[2]) 
-      self.entryMechOffset3.grid(column=ColumnOffset+1,row=RowOffset+4,sticky='EW')
-      # 4 
-      self.entryMechOffset4 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[3]) 
-      self.entryMechOffset4.grid(column=ColumnOffset+1,row=RowOffset+5,sticky='EW')
-      # RF  
-      ro_str_1 = Tkinter.StringVar()
-      ro_str_2 = Tkinter.StringVar()
-      ro_str_3 = Tkinter.StringVar()
-      ro_str_4 = Tkinter.StringVar()
-      self.entryRFOffsetVariable   = [ro_str_1,ro_str_2,ro_str_3,ro_str_4] 
-      for element in self.entryRFOffsetVariable: 
-         element.set(u"Enter time offset") 
-      # 1 
-      self.entryRFOffset1 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[0]) 
-      self.entryRFOffset1.grid(column=ColumnOffset+1,row=RowOffset+6,sticky='EW')
-      # 2 
-      self.entryRFOffset2 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[1]) 
-      self.entryRFOffset2.grid(column=ColumnOffset+1,row=RowOffset+7,sticky='EW')
-      # 3 
-      self.entryRFOffset3 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[2]) 
-      self.entryRFOffset3.grid(column=ColumnOffset+1,row=RowOffset+8,sticky='EW')
-      # 4 
-      self.entryRFOffset4 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[3]) 
-      self.entryRFOffset4.grid(column=ColumnOffset+1,row=RowOffset+9,sticky='EW')
-      # RF gate 
-      self.entryRFOffsetVariableGate = Tkinter.StringVar()
-      self.entryRFOffsetVariableGate.set(u"Enter time offset") 
-      self.entryRFOffsetGate = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariableGate) 
-      self.entryRFOffsetGate.grid(column=ColumnOffset+1,row=RowOffset+10,sticky='EW')
-      # entry fields (duration)  
-      md_str_1 = Tkinter.StringVar()
-      md_str_2 = Tkinter.StringVar()
-      md_str_3 = Tkinter.StringVar()
-      md_str_4 = Tkinter.StringVar()
-      self.entryMechDurationVariable   = [md_str_1,md_str_2,md_str_3,md_str_4] 
-      for element in self.entryMechDurationVariable: 
-         element.set(u"Enter time duration") 
-      # mech 1
-      self.entryMechDuration1 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[0]) 
-      self.entryMechDuration1.grid(column=ColumnOffset+2,row=RowOffset+2,sticky='EW')
-      # 2 
-      self.entryMechDuration2 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[1]) 
-      self.entryMechDuration2.grid(column=ColumnOffset+2,row=RowOffset+3,sticky='EW')
-      # 3 
-      self.entryMechDuration3 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[2]) 
-      self.entryMechDuration3.grid(column=ColumnOffset+2,row=RowOffset+4,sticky='EW')
-      # 4 
-      self.entryMechDuration4 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[3]) 
-      self.entryMechDuration4.grid(column=ColumnOffset+2,row=RowOffset+5,sticky='EW')
-      # rf  
-      rd_str_1 = Tkinter.StringVar()
-      rd_str_2 = Tkinter.StringVar()
-      rd_str_3 = Tkinter.StringVar()
-      rd_str_4 = Tkinter.StringVar()
-      self.entryRFDurationVariable   = [rd_str_1,rd_str_2,rd_str_3,rd_str_4] 
-      for element in self.entryRFDurationVariable: 
-         element.set(u"Enter time duration") 
-      # 1 
-      self.entryRFDuration1 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[0]) 
-      self.entryRFDuration1.grid(column=ColumnOffset+2,row=RowOffset+6,sticky='EW')
-      # 2 
-      self.entryRFDuration2 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[1]) 
-      self.entryRFDuration2.grid(column=ColumnOffset+2,row=RowOffset+7,sticky='EW')
-      # 3 
-      self.entryRFDuration3 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[2]) 
-      self.entryRFDuration3.grid(column=ColumnOffset+2,row=RowOffset+8,sticky='EW')
-      # 4 
-      self.entryRFDuration4 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[3]) 
-      self.entryRFDuration4.grid(column=ColumnOffset+2,row=RowOffset+9,sticky='EW')
-      # rf gate 
-      self.entryRFDurationVariableGate = Tkinter.StringVar() 
-      self.entryRFDurationVariableGate.set(u"Enter time duration") 
-      self.entryRFDurationGate = Tkinter.Entry(self,textvariable=self.entryRFDurationVariableGate) 
-      self.entryRFDurationGate.grid(column=ColumnOffset+2,row=RowOffset+10,sticky='EW')
-
       # pull down menu
-      # mechanical switch 
-      mu_str_1 = Tkinter.StringVar() 
-      mu_str_2 = Tkinter.StringVar() 
-      mu_str_3 = Tkinter.StringVar() 
-      mu_str_4 = Tkinter.StringVar() 
-      self.unit_str_mech = [mu_str_1,mu_str_2,mu_str_3,mu_str_4]
-      for element in self.unit_str_mech: 
-         element.set("units")
-      # 1
-      self.opt_mech_1 = Tkinter.OptionMenu(self,self.unit_str_mech[0],*self.TimeChoices)
-      self.opt_mech_1.grid(column=ColumnOffset+3,row=RowOffset+2) 
-      # 2
-      self.opt_mech_2 = Tkinter.OptionMenu(self,self.unit_str_mech[1],*self.TimeChoices)
-      self.opt_mech_2.grid(column=ColumnOffset+3,row=RowOffset+3) 
-      # 3 
-      self.opt_mech_3 = Tkinter.OptionMenu(self,self.unit_str_mech[2],*self.TimeChoices)
-      self.opt_mech_3.grid(column=ColumnOffset+3,row=RowOffset+4) 
-      # 4 
-      self.opt_mech_4 = Tkinter.OptionMenu(self,self.unit_str_mech[3],*self.TimeChoices)
-      self.opt_mech_4.grid(column=ColumnOffset+3,row=RowOffset+5) 
-      # RF   
-      ru_str_1 = Tkinter.StringVar() 
-      ru_str_2 = Tkinter.StringVar() 
-      ru_str_3 = Tkinter.StringVar() 
-      ru_str_4 = Tkinter.StringVar() 
-      self.unit_str_rf = [ru_str_1,ru_str_2,ru_str_3,ru_str_4]
-      for element in self.unit_str_rf: 
-         element.set("units")
-      # RF 1 
-      self.opt_rf_1 = Tkinter.OptionMenu(self,self.unit_str_rf[0],*self.TimeChoices)
-      self.opt_rf_1.grid(column=ColumnOffset+3,row=RowOffset+6) 
-      # RF 2
-      self.opt_rf_2 = Tkinter.OptionMenu(self,self.unit_str_rf[1],*self.TimeChoices)
-      self.opt_rf_2.grid(column=ColumnOffset+3,row=RowOffset+7) 
-      # RF 3 
-      self.opt_rf_3 = Tkinter.OptionMenu(self,self.unit_str_rf[2],*self.TimeChoices)
-      self.opt_rf_3.grid(column=ColumnOffset+3,row=RowOffset+8) 
-      # RF 4 
-      self.opt_rf_4 = Tkinter.OptionMenu(self,self.unit_str_rf[3],*self.TimeChoices)
-      self.opt_rf_4.grid(column=ColumnOffset+3,row=RowOffset+9) 
-      # RF gate 
-      self.unit_str_rf_gate = Tkinter.StringVar() 
-      self.unit_str_rf_gate.set("units") # initial value 
-      self.opt_rf_gate = Tkinter.OptionMenu(self,self.unit_str_rf_gate,*self.TimeChoices)
-      self.opt_rf_gate.grid(column=ColumnOffset+3,row=RowOffset+10) 
+      mon_str   = Tkinter.StringVar()
+      day_str   = Tkinter.StringVar()
+      year_str  = Tkinter.StringVar()
 
-      # check boxes
-      # initialize  
-      self.chk_global_var = Tkinter.IntVar() 
-      self.chk_global     = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_global_var) 
-      self.chk_global.grid(column=ColumnOffset+5,row=RowOffset+1)
-      mc_int_1 = Tkinter.IntVar()
-      mc_int_2 = Tkinter.IntVar()
-      mc_int_3 = Tkinter.IntVar()
-      mc_int_4 = Tkinter.IntVar()
-      # mech 
-      self.chk_var_mech = [mc_int_1,mc_int_2,mc_int_3,mc_int_4] 
-      # 1 
-      self.chk_mech_1 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[0]) 
-      self.chk_mech_1.grid(column=ColumnOffset+5,row=RowOffset+2)
-      # 2 
-      self.chk_mech_2 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[1]) 
-      self.chk_mech_2.grid(column=ColumnOffset+5,row=RowOffset+3)
-      # 3 
-      self.chk_mech_3 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[2]) 
-      self.chk_mech_3.grid(column=ColumnOffset+5,row=RowOffset+4)
-      # 4 
-      self.chk_mech_4 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[3]) 
-      self.chk_mech_4.grid(column=ColumnOffset+5,row=RowOffset+5)
-      # rf
-      # initialize 
-      rc_int_1   = Tkinter.IntVar()
-      rc_int_2   = Tkinter.IntVar()
-      rc_int_3   = Tkinter.IntVar()
-      rc_int_4   = Tkinter.IntVar()
-      self.chk_var_rf_gate= Tkinter.IntVar()
-      self.chk_var_rf = [rc_int_1,rc_int_2,rc_int_3,rc_int_4]
-      # 1  
-      self.chk_rf_1 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[0]) 
-      self.chk_rf_1.grid(column=ColumnOffset+5,row=RowOffset+6)
-      # 2 
-      self.chk_rf_2 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[1]) 
-      self.chk_rf_2.grid(column=ColumnOffset+5,row=RowOffset+7)
-      # 3 
-      self.chk_rf_3 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[2]) 
-      self.chk_rf_3.grid(column=ColumnOffset+5,row=RowOffset+8)
-      # 4 
-      self.chk_rf_4 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[3]) 
-      self.chk_rf_4.grid(column=ColumnOffset+5,row=RowOffset+9)
-      # tomco gate  
-      self.chk_rf_gate = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf_gate) 
-      self.chk_rf_gate.grid(column=ColumnOffset+5,row=RowOffset+10)
+      mon_str.set("Month") 
+      day_str.set("Day") 
+      year_str.set("Year") 
 
-      # ----------------------------------------------------------------------------------
-      # function generator 
-      # ID Label 
-      self.FGLabelVariable = Tkinter.StringVar()
-      self.FGLabelVariable.set("Function Generator Settings")
-      self.FGLabel = Tkinter.Label(self,textvariable=self.FGLabelVariable,anchor="w",font = "Helvetica 11 bold")
-      self.FGLabel.grid(column=ColumnOffset+0,row=RowOffset+12) 
-      # Labels  
-      self.FGFreqLabelVariable = Tkinter.StringVar()
-      self.FGFreqLabelVariable.set("Frequency")
-      self.FGFreqLabel = Tkinter.Label(self,textvariable=self.FGFreqLabelVariable,anchor="w") 
-      self.FGFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
-      self.FGBNCLabelVariable = Tkinter.StringVar()
-      self.FGBNCLabelVariable.set("BNC")
-      self.FGBNCLabel = Tkinter.Label(self,textvariable=self.FGBNCLabelVariable,anchor="w") 
-      self.FGBNCLabel.grid(column=ColumnOffset+0,row=RowOffset+14)  
-      self.FGNTypeLabelVariable = Tkinter.StringVar()
-      self.FGNTypeLabelVariable.set("N-Type")
-      self.FGNTypeLabel = Tkinter.Label(self,textvariable=self.FGNTypeLabelVariable,anchor="w") 
-      self.FGNTypeLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
+      # month 
+      self.month_opt = Tkinter.OptionMenu(self,mon_str,*self.Month)
+      self.month_opt.grid(column=ColumnOffset+1,row=RowOffset+0) 
+      # day 
+      self.day_opt = Tkinter.OptionMenu(self,day_str,*self.Day)
+      self.day_opt.grid(column=ColumnOffset+2,row=RowOffset+0) 
+      # year 
+      self.year_opt_mech_3 = Tkinter.OptionMenu(self,year_str,*self.Year)
+      self.year_opt_mech_3.grid(column=ColumnOffset+3,row=RowOffset+0) 
 
-      # entry fields 
-      # frequency 
-      self.entryFGFreqVariable = Tkinter.StringVar() 
-      self.entryFGFreqVariable.set(u"Enter frequency")
-      self.entryFGFreq = Tkinter.Entry(self,textvariable=self.entryFGFreqVariable)
-      self.entryFGFreq.grid(column=ColumnOffset+1,row=RowOffset+13,sticky='EW') 
-      # BNC 
-      self.entryFGBNCVoltVariable = Tkinter.StringVar() 
-      self.entryFGBNCVoltVariable.set(u"Enter voltage")
-      self.entryFGBNCVolt = Tkinter.Entry(self,textvariable=self.entryFGBNCVoltVariable)
-      self.entryFGBNCVolt.grid(column=ColumnOffset+1,row=RowOffset+14,sticky='EW')  
-      # N-Type
-      self.entryFGNTypeVoltVariable = Tkinter.StringVar() 
-      self.entryFGNTypeVoltVariable.set(u"Enter voltage")
-      self.entryFGNTypeVolt = Tkinter.Entry(self,textvariable=self.entryFGNTypeVoltVariable)
-      self.entryFGNTypeVolt.grid(column=ColumnOffset+1,row=RowOffset+15,sticky='EW')  
-
-      # pull down menus 
-      # frequency 
-      self.unit_str_freq_fg = Tkinter.StringVar() 
-      self.unit_str_freq_fg.set("units")
-      self.opt_freq_fg = Tkinter.OptionMenu(self,self.unit_str_freq_fg,*FreqChoices) 
-      self.opt_freq_fg.grid(column=ColumnOffset+2,row=RowOffset+13)  
-      # BNC voltage 
-      self.unit_str_volt_fg_bnc = Tkinter.StringVar() 
-      self.unit_str_volt_fg_bnc.set("units")
-      self.opt_volt_fg_bnc = Tkinter.OptionMenu(self,self.unit_str_volt_fg_bnc,*VoltChoices) 
-      self.opt_volt_fg_bnc.grid(column=ColumnOffset+2,row=RowOffset+14)  
-      # N-Type voltage
-      self.unit_str_volt_fg_ntype = Tkinter.StringVar() 
-      self.unit_str_volt_fg_ntype.set("units")
-      self.opt_volt_fg_ntype = Tkinter.OptionMenu(self,self.unit_str_volt_fg_ntype,*VoltChoices) 
-      self.opt_volt_fg_ntype.grid(column=ColumnOffset+2,row=RowOffset+15)  
-      # check boxes 
-      self.chk_fg_bnc_var   = Tkinter.IntVar() 
-      self.chk_fg_bnc   = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_fg_bnc_var) 
-      self.chk_fg_bnc.grid(column=ColumnOffset+5,row=RowOffset+14) 
-      self.chk_fg_ntype_var = Tkinter.IntVar() 
-      self.chk_fg_ntype = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_fg_ntype_var) 
-      self.chk_fg_ntype.grid(column=ColumnOffset+5,row=RowOffset+15)
-
-      # ----------------------------------------------------------------------------------
-      # ADC 
-      # ID Label for ADC
-      self.ADCLabelVariable = Tkinter.StringVar()
-      self.ADCLabelVariable.set("Digitizer Settings")
-      self.ADCLabel = Tkinter.Label(self,textvariable=self.ADCLabelVariable,anchor="w",font="Helvetica 11 bold")
-      self.ADCLabel.grid(column=ColumnOffset+0,row=RowOffset+16) 
-      # Struck ADC ID number 
-      self.ADCNumLabelVariable = Tkinter.StringVar()
-      self.ADCNumLabelVariable.set("Struck ID") 
-      self.ADCNumLabel = Tkinter.Label(self,textvariable=self.ADCNumLabelVariable,anchor="w") 
-      self.ADCNumLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
-      # Struck ADC channel number 
-      self.ADCchLabelVariable = Tkinter.StringVar()
-      self.ADCchLabelVariable.set("Channel Number") 
-      self.ADCchLabel = Tkinter.Label(self,textvariable=self.ADCchLabelVariable,anchor="w") 
-      self.ADCchLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
+      # # ----------------------------------------------------------------------------------
+      # start run info 
+      # label
+      self.StartRunLabel_str = Tkinter.StringVar()
+      self.StartRunLabel_str.set("Start Run") 
+      self.StartRunLabel     = Tkinter.Label(self,textvariable=self.StartRunLabel_str,anchor="w") 
+      self.StartRunLabel.grid(column=ColumnOffset+0,row=RowOffset+1) 
+      # entry field
+      self.StartRunEntry     = Tkinter.StringVar()  
+      self.StartRunEntryField = Tkinter.Entry(self,textvariable=self.StartRunEntry) 
+      self.StartRunEntryField.grid(column=ColumnOffset+1,row=RowOffset+1,sticky='EW')
+      # # ----------------------------------------------------------------------------------
+      # end run info 
+      # label
+      self.EndRunLabel_str = Tkinter.StringVar()
+      self.EndRunLabel_str.set("End Run") 
+      self.EndRunLabel     = Tkinter.Label(self,textvariable=self.EndRunLabel_str,anchor="w") 
+      self.EndRunLabel.grid(column=ColumnOffset+0,row=RowOffset+2) 
+      # entry field
+      self.EndRunEntry     = Tkinter.StringVar()  
+      self.EndRunEntryField = Tkinter.Entry(self,textvariable=self.EndRunEntry) 
+      self.EndRunEntryField.grid(column=ColumnOffset+1,row=RowOffset+2,sticky='EW')
+      # # ----------------------------------------------------------------------------------
       # number of pulses 
-      self.ADCPulseLabelVariable = Tkinter.StringVar()
-      self.ADCPulseLabelVariable.set("Number of Pulses") 
-      self.ADCPulseLabel = Tkinter.Label(self,textvariable=self.ADCPulseLabelVariable,anchor="w") 
-      self.ADCPulseLabel.grid(column=ColumnOffset+0,row=RowOffset+19) 
-      # sampling frequency
-      self.ADCFreqLabelVariable = Tkinter.StringVar()
-      self.ADCFreqLabelVariable.set("Sampling Frequency") 
-      self.ADCFreqLabel = Tkinter.Label(self,textvariable=self.ADCFreqLabelVariable,anchor="w") 
-      self.ADCFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+20) 
+      # label
+      self.NPulsesLabel_str = Tkinter.StringVar()
+      self.NPulsesLabel_str.set("Number of Pulses") 
+      self.NPulsesLabel     = Tkinter.Label(self,textvariable=self.NPulsesLabel_str,anchor="w") 
+      self.NPulsesLabel.grid(column=ColumnOffset+0,row=RowOffset+3) 
+      # entry field
+      self.NPulsesEntry      = Tkinter.StringVar()  
+      self.NPulsesEntryField = Tkinter.Entry(self,textvariable=self.NPulsesEntry) 
+      self.NPulsesEntryField.grid(column=ColumnOffset+1,row=RowOffset+3,sticky='EW')
 
-      # entry fields  
-      # Struck ID number 
-      self.entryADCNumVariable = Tkinter.StringVar() 
-      self.entryADCNumVariable.set(u"Enter value") 
-      self.entryADCNum = Tkinter.Entry(self,textvariable=self.entryADCNumVariable) 
-      self.entryADCNum.grid(column=ColumnOffset+1,row=RowOffset+17,sticky='EW')     
-      # Struck channel number 
-      self.entryADCchVariable = Tkinter.StringVar() 
-      self.entryADCchVariable.set(u"Enter value") 
-      self.entryADCch = Tkinter.Entry(self,textvariable=self.entryADCchVariable) 
-      self.entryADCch.grid(column=ColumnOffset+1,row=RowOffset+18,sticky='EW')     
-      # number of pulses 
-      self.entryADCPulseVariable = Tkinter.StringVar() 
-      self.entryADCPulseVariable.set(u"Enter value") 
-      self.entryADCPulse = Tkinter.Entry(self,textvariable=self.entryADCPulseVariable) 
-      self.entryADCPulse.grid(column=ColumnOffset+1,row=RowOffset+19,sticky='EW') 
 
-      # pull down menus
-      # sampling frequency (value)  
-      self.adc_freq_val = Tkinter.StringVar() 
-      self.adc_freq_val.set('1')
-      self.opt_adc_freq_val = Tkinter.OptionMenu(self,self.adc_freq_val,*FreqValues) 
-      self.opt_adc_freq_val.grid(column=ColumnOffset+1,row=RowOffset+20)  
-      # sampling frequency (unit)  
-      self.unit_str_adc_freq = Tkinter.StringVar() 
-      self.unit_str_adc_freq.set('MHz')
-      self.opt_adc_freq = Tkinter.OptionMenu(self,self.unit_str_adc_freq,*FreqUnitChoices) 
-      self.opt_adc_freq.grid(column=ColumnOffset+2,row=RowOffset+20)  
-      # check boxes 
-      self.chk_adc_clk_type_var = Tkinter.IntVar() 
-      self.chk_adc_clk_type     = Tkinter.Checkbutton(self,text="External",variable=self.chk_adc_clk_type_var) 
-      self.chk_adc_clk_type.grid(column=ColumnOffset+3,row=RowOffset+20) 
+      # # ----------------------------------------------------------------------------------
+      # # FPGA 
+      # # ID Label for pulse timing
+      # self.FPGATimingLabelVariable = Tkinter.StringVar()
+      # self.FPGATimingLabelVariable.set("Pulse Timing")
+      # self.FPGATimingLabel = Tkinter.Label(self,textvariable=self.FPGATimingLabelVariable,anchor="w",font="Helvetica 11 bold")
+      # self.FPGATimingLabel.grid(column=ColumnOffset+0,row=RowOffset+0) 
+      # # global on/off 
+      # self.GlobalOnOffLabelVariable = Tkinter.StringVar() 
+      # self.GlobalOnOffLabelVariable.set("Global On/Off") 
+      # GlobalOnOffLabel  = Tkinter.Label(self,textvariable=self.GlobalOnOffLabelVariable,anchor="w") 
+      # GlobalOnOffLabel.grid(column=ColumnOffset+0,row=RowOffset+1) 
+      # # ID Label
+      # # 1 
+      # self.MechLabelVariable1 = Tkinter.StringVar() 
+      # self.MechLabelVariable1.set(MechSwName[0]) 
+      # MechLabel1  = Tkinter.Label(self,textvariable=self.MechLabelVariable1,anchor="w") 
+      # MechLabel1.grid(column=ColumnOffset+0,row=RowOffset+2) 
+      # # 2 
+      # self.MechLabelVariable2 = Tkinter.StringVar() 
+      # self.MechLabelVariable2.set(MechSwName[1]) 
+      # MechLabel2  = Tkinter.Label(self,textvariable=self.MechLabelVariable2,anchor="w") 
+      # MechLabel2.grid(column=ColumnOffset+0,row=RowOffset+3) 
+      # # 3 
+      # self.MechLabelVariable3 = Tkinter.StringVar() 
+      # self.MechLabelVariable3.set(MechSwName[2]) 
+      # MechLabel3  = Tkinter.Label(self,textvariable=self.MechLabelVariable3,anchor="w") 
+      # MechLabel3.grid(column=ColumnOffset+0,row=RowOffset+4) 
+      # # 4 
+      # self.MechLabelVariable2 = Tkinter.StringVar() 
+      # self.MechLabelVariable2.set(MechSwName[3]) 
+      # MechLabel4  = Tkinter.Label(self,textvariable=self.MechLabelVariable2,anchor="w") 
+      # MechLabel4.grid(column=ColumnOffset+0,row=RowOffset+5) 
+      # # RF 
+      # # 1 
+      # self.RFLabelVariable1 = Tkinter.StringVar() 
+      # self.RFLabelVariable1.set("RF Switch 1") 
+      # RFLabel1  = Tkinter.Label(self,textvariable=self.RFLabelVariable1,anchor="w") 
+      # RFLabel1.grid(column=ColumnOffset+0,row=RowOffset+6) 
+      # # 2 
+      # self.RFLabelVariable2 = Tkinter.StringVar() 
+      # self.RFLabelVariable2.set("RF Switch 2 (Transmit Gate)") 
+      # RFLabel2  = Tkinter.Label(self,textvariable=self.RFLabelVariable2,anchor="w") 
+      # RFLabel2.grid(column=ColumnOffset+0,row=RowOffset+7) 
+      # # 3 
+      # self.RFLabelVariable3 = Tkinter.StringVar() 
+      # self.RFLabelVariable3.set("RF Switch 3 (Receive Gate)") 
+      # RFLabel3  = Tkinter.Label(self,textvariable=self.RFLabelVariable3,anchor="w") 
+      # RFLabel3.grid(column=ColumnOffset+0,row=RowOffset+8) 
+      # # 4 
+      # self.RFLabelVariable4 = Tkinter.StringVar() 
+      # self.RFLabelVariable4.set("RF Clear") 
+      # RFLabel4  = Tkinter.Label(self,textvariable=self.RFLabelVariable4,anchor="w") 
+      # RFLabel4.grid(column=ColumnOffset+0,row=RowOffset+9) 
+      # # RF gate 
+      # self.RFLabelVariableGate = Tkinter.StringVar() 
+      # self.RFLabelVariableGate.set("TOMCO Gate") 
+      # self.RFLabelGate  = Tkinter.Label(self,textvariable=self.RFLabelVariableGate,anchor="w") 
+      # self.RFLabelGate.grid(column=ColumnOffset+0,row=RowOffset+10) 
 
-      # ----------------------------------------------------------------------------------
-      # Utilities 
-      # header label  
-      self.UtilLabelVariable = Tkinter.StringVar()
-      self.UtilLabelVariable.set("Utilities")
-      self.UtilLabel = Tkinter.Label(self,textvariable=self.UtilLabelVariable,anchor="w",font="Helvetica 11 bold")
-      self.UtilLabel.grid(column=ColumnOffset+7,row=RowOffset+0) 
-      # debug  
-      self.UtilDebugLabelVariable = Tkinter.StringVar()
-      self.UtilDebugLabelVariable.set("Debug Mode") 
-      self.UtilDebugLabel = Tkinter.Label(self,textvariable=self.UtilDebugLabelVariable,anchor="w") 
-      self.UtilDebugLabel.grid(column=ColumnOffset+7,row=RowOffset+1) 
-      # verbosity  
-      self.UtilVerbLabelVariable = Tkinter.StringVar()
-      self.UtilVerbLabelVariable.set("Debug Verbosity") 
-      self.UtilVerbLabel = Tkinter.Label(self,textvariable=self.UtilVerbLabelVariable,anchor="w") 
-      self.UtilVerbLabel.grid(column=ColumnOffset+7,row=RowOffset+2) 
-      # test mode  
-      self.UtilTestLabelVariable = Tkinter.StringVar()
-      self.UtilTestLabelVariable.set("Test Mode") 
-      self.UtilTestLabel = Tkinter.Label(self,textvariable=self.UtilTestLabelVariable,anchor="w") 
-      self.UtilTestLabel.grid(column=ColumnOffset+7,row=RowOffset+3) 
-      # reference frequency 
-      self.UtilRefFreqLabelVariable = Tkinter.StringVar()
-      self.UtilRefFreqLabelVariable.set("Field Frequency") 
-      self.UtilRefFreqLabel = Tkinter.Label(self,textvariable=self.UtilRefFreqLabelVariable,anchor="w") 
-      self.UtilRefFreqLabel.grid(column=ColumnOffset+7,row=RowOffset+4) 
-      # file name 
-      self.UtilFNLabelVariable = Tkinter.StringVar()
-      self.UtilFNLabelVariable.set("Configuration Label") 
-      self.UtilFNLabel = Tkinter.Label(self,textvariable=self.UtilFNLabelVariable,anchor="w") 
-      self.UtilFNLabel.grid(column=ColumnOffset+7,row=RowOffset+5) 
+      # # entry fields (offset)  
+      # # Mech 1 
+      # TimeOffsetStart   = "Enter time offset"
+      # TimeDurationStart = "Enter time duration"
+      # mo_str_1 = Tkinter.StringVar()
+      # mo_str_2 = Tkinter.StringVar()
+      # mo_str_3 = Tkinter.StringVar()
+      # mo_str_4 = Tkinter.StringVar()
+      # self.entryMechOffsetVariable   = [mo_str_1,mo_str_2,mo_str_3,mo_str_4] 
+      # for element in self.entryMechOffsetVariable: 
+      #    element.set(u"Enter time offset") 
+      # # 1 
+      # self.entryMechOffset1 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[0]) 
+      # self.entryMechOffset1.grid(column=ColumnOffset+1,row=RowOffset+2,sticky='EW')
+      # # 2 
+      # self.entryMechOffset2 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[1]) 
+      # self.entryMechOffset2.grid(column=ColumnOffset+1,row=RowOffset+3,sticky='EW')
+      # # 3 
+      # self.entryMechOffset3 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[2]) 
+      # self.entryMechOffset3.grid(column=ColumnOffset+1,row=RowOffset+4,sticky='EW')
+      # # 4 
+      # self.entryMechOffset4 = Tkinter.Entry(self,textvariable=self.entryMechOffsetVariable[3]) 
+      # self.entryMechOffset4.grid(column=ColumnOffset+1,row=RowOffset+5,sticky='EW')
+      # # RF  
+      # ro_str_1 = Tkinter.StringVar()
+      # ro_str_2 = Tkinter.StringVar()
+      # ro_str_3 = Tkinter.StringVar()
+      # ro_str_4 = Tkinter.StringVar()
+      # self.entryRFOffsetVariable   = [ro_str_1,ro_str_2,ro_str_3,ro_str_4] 
+      # for element in self.entryRFOffsetVariable: 
+      #    element.set(u"Enter time offset") 
+      # # 1 
+      # self.entryRFOffset1 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[0]) 
+      # self.entryRFOffset1.grid(column=ColumnOffset+1,row=RowOffset+6,sticky='EW')
+      # # 2 
+      # self.entryRFOffset2 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[1]) 
+      # self.entryRFOffset2.grid(column=ColumnOffset+1,row=RowOffset+7,sticky='EW')
+      # # 3 
+      # self.entryRFOffset3 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[2]) 
+      # self.entryRFOffset3.grid(column=ColumnOffset+1,row=RowOffset+8,sticky='EW')
+      # # 4 
+      # self.entryRFOffset4 = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariable[3]) 
+      # self.entryRFOffset4.grid(column=ColumnOffset+1,row=RowOffset+9,sticky='EW')
+      # # RF gate 
+      # self.entryRFOffsetVariableGate = Tkinter.StringVar()
+      # self.entryRFOffsetVariableGate.set(u"Enter time offset") 
+      # self.entryRFOffsetGate = Tkinter.Entry(self,textvariable=self.entryRFOffsetVariableGate) 
+      # self.entryRFOffsetGate.grid(column=ColumnOffset+1,row=RowOffset+10,sticky='EW')
+      # # entry fields (duration)  
+      # md_str_1 = Tkinter.StringVar()
+      # md_str_2 = Tkinter.StringVar()
+      # md_str_3 = Tkinter.StringVar()
+      # md_str_4 = Tkinter.StringVar()
+      # self.entryMechDurationVariable   = [md_str_1,md_str_2,md_str_3,md_str_4] 
+      # for element in self.entryMechDurationVariable: 
+      #    element.set(u"Enter time duration") 
+      # # mech 1
+      # self.entryMechDuration1 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[0]) 
+      # self.entryMechDuration1.grid(column=ColumnOffset+2,row=RowOffset+2,sticky='EW')
+      # # 2 
+      # self.entryMechDuration2 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[1]) 
+      # self.entryMechDuration2.grid(column=ColumnOffset+2,row=RowOffset+3,sticky='EW')
+      # # 3 
+      # self.entryMechDuration3 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[2]) 
+      # self.entryMechDuration3.grid(column=ColumnOffset+2,row=RowOffset+4,sticky='EW')
+      # # 4 
+      # self.entryMechDuration4 = Tkinter.Entry(self,textvariable=self.entryMechDurationVariable[3]) 
+      # self.entryMechDuration4.grid(column=ColumnOffset+2,row=RowOffset+5,sticky='EW')
+      # # rf  
+      # rd_str_1 = Tkinter.StringVar()
+      # rd_str_2 = Tkinter.StringVar()
+      # rd_str_3 = Tkinter.StringVar()
+      # rd_str_4 = Tkinter.StringVar()
+      # self.entryRFDurationVariable   = [rd_str_1,rd_str_2,rd_str_3,rd_str_4] 
+      # for element in self.entryRFDurationVariable: 
+      #    element.set(u"Enter time duration") 
+      # # 1 
+      # self.entryRFDuration1 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[0]) 
+      # self.entryRFDuration1.grid(column=ColumnOffset+2,row=RowOffset+6,sticky='EW')
+      # # 2 
+      # self.entryRFDuration2 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[1]) 
+      # self.entryRFDuration2.grid(column=ColumnOffset+2,row=RowOffset+7,sticky='EW')
+      # # 3 
+      # self.entryRFDuration3 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[2]) 
+      # self.entryRFDuration3.grid(column=ColumnOffset+2,row=RowOffset+8,sticky='EW')
+      # # 4 
+      # self.entryRFDuration4 = Tkinter.Entry(self,textvariable=self.entryRFDurationVariable[3]) 
+      # self.entryRFDuration4.grid(column=ColumnOffset+2,row=RowOffset+9,sticky='EW')
+      # # rf gate 
+      # self.entryRFDurationVariableGate = Tkinter.StringVar() 
+      # self.entryRFDurationVariableGate.set(u"Enter time duration") 
+      # self.entryRFDurationGate = Tkinter.Entry(self,textvariable=self.entryRFDurationVariableGate) 
+      # self.entryRFDurationGate.grid(column=ColumnOffset+2,row=RowOffset+10,sticky='EW')
 
-      # entry fields  
-      # reference frequency 
-      self.entryUtilRefFreqVariable = Tkinter.StringVar() 
-      self.entryUtilRefFreqVariable.set(u"Enter frequency") 
-      self.entryUtilRefFreq = Tkinter.Entry(self,textvariable=self.entryUtilRefFreqVariable) 
-      self.entryUtilRefFreq.grid(column=ColumnOffset+7+1,row=RowOffset+4,sticky='EW')     
-      # file name  
-      self.entryUtilFNVar = Tkinter.StringVar() 
-      self.entryUtilFNVar.set(u"Enter label (no spaces)")
-      self.entryUtilFN    = Tkinter.Entry(self,textvariable=self.entryUtilFNVar)
-      self.entryUtilFN.grid(column=ColumnOffset+7+1,row=RowOffset+5,columnspan=2,sticky='EW') 
+      # # pull down menu
+      # # mechanical switch 
+      # mu_str_1 = Tkinter.StringVar() 
+      # mu_str_2 = Tkinter.StringVar() 
+      # mu_str_3 = Tkinter.StringVar() 
+      # mu_str_4 = Tkinter.StringVar() 
+      # self.unit_str_mech = [mu_str_1,mu_str_2,mu_str_3,mu_str_4]
+      # for element in self.unit_str_mech: 
+      #    element.set("units")
+      # # 1
+      # self.opt_mech_1 = Tkinter.OptionMenu(self,self.unit_str_mech[0],*self.TimeChoices)
+      # self.opt_mech_1.grid(column=ColumnOffset+3,row=RowOffset+2) 
+      # # 2
+      # self.opt_mech_2 = Tkinter.OptionMenu(self,self.unit_str_mech[1],*self.TimeChoices)
+      # self.opt_mech_2.grid(column=ColumnOffset+3,row=RowOffset+3) 
+      # # 3 
+      # self.opt_mech_3 = Tkinter.OptionMenu(self,self.unit_str_mech[2],*self.TimeChoices)
+      # self.opt_mech_3.grid(column=ColumnOffset+3,row=RowOffset+4) 
+      # # 4 
+      # self.opt_mech_4 = Tkinter.OptionMenu(self,self.unit_str_mech[3],*self.TimeChoices)
+      # self.opt_mech_4.grid(column=ColumnOffset+3,row=RowOffset+5) 
+      # # RF   
+      # ru_str_1 = Tkinter.StringVar() 
+      # ru_str_2 = Tkinter.StringVar() 
+      # ru_str_3 = Tkinter.StringVar() 
+      # ru_str_4 = Tkinter.StringVar() 
+      # self.unit_str_rf = [ru_str_1,ru_str_2,ru_str_3,ru_str_4]
+      # for element in self.unit_str_rf: 
+      #    element.set("units")
+      # # RF 1 
+      # self.opt_rf_1 = Tkinter.OptionMenu(self,self.unit_str_rf[0],*self.TimeChoices)
+      # self.opt_rf_1.grid(column=ColumnOffset+3,row=RowOffset+6) 
+      # # RF 2
+      # self.opt_rf_2 = Tkinter.OptionMenu(self,self.unit_str_rf[1],*self.TimeChoices)
+      # self.opt_rf_2.grid(column=ColumnOffset+3,row=RowOffset+7) 
+      # # RF 3 
+      # self.opt_rf_3 = Tkinter.OptionMenu(self,self.unit_str_rf[2],*self.TimeChoices)
+      # self.opt_rf_3.grid(column=ColumnOffset+3,row=RowOffset+8) 
+      # # RF 4 
+      # self.opt_rf_4 = Tkinter.OptionMenu(self,self.unit_str_rf[3],*self.TimeChoices)
+      # self.opt_rf_4.grid(column=ColumnOffset+3,row=RowOffset+9) 
+      # # RF gate 
+      # self.unit_str_rf_gate = Tkinter.StringVar() 
+      # self.unit_str_rf_gate.set("units") # initial value 
+      # self.opt_rf_gate = Tkinter.OptionMenu(self,self.unit_str_rf_gate,*self.TimeChoices)
+      # self.opt_rf_gate.grid(column=ColumnOffset+3,row=RowOffset+10) 
 
-      # pull down menus
-      # debug mode  
-      self.util_debug_val = Tkinter.StringVar() 
-      self.util_debug_val.set('off')
-      self.opt_util_debug_val = Tkinter.OptionMenu(self,self.util_debug_val,*self.DebugChoices) 
-      self.opt_util_debug_val.grid(column=ColumnOffset+7+1,row=RowOffset+1)  
-      # verbosity    
-      self.util_verb_val = Tkinter.StringVar() 
-      self.util_verb_val.set('0')
-      self.opt_util_verb_val = Tkinter.OptionMenu(self,self.util_verb_val,*self.VerbChoices) 
-      self.opt_util_verb_val.grid(column=ColumnOffset+7+1,row=RowOffset+2)  
-      # test mode    
-      self.util_test_val = Tkinter.StringVar() 
-      self.util_test_val.set('0')
-      self.opt_test_val = Tkinter.OptionMenu(self,self.util_test_val,*self.TestChoices) 
-      self.opt_test_val.grid(column=ColumnOffset+7+1,row=RowOffset+3)  
-      # ref frequency units    
-      self.util_ref_freq_unit_val = Tkinter.StringVar() 
-      self.util_ref_freq_unit_val.set('units')
-      self.opt_ref_freq_val = Tkinter.OptionMenu(self,self.util_ref_freq_unit_val,*FreqChoices) 
-      self.opt_ref_freq_val.grid(column=ColumnOffset+7+2,row=RowOffset+4)  
+      # # check boxes
+      # # initialize  
+      # self.chk_global_var = Tkinter.IntVar() 
+      # self.chk_global     = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_global_var) 
+      # self.chk_global.grid(column=ColumnOffset+5,row=RowOffset+1)
+      # mc_int_1 = Tkinter.IntVar()
+      # mc_int_2 = Tkinter.IntVar()
+      # mc_int_3 = Tkinter.IntVar()
+      # mc_int_4 = Tkinter.IntVar()
+      # # mech 
+      # self.chk_var_mech = [mc_int_1,mc_int_2,mc_int_3,mc_int_4] 
+      # # 1 
+      # self.chk_mech_1 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[0]) 
+      # self.chk_mech_1.grid(column=ColumnOffset+5,row=RowOffset+2)
+      # # 2 
+      # self.chk_mech_2 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[1]) 
+      # self.chk_mech_2.grid(column=ColumnOffset+5,row=RowOffset+3)
+      # # 3 
+      # self.chk_mech_3 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[2]) 
+      # self.chk_mech_3.grid(column=ColumnOffset+5,row=RowOffset+4)
+      # # 4 
+      # self.chk_mech_4 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_mech[3]) 
+      # self.chk_mech_4.grid(column=ColumnOffset+5,row=RowOffset+5)
+      # # rf
+      # # initialize 
+      # rc_int_1   = Tkinter.IntVar()
+      # rc_int_2   = Tkinter.IntVar()
+      # rc_int_3   = Tkinter.IntVar()
+      # rc_int_4   = Tkinter.IntVar()
+      # self.chk_var_rf_gate= Tkinter.IntVar()
+      # self.chk_var_rf = [rc_int_1,rc_int_2,rc_int_3,rc_int_4]
+      # # 1  
+      # self.chk_rf_1 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[0]) 
+      # self.chk_rf_1.grid(column=ColumnOffset+5,row=RowOffset+6)
+      # # 2 
+      # self.chk_rf_2 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[1]) 
+      # self.chk_rf_2.grid(column=ColumnOffset+5,row=RowOffset+7)
+      # # 3 
+      # self.chk_rf_3 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[2]) 
+      # self.chk_rf_3.grid(column=ColumnOffset+5,row=RowOffset+8)
+      # # 4 
+      # self.chk_rf_4 = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf[3]) 
+      # self.chk_rf_4.grid(column=ColumnOffset+5,row=RowOffset+9)
+      # # tomco gate  
+      # self.chk_rf_gate = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_var_rf_gate) 
+      # self.chk_rf_gate.grid(column=ColumnOffset+5,row=RowOffset+10)
+
+      # # ----------------------------------------------------------------------------------
+      # # function generator 
+      # # ID Label 
+      # self.FGLabelVariable = Tkinter.StringVar()
+      # self.FGLabelVariable.set("Function Generator Settings")
+      # self.FGLabel = Tkinter.Label(self,textvariable=self.FGLabelVariable,anchor="w",font = "Helvetica 11 bold")
+      # self.FGLabel.grid(column=ColumnOffset+0,row=RowOffset+12) 
+      # # Labels  
+      # self.FGFreqLabelVariable = Tkinter.StringVar()
+      # self.FGFreqLabelVariable.set("Frequency")
+      # self.FGFreqLabel = Tkinter.Label(self,textvariable=self.FGFreqLabelVariable,anchor="w") 
+      # self.FGFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
+      # self.FGBNCLabelVariable = Tkinter.StringVar()
+      # self.FGBNCLabelVariable.set("BNC")
+      # self.FGBNCLabel = Tkinter.Label(self,textvariable=self.FGBNCLabelVariable,anchor="w") 
+      # self.FGBNCLabel.grid(column=ColumnOffset+0,row=RowOffset+14)  
+      # self.FGNTypeLabelVariable = Tkinter.StringVar()
+      # self.FGNTypeLabelVariable.set("N-Type")
+      # self.FGNTypeLabel = Tkinter.Label(self,textvariable=self.FGNTypeLabelVariable,anchor="w") 
+      # self.FGNTypeLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
+
+      # # entry fields 
+      # # frequency 
+      # self.entryFGFreqVariable = Tkinter.StringVar() 
+      # self.entryFGFreqVariable.set(u"Enter frequency")
+      # self.entryFGFreq = Tkinter.Entry(self,textvariable=self.entryFGFreqVariable)
+      # self.entryFGFreq.grid(column=ColumnOffset+1,row=RowOffset+13,sticky='EW') 
+      # # BNC 
+      # self.entryFGBNCVoltVariable = Tkinter.StringVar() 
+      # self.entryFGBNCVoltVariable.set(u"Enter voltage")
+      # self.entryFGBNCVolt = Tkinter.Entry(self,textvariable=self.entryFGBNCVoltVariable)
+      # self.entryFGBNCVolt.grid(column=ColumnOffset+1,row=RowOffset+14,sticky='EW')  
+      # # N-Type
+      # self.entryFGNTypeVoltVariable = Tkinter.StringVar() 
+      # self.entryFGNTypeVoltVariable.set(u"Enter voltage")
+      # self.entryFGNTypeVolt = Tkinter.Entry(self,textvariable=self.entryFGNTypeVoltVariable)
+      # self.entryFGNTypeVolt.grid(column=ColumnOffset+1,row=RowOffset+15,sticky='EW')  
+
+      # # pull down menus 
+      # # frequency 
+      # self.unit_str_freq_fg = Tkinter.StringVar() 
+      # self.unit_str_freq_fg.set("units")
+      # self.opt_freq_fg = Tkinter.OptionMenu(self,self.unit_str_freq_fg,*FreqChoices) 
+      # self.opt_freq_fg.grid(column=ColumnOffset+2,row=RowOffset+13)  
+      # # BNC voltage 
+      # self.unit_str_volt_fg_bnc = Tkinter.StringVar() 
+      # self.unit_str_volt_fg_bnc.set("units")
+      # self.opt_volt_fg_bnc = Tkinter.OptionMenu(self,self.unit_str_volt_fg_bnc,*VoltChoices) 
+      # self.opt_volt_fg_bnc.grid(column=ColumnOffset+2,row=RowOffset+14)  
+      # # N-Type voltage
+      # self.unit_str_volt_fg_ntype = Tkinter.StringVar() 
+      # self.unit_str_volt_fg_ntype.set("units")
+      # self.opt_volt_fg_ntype = Tkinter.OptionMenu(self,self.unit_str_volt_fg_ntype,*VoltChoices) 
+      # self.opt_volt_fg_ntype.grid(column=ColumnOffset+2,row=RowOffset+15)  
+      # # check boxes 
+      # self.chk_fg_bnc_var   = Tkinter.IntVar() 
+      # self.chk_fg_bnc   = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_fg_bnc_var) 
+      # self.chk_fg_bnc.grid(column=ColumnOffset+5,row=RowOffset+14) 
+      # self.chk_fg_ntype_var = Tkinter.IntVar() 
+      # self.chk_fg_ntype = Tkinter.Checkbutton(self,text=TickBox,variable=self.chk_fg_ntype_var) 
+      # self.chk_fg_ntype.grid(column=ColumnOffset+5,row=RowOffset+15)
+
+      # # ----------------------------------------------------------------------------------
+      # # ADC 
+      # # ID Label for ADC
+      # self.ADCLabelVariable = Tkinter.StringVar()
+      # self.ADCLabelVariable.set("Digitizer Settings")
+      # self.ADCLabel = Tkinter.Label(self,textvariable=self.ADCLabelVariable,anchor="w",font="Helvetica 11 bold")
+      # self.ADCLabel.grid(column=ColumnOffset+0,row=RowOffset+16) 
+      # # Struck ADC ID number 
+      # self.ADCNumLabelVariable = Tkinter.StringVar()
+      # self.ADCNumLabelVariable.set("Struck ID") 
+      # self.ADCNumLabel = Tkinter.Label(self,textvariable=self.ADCNumLabelVariable,anchor="w") 
+      # self.ADCNumLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
+      # # Struck ADC channel number 
+      # self.ADCchLabelVariable = Tkinter.StringVar()
+      # self.ADCchLabelVariable.set("Channel Number") 
+      # self.ADCchLabel = Tkinter.Label(self,textvariable=self.ADCchLabelVariable,anchor="w") 
+      # self.ADCchLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
+      # # number of pulses 
+      # self.ADCPulseLabelVariable = Tkinter.StringVar()
+      # self.ADCPulseLabelVariable.set("Number of Pulses") 
+      # self.ADCPulseLabel = Tkinter.Label(self,textvariable=self.ADCPulseLabelVariable,anchor="w") 
+      # self.ADCPulseLabel.grid(column=ColumnOffset+0,row=RowOffset+19) 
+      # # sampling frequency
+      # self.ADCFreqLabelVariable = Tkinter.StringVar()
+      # self.ADCFreqLabelVariable.set("Sampling Frequency") 
+      # self.ADCFreqLabel = Tkinter.Label(self,textvariable=self.ADCFreqLabelVariable,anchor="w") 
+      # self.ADCFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+20) 
+
+      # # entry fields  
+      # # Struck ID number 
+      # self.entryADCNumVariable = Tkinter.StringVar() 
+      # self.entryADCNumVariable.set(u"Enter value") 
+      # self.entryADCNum = Tkinter.Entry(self,textvariable=self.entryADCNumVariable) 
+      # self.entryADCNum.grid(column=ColumnOffset+1,row=RowOffset+17,sticky='EW')     
+      # # Struck channel number 
+      # self.entryADCchVariable = Tkinter.StringVar() 
+      # self.entryADCchVariable.set(u"Enter value") 
+      # self.entryADCch = Tkinter.Entry(self,textvariable=self.entryADCchVariable) 
+      # self.entryADCch.grid(column=ColumnOffset+1,row=RowOffset+18,sticky='EW')     
+      # # number of pulses 
+      # self.entryADCPulseVariable = Tkinter.StringVar() 
+      # self.entryADCPulseVariable.set(u"Enter value") 
+      # self.entryADCPulse = Tkinter.Entry(self,textvariable=self.entryADCPulseVariable) 
+      # self.entryADCPulse.grid(column=ColumnOffset+1,row=RowOffset+19,sticky='EW') 
+
+      # # pull down menus
+      # # sampling frequency (value)  
+      # self.adc_freq_val = Tkinter.StringVar() 
+      # self.adc_freq_val.set('1')
+      # self.opt_adc_freq_val = Tkinter.OptionMenu(self,self.adc_freq_val,*FreqValues) 
+      # self.opt_adc_freq_val.grid(column=ColumnOffset+1,row=RowOffset+20)  
+      # # sampling frequency (unit)  
+      # self.unit_str_adc_freq = Tkinter.StringVar() 
+      # self.unit_str_adc_freq.set('MHz')
+      # self.opt_adc_freq = Tkinter.OptionMenu(self,self.unit_str_adc_freq,*FreqUnitChoices) 
+      # self.opt_adc_freq.grid(column=ColumnOffset+2,row=RowOffset+20)  
+      # # check boxes 
+      # self.chk_adc_clk_type_var = Tkinter.IntVar() 
+      # self.chk_adc_clk_type     = Tkinter.Checkbutton(self,text="External",variable=self.chk_adc_clk_type_var) 
+      # self.chk_adc_clk_type.grid(column=ColumnOffset+3,row=RowOffset+20) 
+
+      # # ----------------------------------------------------------------------------------
+      # # Utilities 
+      # # header label  
+      # self.UtilLabelVariable = Tkinter.StringVar()
+      # self.UtilLabelVariable.set("Utilities")
+      # self.UtilLabel = Tkinter.Label(self,textvariable=self.UtilLabelVariable,anchor="w",font="Helvetica 11 bold")
+      # self.UtilLabel.grid(column=ColumnOffset+7,row=RowOffset+0) 
+      # # debug  
+      # self.UtilDebugLabelVariable = Tkinter.StringVar()
+      # self.UtilDebugLabelVariable.set("Debug Mode") 
+      # self.UtilDebugLabel = Tkinter.Label(self,textvariable=self.UtilDebugLabelVariable,anchor="w") 
+      # self.UtilDebugLabel.grid(column=ColumnOffset+7,row=RowOffset+1) 
+      # # verbosity  
+      # self.UtilVerbLabelVariable = Tkinter.StringVar()
+      # self.UtilVerbLabelVariable.set("Debug Verbosity") 
+      # self.UtilVerbLabel = Tkinter.Label(self,textvariable=self.UtilVerbLabelVariable,anchor="w") 
+      # self.UtilVerbLabel.grid(column=ColumnOffset+7,row=RowOffset+2) 
+      # # test mode  
+      # self.UtilTestLabelVariable = Tkinter.StringVar()
+      # self.UtilTestLabelVariable.set("Test Mode") 
+      # self.UtilTestLabel = Tkinter.Label(self,textvariable=self.UtilTestLabelVariable,anchor="w") 
+      # self.UtilTestLabel.grid(column=ColumnOffset+7,row=RowOffset+3) 
+      # # reference frequency 
+      # self.UtilRefFreqLabelVariable = Tkinter.StringVar()
+      # self.UtilRefFreqLabelVariable.set("Field Frequency") 
+      # self.UtilRefFreqLabel = Tkinter.Label(self,textvariable=self.UtilRefFreqLabelVariable,anchor="w") 
+      # self.UtilRefFreqLabel.grid(column=ColumnOffset+7,row=RowOffset+4) 
+      # # file name 
+      # self.UtilFNLabelVariable = Tkinter.StringVar()
+      # self.UtilFNLabelVariable.set("Configuration Label") 
+      # self.UtilFNLabel = Tkinter.Label(self,textvariable=self.UtilFNLabelVariable,anchor="w") 
+      # self.UtilFNLabel.grid(column=ColumnOffset+7,row=RowOffset+5) 
+
+      # # entry fields  
+      # # reference frequency 
+      # self.entryUtilRefFreqVariable = Tkinter.StringVar() 
+      # self.entryUtilRefFreqVariable.set(u"Enter frequency") 
+      # self.entryUtilRefFreq = Tkinter.Entry(self,textvariable=self.entryUtilRefFreqVariable) 
+      # self.entryUtilRefFreq.grid(column=ColumnOffset+7+1,row=RowOffset+4,sticky='EW')     
+      # # file name  
+      # self.entryUtilFNVar = Tkinter.StringVar() 
+      # self.entryUtilFNVar.set(u"Enter label (no spaces)")
+      # self.entryUtilFN    = Tkinter.Entry(self,textvariable=self.entryUtilFNVar)
+      # self.entryUtilFN.grid(column=ColumnOffset+7+1,row=RowOffset+5,columnspan=2,sticky='EW') 
+
+      # # pull down menus
+      # # debug mode  
+      # self.util_debug_val = Tkinter.StringVar() 
+      # self.util_debug_val.set('off')
+      # self.opt_util_debug_val = Tkinter.OptionMenu(self,self.util_debug_val,*self.DebugChoices) 
+      # self.opt_util_debug_val.grid(column=ColumnOffset+7+1,row=RowOffset+1)  
+      # # verbosity    
+      # self.util_verb_val = Tkinter.StringVar() 
+      # self.util_verb_val.set('0')
+      # self.opt_util_verb_val = Tkinter.OptionMenu(self,self.util_verb_val,*self.VerbChoices) 
+      # self.opt_util_verb_val.grid(column=ColumnOffset+7+1,row=RowOffset+2)  
+      # # test mode    
+      # self.util_test_val = Tkinter.StringVar() 
+      # self.util_test_val.set('0')
+      # self.opt_test_val = Tkinter.OptionMenu(self,self.util_test_val,*self.TestChoices) 
+      # self.opt_test_val.grid(column=ColumnOffset+7+1,row=RowOffset+3)  
+      # # ref frequency units    
+      # self.util_ref_freq_unit_val = Tkinter.StringVar() 
+      # self.util_ref_freq_unit_val.set('units')
+      # self.opt_ref_freq_val = Tkinter.OptionMenu(self,self.util_ref_freq_unit_val,*FreqChoices) 
+      # self.opt_ref_freq_val.grid(column=ColumnOffset+7+2,row=RowOffset+4)  
 
       # ----------------------------------------------------------------------------------
       # make buttons 
@@ -1199,5 +1253,5 @@ class daq(Tkinter.Tk):
 
 if __name__ == "__main__": 
    app = daq(None) 
-   app.title('NMR DAQ')
+   app.title('NMR Analysis')
    app.mainloop()
