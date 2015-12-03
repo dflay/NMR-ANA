@@ -22,17 +22,18 @@ class daq(Tkinter.Tk):
       self.ConfVarLabel = Tkinter.StringVar()   
 
       # variables and lists  
-      TickBox      = "on"
-      self.TimeChoices  = ['units','s'  ,'ms','us']
-      self.DebugChoices = ['off','on']
-      self.VerbChoices  = ['0','1','2','3','4']
-      self.TestChoices  = ['0','1','2','3','4','5']
-      FreqValues        = ['1','10','25','50','100','125','250']
-      FreqChoices       = ['units','kHz','MHz']
-      FreqUnitChoices   = ['MHz']
-      VoltChoices       = ['units','Vpp','rms','dBm']
-      RowOffset         = 0 
-      ColumnOffset      = 0
+      TickBox            = "on"
+      self.TimeChoices   = ['units','s'  ,'ms','us']
+      self.DebugChoices  = ['off','on']
+      self.VerbChoices   = ['0','1','2','3','4']
+      self.TestChoices   = ['0','1','2','3','4','5']
+      FreqValues         = ['1','10','25','50','100','125','250']
+      FreqChoices        = ['units','kHz','MHz']
+      ExpFreqUnitChoices = ['kHz']
+      FreqUnitChoices    = ['MHz']
+      VoltChoices        = ['units','Vpp','rms','dBm']
+      RowOffset          = 0 
+      ColumnOffset       = 0
 
       self.Month        = ['Month','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
       self.Day          = ['Day',1,2,3,4,5,6,7,8,9,10,
@@ -101,7 +102,60 @@ class daq(Tkinter.Tk):
       self.NPulsesEntry      = Tkinter.StringVar()  
       self.NPulsesEntryField = Tkinter.Entry(self,textvariable=self.NPulsesEntry) 
       self.NPulsesEntryField.grid(column=ColumnOffset+1,row=RowOffset+3,sticky='EW')
-
+      # # ----------------------------------------------------------------------------------
+      # start time  
+      # label
+      self.TStartLabel_str = Tkinter.StringVar()
+      self.TStartLabel_str.set("Start Time") 
+      self.TStartLabel     = Tkinter.Label(self,textvariable=self.TStartLabel_str,anchor="w") 
+      self.TStartLabel.grid(column=ColumnOffset+0,row=RowOffset+4) 
+      # entry field
+      self.TStartEntry      = Tkinter.StringVar()  
+      self.TStartEntryField = Tkinter.Entry(self,textvariable=self.TStartEntry) 
+      self.TStartEntryField.grid(column=ColumnOffset+1,row=RowOffset+4,sticky='EW')
+      # # ----------------------------------------------------------------------------------
+      # end time  
+      # label
+      self.TEndLabel_str = Tkinter.StringVar()
+      self.TEndLabel_str.set("End Time") 
+      self.TEndLabel     = Tkinter.Label(self,textvariable=self.TEndLabel_str,anchor="w") 
+      self.TEndLabel.grid(column=ColumnOffset+2,row=RowOffset+4) 
+      # entry field
+      self.TEndEntry      = Tkinter.StringVar()  
+      self.TEndEntryField = Tkinter.Entry(self,textvariable=self.TEndEntry) 
+      self.TEndEntryField.grid(column=ColumnOffset+3,row=RowOffset+4,sticky='EW')
+      # # ----------------------------------------------------------------------------------
+      # expected frequency  
+      # label
+      self.ExpFreqLabel_str = Tkinter.StringVar()
+      self.ExpFreqLabel_str.set("Expected Frequency") 
+      self.ExpFreqLabel     = Tkinter.Label(self,textvariable=self.ExpFreqLabel_str,anchor="w") 
+      self.ExpFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+5) 
+      # entry field
+      self.unit_str_exp_freq = Tkinter.StringVar() 
+      self.unit_str_exp_freq.set('kHz')
+      self.ExpFreqEntry      = Tkinter.StringVar()  
+      self.ExpFreqEntryField = Tkinter.Entry(self,textvariable=self.ExpFreqEntry) 
+      self.ExpFreqEntryField.grid(column=ColumnOffset+1,row=RowOffset+5,sticky='EW')
+      self.opt_exp_freq = Tkinter.OptionMenu(self,self.unit_str_exp_freq,*ExpFreqUnitChoices) 
+      self.opt_exp_freq.grid(column=ColumnOffset+2,row=RowOffset+5) 
+      # # ----------------------------------------------------------------------------------
+      # sampling frequency  
+      # label
+      self.SampleFreqLabel_str = Tkinter.StringVar()
+      self.SampleFreqLabel_str.set("Sampling Frequency") 
+      self.SampleFreqLabel     = Tkinter.Label(self,textvariable=self.SampleFreqLabel_str,anchor="w") 
+      self.SampleFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+6) 
+      # sampling frequency (value)  
+      self.adc_freq_val = Tkinter.StringVar() 
+      self.adc_freq_val.set('1')
+      self.opt_adc_freq_val = Tkinter.OptionMenu(self,self.adc_freq_val,*FreqValues) 
+      self.opt_adc_freq_val.grid(column=ColumnOffset+1,row=RowOffset+6)  
+      # sampling frequency (unit)  
+      self.unit_str_adc_freq = Tkinter.StringVar() 
+      self.unit_str_adc_freq.set('MHz')
+      self.opt_adc_freq = Tkinter.OptionMenu(self,self.unit_str_adc_freq,*FreqUnitChoices) 
+      self.opt_adc_freq.grid(column=ColumnOffset+2,row=RowOffset+6)  
 
       # # ----------------------------------------------------------------------------------
       # # FPGA 
