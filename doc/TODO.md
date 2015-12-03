@@ -2,6 +2,8 @@
 
 ## General 
 
+   - Add a GUI 
+
    - Segmentation fault problem
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
        over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
