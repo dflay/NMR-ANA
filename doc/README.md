@@ -46,6 +46,12 @@
 
 ## 3. Running an Analysis  
 
+### Graphical User Interface
+
+   A graphical user interface (GUI) is currently in development. 
+
+### Main Program and Command Line  
+
    See `./src/main.cpp` for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
    number of things to the classes, listed below:
 
