@@ -1,5 +1,9 @@
 # CHANGELOG 
 
+## 12/4/15, David Flay
+
+   - Added a GUI to the project; it is not finished yet.  
+
 ## 12/1/15, David Flay
 
    - General maintenence and added functionality to turn on/off the use of integer cycles 
