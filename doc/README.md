@@ -12,7 +12,7 @@
    and voltage data of a given NMR pulse is organized into the NMRPulse (and derived) class(es), 
    while the multiple analysis options have their own specialized classes. 
 
-## 2. C++ Classes 
+## 2. C++ Classes and Namespaces 
 
    - NMRPulse:            A basic class containing pulse information: time and voltage data are stored 
                           in arrays; additionally, variables exist for the maximum amplitude, RMS noise and 
