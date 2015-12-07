@@ -26,6 +26,8 @@ class daq(Tkinter.Tk):
       self.TimeChoices   = ['units','s','ms','us']
       self.DebugChoices  = ['off','on']
       self.ADCChoices    = ['3302','3316']
+      self.ADCChChoices  = ['1','2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8',
+                            '9','10','11','12','13','14','15','16']
       self.VerbChoices   = ['0','1','2','3','4']
       self.OffsetChoices = ['0','1','2','3','4']
       FreqValues         = ['1','10','25','50','100','125','250']
@@ -233,29 +235,41 @@ class daq(Tkinter.Tk):
       self.opt_adc_val = Tkinter.OptionMenu(self,self.adc_val,*self.ADCChoices) 
       self.opt_adc_val.grid(column=ColumnOffset+1,row=RowOffset+16)  
       # ----------------------------------------------------------------------------------
+      # ADC channel  
+      # label
+      self.ADCChLabel_str = Tkinter.StringVar()
+      self.ADCChLabel_str.set("Struck ADC Channel") 
+      self.ADCChLabel     = Tkinter.Label(self,textvariable=self.ADCChLabel_str,anchor="w") 
+      self.ADCChLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
+      # pull down menu 
+      self.adc_ch_val = Tkinter.StringVar() 
+      self.adc_ch_val.set('1')
+      self.opt_adc_ch_val = Tkinter.OptionMenu(self,self.adc_ch_val,*self.ADCChChoices) 
+      self.opt_adc_ch_val.grid(column=ColumnOffset+1,row=RowOffset+17)  
+      # ----------------------------------------------------------------------------------
       # Offset correction   
       # label
       self.OffsetLabel_str = Tkinter.StringVar()
       self.OffsetLabel_str.set("Offset Correction Order") 
       self.OffsetLabel     = Tkinter.Label(self,textvariable=self.OffsetLabel_str,anchor="w") 
-      self.OffsetLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
+      self.OffsetLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
       # pull down menu 
       self.offset_val = Tkinter.StringVar() 
       self.offset_val.set('0')
       self.opt_offset_val = Tkinter.OptionMenu(self,self.offset_val,*self.OffsetChoices) 
-      self.opt_offset_val.grid(column=ColumnOffset+1,row=RowOffset+17)  
+      self.opt_offset_val.grid(column=ColumnOffset+1,row=RowOffset+18)  
       # ----------------------------------------------------------------------------------
       # Verbosity   
       # label
       self.VerbosityLabel_str = Tkinter.StringVar()
       self.VerbosityLabel_str.set("Verbosity") 
       self.VerbosityLabel     = Tkinter.Label(self,textvariable=self.VerbosityLabel_str,anchor="w") 
-      self.VerbosityLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
+      self.VerbosityLabel.grid(column=ColumnOffset+0,row=RowOffset+19) 
       # pull down menu 
       self.verb_val = Tkinter.StringVar() 
       self.verb_val.set('0')
       self.opt_verb_val = Tkinter.OptionMenu(self,self.verb_val,*self.VerbChoices) 
-      self.opt_verb_val.grid(column=ColumnOffset+1,row=RowOffset+18)  
+      self.opt_verb_val.grid(column=ColumnOffset+1,row=RowOffset+19)  
 
       # ----------------------------------------------------------------------------------
       # make buttons 
