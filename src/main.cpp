@@ -41,6 +41,7 @@ int main(){
 
    for(int i=StartRunNumber;i<=EndRunNumber;i++){
       FM->SetRunNumber(i);
+      // FM->InputManager->ReadRunSummary(i);      // get details of the run
       FM->InitOutputDirectory(); 
       myAna->SetupForRun(i); 
       aRun->SetRunNumber(i);

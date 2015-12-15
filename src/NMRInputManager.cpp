@@ -19,6 +19,12 @@ NMRInputManager::NMRInputManager(){
    fEndTimeZC        = 0;
    fExpFreq          = 0;
    fSampleFreq       = 0;
+   fLOFreq           = 0; 
+   fRFFreq           = 0; 
+   fADCNumSamples    = 0;
+   fADCSignalLength  = 0;
+   fBNCVoltage       = 0;
+   fNTypeVoltage     = 0;
 }
 //______________________________________________________________________________
 NMRInputManager::~NMRInputManager(){
@@ -46,6 +52,12 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fEndTimeZC        = a.GetEndTimeZC(); 
    fExpFreq          = a.GetExpectedFrequency(); 
    fSampleFreq       = a.GetSampleFrequency(); 
+   fLOFreq           = a.GetLOFrequency();
+   fRFFreq           = a.GetRFFrequency();
+   fADCNumSamples    = a.GetNumSamples(); 
+   fADCSignalLength  = a.GetSignalLength();
+   fBNCVoltage       = a.GetBNCVoltage();     
+   fNTypeVoltage     = a.GetNTypeVoltage();     
 }
 //______________________________________________________________________________
 NMRInputManager::NMRInputManager(const NMRInputManager *a){
@@ -69,6 +81,12 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fEndTimeZC        = a->GetEndTimeZC(); 
    fExpFreq          = a->GetExpectedFrequency(); 
    fSampleFreq       = a->GetSampleFrequency(); 
+   fLOFreq           = a->GetLOFrequency();
+   fRFFreq           = a->GetRFFrequency();
+   fADCNumSamples    = a->GetNumSamples(); 
+   fADCSignalLength  = a->GetSignalLength();
+   fBNCVoltage       = a->GetBNCVoltage();     
+   fNTypeVoltage     = a->GetNTypeVoltage();     
 }
 //______________________________________________________________________________
 void NMRInputManager::GetInputParameters(const char *inpath){
@@ -155,24 +173,89 @@ void NMRInputManager::GetInputParameters(const char *inpath){
 
 }
 //______________________________________________________________________________
+void NMRInputManager::ReadRunSummary(int RunNumber){
+
+   // read the summary file for a run; simplifies what the user needs to input
+   // because we can get: 
+   // - the clock frequency, expected IF, LO frequency, RF frequency 
+   // - the number of pulses 
+
+   const int MAX = 2000; 
+   char itag[MAX]; 
+   
+   char *inpath = new char[MAX];
+   char *prefix = new char[MAX]; 
+   sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000);  
+   sprintf(inpath,"%s/run-%d/summary.dat",prefix,RunNumber); 
+ 
+   double ivalue=0; 
+
+   const char *adc               = "adc_id"; 
+   const char *adc_num_samples   = "adc_number_of_samples"; 
+   const char *adc_clock_freq    = "adc_clock_frequency"; 
+   const char *adc_signal_length = "adc_signal_length"; 
+   const char *exp_freq          = "expected_IF_frequency"; 
+   const char *lo_freq           = "LO_frequency";            // local oscillator frequency
+   const char *rf_freq           = "RF_frequency";            // frequency of pulse sent to probe
+   const char *bnc_voltage       = "bnc_voltage"; 
+   const char *ntype_voltage     = "ntype_voltage";
+   const char *num_pulses        = "number_of_pulses";  
+   const char *eof               = "end_of_file";  
+ 
+   std::ifstream infile;
+   infile.open(inpath,std::ios::in);
+
+   if( infile.fail() ){
+      printf("[NMRFileManager::ReadRunSummary]: Cannot open the file: %s.  Exiting... \n",inpath);
+      exit(1);
+   }else{
+      while( !infile.eof() ){
+         infile >> itag >> ivalue; 
+         // printf("%s %15.2lf \n",itag,ivalue);
+         if( !NMRUtility::AreEquivStrings(itag,eof) ){
+            if( NMRUtility::AreEquivStrings(itag,num_pulses)        ) fNumPulses       = (int)ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,adc)               ) fADCID           = (int)ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,adc_num_samples)   ) fADCNumSamples   = (int)ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,adc_clock_freq)    ) fSampleFreq      = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,adc_signal_length) ) fADCSignalLength = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,exp_freq)          ) fExpFreq         = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,lo_freq)           ) fLOFreq          = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,rf_freq)           ) fRFFreq          = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,bnc_voltage)       ) fBNCVoltage      = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,ntype_voltage)     ) fNTypeVoltage    = ivalue;  
+         }else{
+            break;
+         }
+      }
+      infile.close(); 
+   }
+
+}
+//______________________________________________________________________________
 void NMRInputManager::Print(){
    std::cout << "============= Input Parameters =============" << std::endl;
-   printf("Month                = %d \n"  ,fMonth                );  
-   printf("Day                  = %d \n"  ,fDay                  );  
-   printf("Year                 = %d \n"  ,fYear                 );  
-   printf("Run Number           = %d \n"  ,fRunNumber            );  
-   printf("Start Run            = %d \n"  ,fStartRun             );  
-   printf("End Run              = %d \n"  ,fEndRun               );     
-   printf("Number of Pulses     = %d \n"  ,fNumPulses            );  
+   printf("Month                = %d   \n",fMonth                );  
+   printf("Day                  = %d   \n",fDay                  );  
+   printf("Year                 = %d   \n",fYear                 );  
+   // printf("Run Number           = %d   \n",fRunNumber            );  
+   printf("Start Run            = %d   \n",fStartRun             );  
+   printf("End Run              = %d   \n",fEndRun               );     
+   printf("Number of Pulses     = %d   \n",fNumPulses            );  
    printf("Start Time (ZC)      = %.3E \n",fStartTimeZC          );
    printf("End Time (ZC)        = %.3E \n",fEndTimeZC            );      
    printf("Expected Frequency   = %.3E \n",fExpFreq              );        
    printf("Sample Frequency     = %.3E \n",fSampleFreq           );        
-   printf("ADC ID               = %d \n"  ,fADCID                );       
-   printf("Verbosity            = %d \n"  ,fVerbosity            );     
-   printf("Offset Order         = %d \n"  ,fOffsetOrder          );
-   printf("Zero Crossing Status = %d \n"  ,(int)fUseZeroCrossing );
-   printf("Time Fit Status      = %d \n"  ,(int)fUseTimeFit      );
-   printf("Phase Fit Status     = %d \n"  ,(int)fUsePhaseFit     );
-   printf("Integer Cycle Status = %d \n"  ,(int)fUseIntegerCycles);
+   printf("LO Frequency         = %.3E \n",fLOFreq               ); 
+   printf("RF Frequency         = %.3E \n",fRFFreq               ); 
+   printf("LO BNC Voltage       = %.3E \n",fBNCVoltage           );
+   printf("LO NType Voltage     = %.3E \n",fNTypeVoltage         );
+   printf("ADC ID               = %d   \n",fADCID                );       
+   printf("Number of Samples    = %d   \n",fADCNumSamples        );
+   printf("Signal Length        = %.3E \n",fADCSignalLength      );
+   printf("Verbosity            = %d   \n",fVerbosity            );     
+   printf("Offset Order         = %d   \n",fOffsetOrder          );
+   printf("Zero Crossing Status = %d   \n",(int)fUseZeroCrossing );
+   printf("Time Fit Status      = %d   \n",(int)fUseTimeFit      );
+   printf("Phase Fit Status     = %d   \n",(int)fUsePhaseFit     );
+   printf("Integer Cycle Status = %d   \n",(int)fUseIntegerCycles);
 }
