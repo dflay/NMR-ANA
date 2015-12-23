@@ -107,7 +107,7 @@ void NMRFileManager::ClearNZCArrays(){
 //______________________________________________________________________________
 void NMRFileManager::GetInputParameters(const char *inpath){
    InputManager->GetInputParameters(inpath);
-   InputManager->Print(); 
+   // InputManager->Print(); 
    fVerbosity = InputManager->GetVerbosity(); 
 }
 //______________________________________________________________________________

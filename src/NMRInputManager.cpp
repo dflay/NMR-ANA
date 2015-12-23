@@ -211,7 +211,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    }else{
       while( !infile.eof() ){
          infile >> itag >> ivalue; 
-         // printf("%s %15.2lf \n",itag,ivalue);
+         printf("%s %15.2lf \n",itag,ivalue);
          if( !NMRUtility::AreEquivStrings(itag,eof) ){
             if( NMRUtility::AreEquivStrings(itag,num_pulses)        ) fNumPulses       = (int)ivalue;  
             if( NMRUtility::AreEquivStrings(itag,adc)               ) fADCID           = (int)ivalue;  

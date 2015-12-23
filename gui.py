@@ -113,38 +113,38 @@ class daq(Tkinter.Tk):
       self.NPulsesEntryField.grid(column=ColumnOffset+1,row=RowOffset+4,sticky='EW')
 
       # # ----------------------------------------------------------------------------------
-      # expected frequency  
-      # label
-      self.ExpFreqLabel_str = Tkinter.StringVar()
-      self.ExpFreqLabel_str.set("Expected Frequency") 
-      self.ExpFreqLabel     = Tkinter.Label(self,textvariable=self.ExpFreqLabel_str,anchor="w") 
-      self.ExpFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+7) 
-      # entry field
-      self.unit_str_exp_freq = Tkinter.StringVar() 
-      self.unit_str_exp_freq.set('kHz')
-      self.ExpFreqEntry      = Tkinter.StringVar()  
-      self.ExpFreqEntryField = Tkinter.Entry(self,textvariable=self.ExpFreqEntry) 
-      self.ExpFreqEntryField.grid(column=ColumnOffset+1,row=RowOffset+7,sticky='EW')
-      # pull down menu
-      self.opt_exp_freq = Tkinter.OptionMenu(self,self.unit_str_exp_freq,*ExpFreqUnitChoices) 
-      self.opt_exp_freq.grid(column=ColumnOffset+2,row=RowOffset+7) 
-      # # ----------------------------------------------------------------------------------
-      # sampling frequency  
-      # label
-      self.SampleFreqLabel_str = Tkinter.StringVar()
-      self.SampleFreqLabel_str.set("Sampling Frequency") 
-      self.SampleFreqLabel     = Tkinter.Label(self,textvariable=self.SampleFreqLabel_str,anchor="w") 
-      self.SampleFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+8) 
-      # sampling frequency (value)  
-      self.adc_freq_val = Tkinter.StringVar() 
-      self.adc_freq_val.set('1')
-      self.opt_adc_freq_val = Tkinter.OptionMenu(self,self.adc_freq_val,*FreqValues) 
-      self.opt_adc_freq_val.grid(column=ColumnOffset+1,row=RowOffset+8)  
-      # sampling frequency (unit)  
-      self.unit_str_adc_freq = Tkinter.StringVar() 
-      self.unit_str_adc_freq.set('MHz')
-      self.opt_adc_freq = Tkinter.OptionMenu(self,self.unit_str_adc_freq,*FreqUnitChoices) 
-      self.opt_adc_freq.grid(column=ColumnOffset+2,row=RowOffset+8)  
+      # # expected frequency  
+      # # label
+      # self.ExpFreqLabel_str = Tkinter.StringVar()
+      # self.ExpFreqLabel_str.set("Expected Frequency") 
+      # self.ExpFreqLabel     = Tkinter.Label(self,textvariable=self.ExpFreqLabel_str,anchor="w") 
+      # self.ExpFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+7) 
+      # # entry field
+      # self.unit_str_exp_freq = Tkinter.StringVar() 
+      # self.unit_str_exp_freq.set('kHz')
+      # self.ExpFreqEntry      = Tkinter.StringVar()  
+      # self.ExpFreqEntryField = Tkinter.Entry(self,textvariable=self.ExpFreqEntry) 
+      # self.ExpFreqEntryField.grid(column=ColumnOffset+1,row=RowOffset+7,sticky='EW')
+      # # pull down menu
+      # self.opt_exp_freq = Tkinter.OptionMenu(self,self.unit_str_exp_freq,*ExpFreqUnitChoices) 
+      # self.opt_exp_freq.grid(column=ColumnOffset+2,row=RowOffset+7) 
+      # # # ----------------------------------------------------------------------------------
+      # # sampling frequency  
+      # # label
+      # self.SampleFreqLabel_str = Tkinter.StringVar()
+      # self.SampleFreqLabel_str.set("Sampling Frequency") 
+      # self.SampleFreqLabel     = Tkinter.Label(self,textvariable=self.SampleFreqLabel_str,anchor="w") 
+      # self.SampleFreqLabel.grid(column=ColumnOffset+0,row=RowOffset+8) 
+      # # sampling frequency (value)  
+      # self.adc_freq_val = Tkinter.StringVar() 
+      # self.adc_freq_val.set('1')
+      # self.opt_adc_freq_val = Tkinter.OptionMenu(self,self.adc_freq_val,*FreqValues) 
+      # self.opt_adc_freq_val.grid(column=ColumnOffset+1,row=RowOffset+8)  
+      # # sampling frequency (unit)  
+      # self.unit_str_adc_freq = Tkinter.StringVar() 
+      # self.unit_str_adc_freq.set('MHz')
+      # self.opt_adc_freq = Tkinter.OptionMenu(self,self.unit_str_adc_freq,*FreqUnitChoices) 
+      # self.opt_adc_freq.grid(column=ColumnOffset+2,row=RowOffset+8)  
       # ----------------------------------------------------------------------------------
       # header label
       self.AnaOptLabel_str = Tkinter.StringVar()
@@ -223,29 +223,29 @@ class daq(Tkinter.Tk):
       self.UtilOptLabel     = Tkinter.Label(self,textvariable=self.UtilOptLabel_str,anchor="w",font="Helvetica 14 bold") 
       self.UtilOptLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
       # ----------------------------------------------------------------------------------
-      # ADC ID  
-      # label
-      self.ADCLabel_str = Tkinter.StringVar()
-      self.ADCLabel_str.set("Struck ADC ID") 
-      self.ADCLabel     = Tkinter.Label(self,textvariable=self.ADCLabel_str,anchor="w") 
-      self.ADCLabel.grid(column=ColumnOffset+0,row=RowOffset+16) 
-      # pull down menu 
-      self.adc_val = Tkinter.StringVar() 
-      self.adc_val.set('3316')
-      self.opt_adc_val = Tkinter.OptionMenu(self,self.adc_val,*self.ADCChoices) 
-      self.opt_adc_val.grid(column=ColumnOffset+1,row=RowOffset+16)  
-      # ----------------------------------------------------------------------------------
-      # ADC channel  
-      # label
-      self.ADCChLabel_str = Tkinter.StringVar()
-      self.ADCChLabel_str.set("Struck ADC Channel") 
-      self.ADCChLabel     = Tkinter.Label(self,textvariable=self.ADCChLabel_str,anchor="w") 
-      self.ADCChLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
-      # pull down menu 
-      self.adc_ch_val = Tkinter.StringVar() 
-      self.adc_ch_val.set('1')
-      self.opt_adc_ch_val = Tkinter.OptionMenu(self,self.adc_ch_val,*self.ADCChChoices) 
-      self.opt_adc_ch_val.grid(column=ColumnOffset+1,row=RowOffset+17)  
+      # # ADC ID  
+      # # label
+      # self.ADCLabel_str = Tkinter.StringVar()
+      # self.ADCLabel_str.set("Struck ADC ID") 
+      # self.ADCLabel     = Tkinter.Label(self,textvariable=self.ADCLabel_str,anchor="w") 
+      # self.ADCLabel.grid(column=ColumnOffset+0,row=RowOffset+16) 
+      # # pull down menu 
+      # self.adc_val = Tkinter.StringVar() 
+      # self.adc_val.set('3316')
+      # self.opt_adc_val = Tkinter.OptionMenu(self,self.adc_val,*self.ADCChoices) 
+      # self.opt_adc_val.grid(column=ColumnOffset+1,row=RowOffset+16)  
+      # # ----------------------------------------------------------------------------------
+      # # ADC channel  
+      # # label
+      # self.ADCChLabel_str = Tkinter.StringVar()
+      # self.ADCChLabel_str.set("Struck ADC Channel") 
+      # self.ADCChLabel     = Tkinter.Label(self,textvariable=self.ADCChLabel_str,anchor="w") 
+      # self.ADCChLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
+      # # pull down menu 
+      # self.adc_ch_val = Tkinter.StringVar() 
+      # self.adc_ch_val.set('1')
+      # self.opt_adc_ch_val = Tkinter.OptionMenu(self,self.adc_ch_val,*self.ADCChChoices) 
+      # self.opt_adc_ch_val.grid(column=ColumnOffset+1,row=RowOffset+17)  
       # ----------------------------------------------------------------------------------
       # Offset correction   
       # label

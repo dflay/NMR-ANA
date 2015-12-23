@@ -9,9 +9,6 @@
 #include "NMRRun.h"
 #include "NMRFileManager.h"
 #include "NMRAnalysis.h"
-// #include "NMRZeroCrossing.h"
-// #include "NMRFourierTransform.h"
-// #include "NMRInputManager.h"
 
 int main(){
 
@@ -45,6 +42,9 @@ int main(){
       FM->InitOutputDirectory(); 
       myAna->SetupForRun(i); 
       aRun->SetRunNumber(i);
+      // NPulses = FM->InputManager->GetNumPulses(); 
+      // aRun->SetNumPulses(NPulses);
+      // FM->InputManager->Print(); 
       // try a loop over pulses 
       for(int j=1;j<=NPulses;j++){
          // minimal initialization of the pulse 
