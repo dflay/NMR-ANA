@@ -111,6 +111,15 @@ void NMRFileManager::GetInputParameters(const char *inpath){
    fVerbosity = InputManager->GetVerbosity(); 
 }
 //______________________________________________________________________________
+void NMRFileManager::Update(const NMRFileManager *fm){
+   UpdateInputManager(fm->InputManager);
+}
+//______________________________________________________________________________
+void NMRFileManager::UpdateInputManager(const NMRInputManager *a){
+   // update the input manager when we read in data from a run's summary file 
+   InputManager->Update(a);    
+}
+//______________________________________________________________________________
 int NMRFileManager::DeleteSymLink(const char *suffix){
 
    int rc = 0; 
@@ -235,9 +244,10 @@ void NMRFileManager::InitOutputDirectory(){
    char *d4 = new char[SIZE]; 
    char *d5 = new char[SIZE]; 
 
-   int Month = InputManager->GetMonth(); 
-   int Day   = InputManager->GetDay(); 
-   int Year  = InputManager->GetYear(); 
+   int Month     = InputManager->GetMonth(); 
+   int Day       = InputManager->GetDay(); 
+   int Year      = InputManager->GetYear(); 
+   int RunNumber = InputManager->GetRunNumber(); 
 
    if(Month<10 && Day<10){
       sprintf(d2,"%s/%d"        ,d1,Year); 
@@ -253,7 +263,7 @@ void NMRFileManager::InitOutputDirectory(){
       sprintf(d4,"%s/%d_%d_%d"  ,d3,Month,Day,Year-2000); 
    }
 
-   sprintf(d5,"%s/run-%d",d4,fRunNumber); 
+   sprintf(d5,"%s/run-%d",d4,RunNumber); 
 
    const char *D1 = d1; 
    const char *D2 = d2; 

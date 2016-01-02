@@ -30,8 +30,6 @@ class NMRFileManager{
       bool fUseTimeRangeZC;                                                             // use time range (for zero crossing) 
 
       int fVerbosity;                                                                   // verbosity level 
-      int fStartRun,fEndRun;                                                            // start and end run numbers 
-      int fRunNumber;                                                                   // run number
       int fSIZE,fNPTS;                                                                  // fSIZE = 1E+6, fNPTS = total number of data points 
       int fNCycles;                                                                     // number of cycles (used in offset correction) 
       int *fSample;                                                                     // sample number 
@@ -49,7 +47,7 @@ class NMRFileManager{
       struct stat fSB;                                                                  // for checking on file states   
 
       void ClearDataArrays();                                                           // set arrays to zero  
-      void ClearNZCArrays();                                                           // set arrays to zero  
+      void ClearNZCArrays();                                                            // set arrays to zero  
       void DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NMRPulse *aPulse,double &RMSNoise,double &VMax);  // apply voltage offset of arbitrary order to a pulse  
       void ApplyOffset(double offset);                                                  // apply voltage offset to data 
       void ApplyOffset(double offset,NMRPulse *aPulse);                                 // apply voltage offset to data 
@@ -90,9 +88,11 @@ class NMRFileManager{
 
       NMRInputManager *InputManager; 
 
+      void Update(const NMRFileManager *fm); 
+      void UpdateInputManager(const NMRInputManager *a); 
+
       void GetInputParameters(const char *); 
 
-      void SetRunNumber(int r){fRunNumber = r;} 
       void SetVerbosity(int v){fVerbosity = v;} 
       void InitInputDirectory();
       void InitOutputDirectory();

@@ -16,6 +16,7 @@ int main(){
 
    NMRFileManager *FM = new NMRFileManager(); 
    FM->GetInputParameters(inpath); 
+   FM->InputManager->Print();              
    FM->InitInputDirectory();
 
    int NPulses        = FM->InputManager->GetNumPulses();
@@ -37,34 +38,29 @@ int main(){
    aRun->SetVerbosity(Verbosity);  
 
    for(int i=StartRunNumber;i<=EndRunNumber;i++){
-      FM->SetRunNumber(i);
-      // FM->InputManager->ReadRunSummary(i);      // get details of the run
-      FM->InitOutputDirectory(); 
-      myAna->SetupForRun(i); 
-      aRun->SetRunNumber(i);
-      // NPulses = FM->InputManager->GetNumPulses(); 
-      // aRun->SetNumPulses(NPulses);
-      // FM->InputManager->Print(); 
+      FM->InputManager->ReadRunSummary(i);            // get details of the run
+      FM->InputManager->PrintRunSummary();            // show new run information  
+      FM->InitOutputDirectory();                      // initiaize output directories  
+      myAna->UpdateFileManager(FM);                   // update the FileManager
+      myAna->InitializeAnalysis();                    // initialize the analysis based on the run 
+      NPulses = FM->InputManager->GetNumPulses();     // update the number of pulses  
+      aRun->SetRunNumber(i);                          // set the run number  
+      aRun->SetNumPulses(NPulses);                    // set the number of pulses 
       // try a loop over pulses 
       for(int j=1;j<=NPulses;j++){
-         // minimal initialization of the pulse 
-         aPulse->SetPulseNumber(j); 
-         // load data 
-         FM->Load(i,j,aPulse);
-         // compute frequencies, add to analyzed pulse   
-         myAna->CalculateFrequency(aPulse,aPulseAna); 
-         // print results to screen 
+         aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
+         FM->Load(i,j,aPulse);                        // load data 
+         myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
          // aPulseAna->Print(); 
-         // set up for next pulse 
-         aRun->AddNMRPulse(aPulseAna); 
-         aPulse->ClearData();
-         aPulseAna->ClearData();
+         aRun->AddNMRPulse(aPulseAna);                // add analyzed pulse to the run  
+         aPulse->ClearData();                         // set up for next pulse  
+         aPulseAna->ClearData();                      // set up for next pulse 
       }
-      myAna->CalculateStatistics(aRun); // calculate statistics on the run (mean, std dev, etc) 
-      // aRun->PrintPulseData();        // print data for all pulses to the screen   
-      aRun->PrintStatistics();          // print data for statistics of a run to the screen 
-      FM->PrintResultsToFile(aRun);     // print analysis results for pulses of a run to file  
-      aRun->ClearData();                // clear run data 
+      myAna->CalculateStatistics(aRun);               // calculate statistics on the run (mean, std dev, etc) 
+      // aRun->PrintPulseData();                      // print data for all pulses to the screen   
+      aRun->PrintStatistics();                        // print data for statistics of a run to the screen 
+      FM->PrintResultsToFile(aRun);                   // print analysis results for pulses of a run to file  
+      aRun->ClearData();                              // clear run data 
    }
 
    // end of runs 

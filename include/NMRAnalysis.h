@@ -40,16 +40,17 @@ class NMRAnalysis{
          ZeroCrossing->SetFileManager(fm); 
       } 
 
+      void UpdateFileManager(NMRFileManager *fm){
+         fFileManager->Update(fm); 
+         ZeroCrossing->UpdateFileManager(fm); 
+      } 
+
       void SetVerbosity(int v){
          fVerbosity = v;
          ZeroCrossing->SetVerbosity(v); 
       } 
 
       void InitializeAnalysis(); 
-
-      void SetupForRun(int run){
-         ZeroCrossing->SetupForRun(run); 
-      }
  
       void UseFit(bool v=true){ 
          std::cout << "[NMRAnalysis]: Will use fitting method." << std::endl;

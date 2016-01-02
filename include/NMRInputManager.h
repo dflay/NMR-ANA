@@ -38,9 +38,38 @@ class NMRInputManager{
       NMRInputManager* operator=(const NMRInputManager *a);
 
       void Print(); 
+      void PrintRunSummary(); 
       void GetInputParameters(const char *);
       void ReadRunSummary(int); 
-     
+
+      void Update(const NMRInputManager &a); 
+      void Update(const NMRInputManager *a); 
+  
+      void SetZeroCrossingStatus  (bool v)   { fUseZeroCrossing  = v; } 
+      void SetTimeFitStatus       (bool v)   { fUseTimeFit       = v; } 
+      void SetPhaseFitStatus      (bool v)   { fUsePhaseFit      = v; } 
+      void SetIntegerCycleStatus  (bool v)   { fUseIntegerCycles = v; } 
+      void SetADCID               (int v)    { fADCID            = v; } 
+      void SetMonth               (int v)    { fMonth            = v; } 
+      void SetDay                 (int v)    { fDay              = v; } 
+      void SetYear                (int v)    { fYear             = v; } 
+      void SetVerbosity           (int v)    { fVerbosity        = v; } 
+      void SetOffsetOrder         (int v)    { fOffsetOrder      = v; } 
+      void SetRunNumber           (int v)    { fRunNumber        = v; } 
+      void SetStartRun            (int v)    { fStartRun         = v; } 
+      void SetEndRun              (int v)    { fEndRun           = v; } 
+      void SetNumPulses           (int v)    { fNumPulses        = v; } 
+      void SetStartTimeZC         (double v) { fStartTimeZC      = v; } 
+      void SetEndTimeZC           (double v) { fEndTimeZC        = v; } 
+      void SetExpFreq             (double v) { fExpFreq          = v; } 
+      void SetSampleFreq          (double v) { fSampleFreq       = v; } 
+      void SetLOFreq              (double v) { fLOFreq           = v; } 
+      void SetRFFreq              (double v) { fRFFreq           = v; } 
+      void SetADCNumSamples       (int v)    { fADCNumSamples    = v; } 
+      void SetADCSignalLength     (double v) { fADCSignalLength  = v; } 
+      void SetBNCVoltage          (double v) { fBNCVoltage       = v; } 
+      void SetNTypeVoltage        (double v) { fNTypeVoltage     = v; } 
+
       bool GetZeroCrossingStatus()  const { return fUseZeroCrossing;  } 
       bool GetTimeFitStatus()       const { return fUseTimeFit;       } 
       bool GetPhaseFitStatus()      const { return fUsePhaseFit;      } 

@@ -38,6 +38,7 @@ void NMRAnalysis::InitializeAnalysis(){
       ZeroCrossing->SetSampleFrequency(SampleFreq); 
       ZeroCrossing->SetExpectedFrequency(ExpFreq); 
       ZeroCrossing->UpdateParameters(); 
+      ZeroCrossing->SetupForRun(); 
    }
 
    // time fit 

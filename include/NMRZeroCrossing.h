@@ -88,10 +88,9 @@ class NMRZeroCrossing{
          fUseIntegerCycles = v;
       }
 
-      void SetupForRun(int run){
-         fFileManager->SetRunNumber(run);
-         fFileManager->InitOutputDirectory();
-      }
+      void SetupForRun()                             { fFileManager->InitOutputDirectory(); }
+      
+      void UpdateFileManager(NMRFileManager *fm)     { fFileManager->Update(fm); }  
 
       void UpdateParameters();                                              // update fNPTS and fStep  
       void SetFileManager(NMRFileManager *fm)        {fFileManager = new NMRFileManager(fm);}  

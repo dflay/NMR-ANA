@@ -89,6 +89,62 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fNTypeVoltage     = a->GetNTypeVoltage();     
 }
 //______________________________________________________________________________
+void NMRInputManager::Update(const NMRInputManager &a){
+   // shallow copy (don't need deep copy, no pointers in class), the "hard" way  
+   fUseZeroCrossing  = a.GetZeroCrossingStatus(); 
+   fUseTimeFit       = a.GetTimeFitStatus(); 
+   fUsePhaseFit      = a.GetPhaseFitStatus(); 
+   fUseIntegerCycles = a.GetIntegerCycleStatus(); 
+   fADCID            = a.GetADCID(); 
+   fMonth            = a.GetMonth(); 
+   fDay              = a.GetDay(); 
+   fYear             = a.GetYear(); 
+   fVerbosity        = a.GetVerbosity(); 
+   fOffsetOrder      = a.GetOffsetOrder(); 
+   fRunNumber        = a.GetRunNumber(); 
+   fStartRun         = a.GetStartRunNumber(); 
+   fEndRun           = a.GetEndRunNumber(); 
+   fNumPulses        = a.GetNumPulses(); 
+   fStartTimeZC      = a.GetStartTimeZC(); 
+   fEndTimeZC        = a.GetEndTimeZC(); 
+   fExpFreq          = a.GetExpectedFrequency(); 
+   fSampleFreq       = a.GetSampleFrequency(); 
+   fLOFreq           = a.GetLOFrequency();
+   fRFFreq           = a.GetRFFrequency();
+   fADCNumSamples    = a.GetNumSamples(); 
+   fADCSignalLength  = a.GetSignalLength();
+   fBNCVoltage       = a.GetBNCVoltage();     
+   fNTypeVoltage     = a.GetNTypeVoltage();     
+}
+//______________________________________________________________________________
+void NMRInputManager::Update(const NMRInputManager *a){
+   // shallow copy (don't need deep copy, no pointers in class), the "hard" way  
+   fUseZeroCrossing  = a->GetZeroCrossingStatus(); 
+   fUseTimeFit       = a->GetTimeFitStatus(); 
+   fUsePhaseFit      = a->GetPhaseFitStatus(); 
+   fUseIntegerCycles = a->GetIntegerCycleStatus(); 
+   fADCID            = a->GetADCID(); 
+   fMonth            = a->GetMonth(); 
+   fDay              = a->GetDay(); 
+   fYear             = a->GetYear(); 
+   fVerbosity        = a->GetVerbosity(); 
+   fOffsetOrder      = a->GetOffsetOrder(); 
+   fRunNumber        = a->GetRunNumber(); 
+   fStartRun         = a->GetStartRunNumber(); 
+   fEndRun           = a->GetEndRunNumber(); 
+   fNumPulses        = a->GetNumPulses(); 
+   fStartTimeZC      = a->GetStartTimeZC(); 
+   fEndTimeZC        = a->GetEndTimeZC(); 
+   fExpFreq          = a->GetExpectedFrequency(); 
+   fSampleFreq       = a->GetSampleFrequency(); 
+   fLOFreq           = a->GetLOFrequency();
+   fRFFreq           = a->GetRFFrequency();
+   fADCNumSamples    = a->GetNumSamples(); 
+   fADCSignalLength  = a->GetSignalLength();
+   fBNCVoltage       = a->GetBNCVoltage();     
+   fNTypeVoltage     = a->GetNTypeVoltage();     
+}
+//______________________________________________________________________________
 void NMRInputManager::GetInputParameters(const char *inpath){
 
    const int MAX = 2000; 
@@ -187,7 +243,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    char *prefix = new char[MAX]; 
    sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000);  
    sprintf(inpath,"%s/run-%d/summary.dat",prefix,RunNumber); 
- 
+
    double ivalue=0; 
 
    const char *adc               = "adc_id"; 
@@ -200,6 +256,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    const char *bnc_voltage       = "bnc_voltage"; 
    const char *ntype_voltage     = "ntype_voltage";
    const char *num_pulses        = "number_of_pulses";  
+   const char *run               = "run_number"; 
    const char *eof               = "end_of_file";  
  
    std::ifstream infile;
@@ -211,8 +268,9 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    }else{
       while( !infile.eof() ){
          infile >> itag >> ivalue; 
-         printf("%s %15.2lf \n",itag,ivalue);
+         // printf("%s %15.2lf \n",itag,ivalue);
          if( !NMRUtility::AreEquivStrings(itag,eof) ){
+            if( NMRUtility::AreEquivStrings(itag,run)               ) fRunNumber       = (int)ivalue;  
             if( NMRUtility::AreEquivStrings(itag,num_pulses)        ) fNumPulses       = (int)ivalue;  
             if( NMRUtility::AreEquivStrings(itag,adc)               ) fADCID           = (int)ivalue;  
             if( NMRUtility::AreEquivStrings(itag,adc_num_samples)   ) fADCNumSamples   = (int)ivalue;  
@@ -229,6 +287,9 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
       }
       infile.close(); 
    }
+
+   delete inpath;
+   delete prefix; 
 
 }
 //______________________________________________________________________________
@@ -258,4 +319,19 @@ void NMRInputManager::Print(){
    printf("Time Fit Status      = %d   \n",(int)fUseTimeFit      );
    printf("Phase Fit Status     = %d   \n",(int)fUsePhaseFit     );
    printf("Integer Cycle Status = %d   \n",(int)fUseIntegerCycles);
+}
+//______________________________________________________________________________
+void NMRInputManager::PrintRunSummary(){
+   std::cout << "============= Input Parameters: Run Summary =============" << std::endl;
+   printf("Run Number           = %d   \n",fRunNumber            );  
+   printf("Number of Pulses     = %d   \n",fNumPulses            );  
+   printf("Expected Frequency   = %.3E \n",fExpFreq              );        
+   printf("Sample Frequency     = %.3E \n",fSampleFreq           );        
+   printf("LO Frequency         = %.3E \n",fLOFreq               ); 
+   printf("RF Frequency         = %.3E \n",fRFFreq               ); 
+   printf("LO BNC Voltage       = %.3E \n",fBNCVoltage           );
+   printf("LO NType Voltage     = %.3E \n",fNTypeVoltage         );
+   printf("ADC ID               = %d   \n",fADCID                );       
+   printf("Number of Samples    = %d   \n",fADCNumSamples        );
+   printf("Signal Length        = %.3E \n",fADCSignalLength      );
 }
