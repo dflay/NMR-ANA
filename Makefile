@@ -7,7 +7,7 @@ PROJECT = nmr_ana
 
 # Directories
 OBJDIR = obj
-SODIR  = so 
+SODIR  = lib  
 SRCDIR = src
 INCDIR = include 
 # options 
