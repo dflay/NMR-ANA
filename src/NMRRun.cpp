@@ -65,7 +65,7 @@ void NMRRun::SetNumPulses(int NumPulses){
    // first delete the old array
    if(fVerbosity>=4) std::cout << "[NMRRun::SetNumPulses]: Deleting " << fNumPulses << " pulses." << std::endl; 
    for(int i=0;i<fNumPulses;i++){
-      delete fPulse[i];
+      if(fPulse[i]!=NULL) delete fPulse[i];
    } 
    delete[] fPulse; 
    // now create a new array of pulses
@@ -119,6 +119,7 @@ void NMRRun::ClearData(){
    fSigNumCycles         = 0;      
    for(int i=0;i<fNumPulses;i++){
       delete fPulse[i];
+      fPulse[i] = NULL;   // this might help.
    } 
    for(int i=0;i<3;i++){
       fFreqMeanZC[i] = 0;

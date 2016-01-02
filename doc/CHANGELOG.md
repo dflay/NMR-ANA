@@ -1,5 +1,11 @@
 # CHANGELOG 
 
+## 1/2/16, David Flay
+ 
+   - The NMRInputManager now updates on every run by reading the corresponding summary file.  The 
+     changes to the InputManager are propagated to all copies.  This way, the user does not need to 
+     tell the code how many pulses were in a run, as it is already logged by NMR-DAQ. 
+
 ## 12/4/15, David Flay
 
    - Added a GUI to the project; it is not finished yet.  

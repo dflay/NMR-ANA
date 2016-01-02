@@ -2,20 +2,12 @@
 
 ## General 
 
-   - Remove the need to set various parameters like sampling frequency, expected mixdown frequency, 
-     ADC type, number of pulses in a run, etc; these are all stored in the summary files (~/data/~/run-*/summary.dat).  
-     This will simplify the GUI, and ultimately allow for different number of pulses per run. 
-     - To accomplish this, we need to propagate all changes to the main FileManager->InputManager to the other copies
-       found in NMRAnalysis and NMRZeroCrossing. 
-
    - Add a GUI 
 
    - Segmentation fault problem
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
        over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
        class is causing the problem.   
-
-   - Add capability to do different number of pulses for a given run (?)   
 
    - Improve error handling (?) 
 
