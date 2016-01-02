@@ -19,7 +19,7 @@ int main(){
    FM->InputManager->Print();              
    FM->InitInputDirectory();
 
-   int NPulses        = FM->InputManager->GetNumPulses();
+   int NPulses        = FM->InputManager->GetNumPulses();   // will be zero upon starting
    int Verbosity      = FM->InputManager->GetVerbosity(); 
    int StartRunNumber = FM->InputManager->GetStartRunNumber(); 
    int EndRunNumber   = FM->InputManager->GetEndRunNumber(); 
@@ -32,9 +32,8 @@ int main(){
 
    NMRAnalysis *myAna = new NMRAnalysis();
    myAna->SetFileManager(FM);
-   myAna->InitializeAnalysis();  
 
-   NMRRun *aRun = new NMRRun(NPulses);
+   NMRRun *aRun = new NMRRun(1);                      // initialize to 1 pulse 
    aRun->SetVerbosity(Verbosity);  
 
    for(int i=StartRunNumber;i<=EndRunNumber;i++){
@@ -51,13 +50,13 @@ int main(){
          aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
          FM->Load(i,j,aPulse);                        // load data 
          myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
-         // aPulseAna->Print(); 
+         if(Verbosity>4) aPulseAna->Print(); 
          aRun->AddNMRPulse(aPulseAna);                // add analyzed pulse to the run  
          aPulse->ClearData();                         // set up for next pulse  
          aPulseAna->ClearData();                      // set up for next pulse 
       }
       myAna->CalculateStatistics(aRun);               // calculate statistics on the run (mean, std dev, etc) 
-      // aRun->PrintPulseData();                      // print data for all pulses to the screen   
+      if(Verbosity>4) aRun->PrintPulseData();                      // print data for all pulses to the screen   
       aRun->PrintStatistics();                        // print data for statistics of a run to the screen 
       FM->PrintResultsToFile(aRun);                   // print analysis results for pulses of a run to file  
       aRun->ClearData();                              // clear run data 

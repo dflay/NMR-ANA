@@ -13,11 +13,11 @@ class NMRInputManager{
    private:
       bool fUseZeroCrossing,fUseTimeFit,fUsePhaseFit,fUseIntegerCycles; 
  
-      int fADCID;
+      int fADCID,fADCChannelNumber;
       int fMonth,fDay,fYear;
       int fVerbosity,fOffsetOrder;
       int fRunNumber,fStartRun,fEndRun,fNumPulses;
-      int fADCNumSamples; 
+      int fADCNumSamples;
 
       double fStartTimeZC,fEndTimeZC;
       double fExpFreq,fSampleFreq,fLOFreq,fRFFreq; 
@@ -50,6 +50,7 @@ class NMRInputManager{
       void SetPhaseFitStatus      (bool v)   { fUsePhaseFit      = v; } 
       void SetIntegerCycleStatus  (bool v)   { fUseIntegerCycles = v; } 
       void SetADCID               (int v)    { fADCID            = v; } 
+      void SetADCChannelNumber    (int v)    { fADCChannelNumber = v; } 
       void SetMonth               (int v)    { fMonth            = v; } 
       void SetDay                 (int v)    { fDay              = v; } 
       void SetYear                (int v)    { fYear             = v; } 
@@ -83,6 +84,7 @@ class NMRInputManager{
       int GetStartRunNumber()       const { return fStartRun;         } 
       int GetEndRunNumber()         const { return fEndRun;           } 
       int GetADCID()                const { return fADCID;            } 
+      int GetADCChannelNumber()     const { return fADCChannelNumber; } 
       int GetVerbosity()            const { return fVerbosity;        } 
       int GetOffsetOrder()          const { return fOffsetOrder;      } 
       int GetNumSamples()           const { return fADCNumSamples;    } 
