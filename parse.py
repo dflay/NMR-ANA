@@ -13,6 +13,8 @@ class ListGenerator:
         def __init__(self,string):  
                 self.fList   = [] 
                 self.fString = string
+        def Clear(self): 
+                self.fList   = [] 
         def Generate(self):  
                 print "String to parse is: %s" %(self.fString) 
                 # first, split on the comma into a list  
