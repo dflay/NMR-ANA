@@ -55,12 +55,12 @@
    See `./src/main.cpp` for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
    number of things to the classes, listed below:
 
-   - The run number(s). 
+   - The run number(s) 
    - The date  
    - Which analysis method to use, whether or not to use a time range, along with the desired start and end times of 
      said time range. 
-   - The verbosity level, which controls how much information is printed to screen during an analysis.
-   - The offset order, which determines what offset correction to apply to the data upon loading from input files.  
+   - The verbosity level, which controls how much information is printed to screen during an analysis. 
+   - The offset order, which determines what offset correction to apply to the data upon loading from input files. 
 
    All of these parameters are listed in the parameter input file, located in `./input/parameters.dat`. 
    The user may also run an analysis using the graphical user interface (see next subsection).  
@@ -79,7 +79,8 @@
 ## 4. Adding Analysis Classes 
 
    To add an analysis class to the code, the user should integrate their class into the NMRAnalysis class;
-   see NMRZeroCrossing for an example.  
+   see NMRZeroCrossing for an example.  Also, if there are specific inputs required for your analysis, 
+   be sure to integrate them into the NMRFileManager and/or the NMRInputManager appropriately.   
 
 ## 5. Authors and Contact Information 
 
