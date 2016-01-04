@@ -43,7 +43,7 @@ class daq(Tkinter.Tk):
       self.Day          = ['Day',1,2,3,4,5,6,7,8,9,10,
                            11,12,13,14,15,16,17,18,19,20,
                            21,22,23,24,25,26,27,28,29,30,31]
-      self.Year         = ['Year',2015,2016,2017,2018] 
+      self.Year         = ['Year',2015,2016,2017,2018,2019,2020] 
 
       # ----------------------------------------------------------------------------------
       # header label
@@ -200,7 +200,7 @@ class daq(Tkinter.Tk):
       self.buttonConfig = Tkinter.Button(self,text=u"Apply Configuration",command=self.PrintToFile) 
       self.buttonConfig.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW',) 
       # run  
-      self.buttonRun = Tkinter.Button(self,text=u"Run",command=self.RunDAQ) 
+      self.buttonRun = Tkinter.Button(self,text=u"Analyze",command=self.RunDAQ) 
       # self.buttonRun = Tkinter.Button(self,text=u"Calculate",command=self.CheckHardware) 
       self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=4,sticky='EW') 
       # quit the program 
@@ -210,7 +210,7 @@ class daq(Tkinter.Tk):
       # ----------------------------------------------------------------------------------
       # status field  
       self.StatusVariable = Tkinter.StringVar() 
-      self.StatusVariable.set(u"Fill out the fields above before clicking 'Apply Configuration' and then 'Calculate.' ") 
+      self.StatusVariable.set(u"Fill out the fields above before clicking 'Apply Configuration' and then 'Analyze.' ") 
       self.Status  = Tkinter.Label(self,textvariable=self.StatusVariable,
                                    anchor="w",fg="white",bg="blue") 
       self.Status.grid(column=ColumnOffset+0,row=RowOffset+24,columnspan=10,sticky='ew') 
