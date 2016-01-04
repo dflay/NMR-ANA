@@ -12,17 +12,23 @@
 
 int main(){
 
-   const char *inpath = "./input/parameters.dat"; 
+   const char *inpath   = "./input/parameters.dat"; 
+   const char *run_list = "./input/runlist.dat";  
 
    NMRFileManager *FM = new NMRFileManager(); 
-   FM->GetInputParameters(inpath); 
-   FM->InputManager->Print();              
+   FM->GetInputParameters(inpath);
+   FM->InputManager->GetRunList(run_list);  
+   FM->InputManager->Print();             
+   FM->InputManager->PrintRunList();  
    FM->InitInputDirectory();
 
-   int NPulses        = FM->InputManager->GetNumPulses();   // will be zero upon starting
+   int NPulses        = FM->InputManager->GetNumPulses();       // will be zero upon starting
    int Verbosity      = FM->InputManager->GetVerbosity(); 
-   int StartRunNumber = FM->InputManager->GetStartRunNumber(); 
-   int EndRunNumber   = FM->InputManager->GetEndRunNumber(); 
+   int NumRuns        = FM->InputManager->GetNumberOfRuns();  
+   
+   const int NRUNS = NumRuns; 
+   int RunList[NRUNS]; 
+   for(int i=0;i<NRUNS;i++) RunList[i] = FM->InputManager->GetRun(i);  
  
    NMRPulse *aPulse            = new NMRPulse(1,1); 
    NMRPulseAnalyzed *aPulseAna = new NMRPulseAnalyzed(1,1); 
@@ -35,20 +41,22 @@ int main(){
 
    NMRRun *aRun = new NMRRun(1);                      // initialize to 1 pulse 
    aRun->SetVerbosity(Verbosity);  
-
-   for(int i=StartRunNumber;i<=EndRunNumber;i++){
-      FM->InputManager->ReadRunSummary(i);            // get details of the run
+  
+   int run_num=0; 
+   for(int i=0;i<NRUNS;i++){
+      run_num = RunList[i]; 
+      FM->InputManager->ReadRunSummary(run_num);      // get details of the run
       FM->InputManager->PrintRunSummary();            // show new run information  
       FM->InitOutputDirectory();                      // initiaize output directories  
       myAna->UpdateFileManager(FM);                   // update the FileManager
       myAna->InitializeAnalysis();                    // initialize the analysis based on the run 
       NPulses = FM->InputManager->GetNumPulses();     // update the number of pulses  
-      aRun->SetRunNumber(i);                          // set the run number  
+      aRun->SetRunNumber(run_num);                    // set the run number  
       aRun->SetNumPulses(NPulses);                    // set the number of pulses 
       // try a loop over pulses 
       for(int j=1;j<=NPulses;j++){
          aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
-         FM->Load(i,j,aPulse);                        // load data 
+         FM->Load(run_num,j,aPulse);                  // load data 
          myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
          if(Verbosity>4) aPulseAna->Print(); 
          aRun->AddNMRPulse(aPulseAna);                // add analyzed pulse to the run  
@@ -56,7 +64,7 @@ int main(){
          aPulseAna->ClearData();                      // set up for next pulse 
       }
       myAna->CalculateStatistics(aRun);               // calculate statistics on the run (mean, std dev, etc) 
-      if(Verbosity>4) aRun->PrintPulseData();                      // print data for all pulses to the screen   
+      if(Verbosity>4) aRun->PrintPulseData();         // print data for all pulses to the screen   
       aRun->PrintStatistics();                        // print data for statistics of a run to the screen 
       FM->PrintResultsToFile(aRun);                   // print analysis results for pulses of a run to file  
       aRun->ClearData();                              // clear run data 

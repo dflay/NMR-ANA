@@ -1,14 +1,12 @@
-# ID                             Value 
-  month                          11
-  day                            13  
-  year                           2015 
-  start_run                      20 
-  end_run                        21 
-  t_start                        0
-  t_end                          5E-3 
-  verbosity                      0
-  offset_correction_order        2             
-  zero_crossing                  1 
-  time_fit                       0 
-  phase_fit                      0 
-  end_of_file                    99 
+# ID 	 value
+month                   11
+day                     13
+year                    2015
+t_start                 0.00E+00
+t_end                   5.00E-03
+verbosity               0
+offset_correction_order 2
+zero_crossing           1
+time_fit                0
+phase_fit               0
+end_of_file             99                  

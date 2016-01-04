@@ -1,5 +1,9 @@
 # CHANGELOG 
 
+## 1/4/16, David Flay
+
+   - Finished the development of the GUI. 
+
 ## 1/2/16, David Flay
  
    - The NMRInputManager now updates on every run by reading the corresponding summary file.  The 

@@ -9,13 +9,14 @@
 # 60
 # 90 
 
-class ListGenerator: 
+class StringParser: 
         def __init__(self,string):  
                 self.fList   = [] 
                 self.fString = string
         def Clear(self): 
                 self.fList   = [] 
-        def Generate(self):  
+                self.fString = "" 
+        def GenerateList(self):  
                 print "String to parse is: %s" %(self.fString) 
                 # first, split on the comma into a list  
                 arr_com = self.fString.split(",")
@@ -32,7 +33,7 @@ class ListGenerator:
                       first = int( float(arr_dash[0]) )   
                       last  = int( float(arr_dash[1]) )  
                       for i in range(first,last+1):     # need the +1 since range works as first <= i < last  
-                         self.fList.append(i)
+                         self.fList.append( str(i) )
                 print "Generated run list: "
                 for entry in self.fList: 
                    print entry 

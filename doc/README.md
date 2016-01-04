@@ -46,25 +46,35 @@
 
 ## 3. Running an Analysis  
 
-### Graphical User Interface
+### Compilation 
 
-   A graphical user interface (GUI) is currently in development. 
+   To compile the code, in a terminal type: `make`.  To run the program, type `./nmr_ana`.
 
 ### Main Program and Command Line  
 
    See `./src/main.cpp` for an example of code utilizing the classes mentioned in chapter 2. The user needs to provide a 
    number of things to the classes, listed below:
 
-   - The run number and the number of pulses associated with the run. 
-   - The Struck SIS ADC ID number (for converting ADC counts to voltage), the date and sampling frequency
+   - The run number(s). 
+   - The date  
    - Which analysis method to use, whether or not to use a time range, along with the desired start and end times of 
      said time range. 
    - The verbosity level, which controls how much information is printed to screen during an analysis.
    - The offset order, which determines what offset correction to apply to the data upon loading from input files.  
 
-   All of these parameters are listed in the parameter input file, located in `./input/parameters.dat`.  
+   All of these parameters are listed in the parameter input file, located in `./input/parameters.dat`. 
+   The user may also run an analysis using the graphical user interface (see next subsection).  
 
-   To compile the code, in a terminal type: `make`.  To run the program, type `./nmr_ana`.
+### Graphical User Interface
+
+   A graphical user interface (GUI) has been developed.  To run the GUI, run `python gui.py`.  Fill in the input fields
+   to the desired values.  To set the runs to analyze, use the **Run Range** field.  Enter the run numbers separated by 
+   commas; if you want to do all runs between (and including) 20 and 30, for instance, write `20-30`.  The user can
+   also do *combinations* of these delimitations, as follows: 
+
+   > 1,4,5-10,17
+
+   This will tell the C++ code to analyze runs 1, 4, 5, 6, 7, 8, 9, 10 and 17.     
 
 ## 4. Adding Analysis Classes 
 
@@ -75,8 +85,5 @@
 
    Authors:     David Flay and Zac Meadows  
    Affiliation: UMass Amherst   
-   Contact:     David, flay@umass.edu 
-
-
-
+   Contact:     David (flay@umass.edu) 
 

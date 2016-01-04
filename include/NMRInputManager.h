@@ -16,13 +16,15 @@ class NMRInputManager{
       int fADCID,fADCChannelNumber;
       int fMonth,fDay,fYear;
       int fVerbosity,fOffsetOrder;
-      int fRunNumber,fStartRun,fEndRun,fNumPulses;
+      int fNumRuns,fRunNumber,fStartRun,fEndRun,fNumPulses;
       int fADCNumSamples;
 
       double fStartTimeZC,fEndTimeZC;
       double fExpFreq,fSampleFreq,fLOFreq,fRFFreq; 
       double fBNCVoltage,fNTypeVoltage;
       double fADCSignalLength;
+
+      int *fRunList;
 
    public:
       // constructor and destructor 
@@ -38,8 +40,10 @@ class NMRInputManager{
       NMRInputManager* operator=(const NMRInputManager *a);
 
       void Print(); 
+      void PrintRunList(); 
       void PrintRunSummary(); 
       void GetInputParameters(const char *);
+      void GetRunList(const char *);
       void ReadRunSummary(int); 
 
       void Update(const NMRInputManager &a); 
@@ -88,6 +92,8 @@ class NMRInputManager{
       int GetVerbosity()            const { return fVerbosity;        } 
       int GetOffsetOrder()          const { return fOffsetOrder;      } 
       int GetNumSamples()           const { return fADCNumSamples;    } 
+      int GetRun(int i)             const { return fRunList[i];       } 
+      int GetNumberOfRuns()         const { return fNumRuns;          }  
 
       double GetStartTimeZC()       const { return fStartTimeZC;      } 
       double GetEndTimeZC()         const { return fEndTimeZC;        } 

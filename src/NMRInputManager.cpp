@@ -26,10 +26,14 @@ NMRInputManager::NMRInputManager(){
    fADCSignalLength  = 0;
    fBNCVoltage       = 0;
    fNTypeVoltage     = 0;
+   fNumRuns          = 0;
+   const int N       = 1E+3; 
+   fRunList          = new int[N]; 
+   for(int i=0;i<N;i++) fRunList[i] = 0; 
 }
 //______________________________________________________________________________
 NMRInputManager::~NMRInputManager(){
-
+   delete[] fRunList; 
 }
 //______________________________________________________________________________
 NMRInputManager::NMRInputManager(const NMRInputManager &a){
@@ -224,6 +228,30 @@ void NMRInputManager::GetInputParameters(const char *inpath){
 
 }
 //______________________________________________________________________________
+void NMRInputManager::GetRunList(const char *inpath){
+ 
+   int k=0,irun=0; 
+ 
+   std::ifstream infile;
+   infile.open(inpath,std::ios::in);
+
+   if( infile.fail() ){
+      printf("[NMRFileManager::GetRunList]: Cannot open the file: %s.  Exiting... \n",inpath);
+      exit(1);
+   }else{
+      while( !infile.eof() ){
+            infile >> irun; 
+            fRunList[k] = irun;
+            k++; 
+      }
+      infile.close(); 
+   }
+
+   k--; 
+   fNumRuns = k; 
+ 
+}
+//______________________________________________________________________________
 void NMRInputManager::ReadRunSummary(int RunNumber){
 
    // read the summary file for a run; simplifies what the user needs to input
@@ -322,4 +350,9 @@ void NMRInputManager::PrintRunSummary(){
    printf("ADC Channel Number   = %d   \n",fADCChannelNumber     );       
    printf("Number of Samples    = %d   \n",fADCNumSamples        );
    printf("Signal Length        = %.3E \n",fADCSignalLength      );
+}
+//______________________________________________________________________________
+void NMRInputManager::PrintRunList(){
+   std::cout << "============= Input Parameters: Run List =============" << std::endl;
+   for(int i=0;i<fNumRuns;i++) std::cout << fRunList[i] << std::endl;
 }
