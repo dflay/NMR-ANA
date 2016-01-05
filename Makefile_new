@@ -39,9 +39,9 @@ all: $(TARGET_LIB)
 
 # build a shared library, move it to the lib dir, then build the main program 
 $(TARGET_LIB): buildrepo $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
+	$(CC) $(CPPFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
 	mv $(TARGET_LIB) $(SODIR) 
-	$(CC) -o $(PROJECT) $(SRCDIR)/main.cpp -I$(INCDIR) -L$(SODIR) -l$(TARGET_LIB)
+	$(CC) -o $(PROJECT) $(SRCDIR)/main.cpp -I$(INCDIR) $(LIBS) -L$(SODIR) -l$(TARGET_LIB)  
 
 # make objects
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
