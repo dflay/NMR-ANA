@@ -19,7 +19,7 @@ LDFLAGS = -shared
 # Libraries
 LIBS       = -lm
 LIBRARY    = NMRANA
-TARGET_LIB = $(LIBRARY).so
+TARGET_LIB = lib$(LIBRARY).so
  
 # sources 
 SRCDIRS = $(shell find $(SRCDIR) -type d | sed 's/$(SRCDIR)/./g' )
