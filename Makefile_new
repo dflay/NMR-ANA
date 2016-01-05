@@ -3,7 +3,7 @@ PROJECT = nmr_ana
 
 # Directories
 OBJDIR = obj
-SODIR  = lib  
+SODIR  = slib  
 SRCDIR = src
 INCDIR = include 
 
@@ -37,10 +37,12 @@ OBJS    = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 all: $(TARGET_LIB) 
 
-# build a shared library
+# build a shared library, move to the lib dir, then build the main program 
 $(TARGET_LIB): buildrepo $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
 	mv $(TARGET_LIB) $(SODIR) 
+	$(CC) -o $(PROJECT) $(SRCDIR)/main.cpp -I$(INCDIR) -L$(SODIR) -l$(TARGET_LIB)
+
 # make objects
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
