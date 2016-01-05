@@ -1,11 +1,11 @@
 # Project name
-PROJECT = nmr_ana 
+PROJECT = nmr_ana
 
 # Directories
 OBJDIR = obj
-SODIR  = slib  
+SODIR  = slib
 SRCDIR = src
-INCDIR = include 
+INCDIR = include
 
 # Compiler
 CC       = g++
@@ -14,7 +14,7 @@ CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g  \
        -Wcomment -Wformat
 
 # shared object 
-LDFLAGS = -shared  
+LDFLAGS = -shared
 
 # Libraries
 LIBS       = -lm
@@ -37,7 +37,7 @@ OBJS    = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 all: $(TARGET_LIB) 
 
-# build a shared library, move to the lib dir, then build the main program 
+# build a shared library, move it to the lib dir, then build the main program 
 $(TARGET_LIB): buildrepo $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
 	mv $(TARGET_LIB) $(SODIR) 
@@ -49,7 +49,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -Rf $(PROJECT) $(OBJDIR) $(SODIR) $(SRCDIR)/*~  *~ 
+	rm -Rf $(PROJECT) $(PROJECT).dSYM $(OBJDIR) $(SODIR) $(SRCDIR)/*~  *~ 
 
 buildrepo:
 	@$(call make-repo)
