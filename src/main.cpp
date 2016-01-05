@@ -1,4 +1,4 @@
-/// Test out the new analysis classes
+
 
 #include <iostream> 
 #include <cstdlib> 
@@ -53,7 +53,7 @@ int main(){
       NPulses = FM->InputManager->GetNumPulses();     // update the number of pulses  
       aRun->SetRunNumber(run_num);                    // set the run number  
       aRun->SetNumPulses(NPulses);                    // set the number of pulses 
-      // try a loop over pulses 
+      // loop over pulses 
       for(int j=1;j<=NPulses;j++){
          aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
          FM->Load(run_num,j,aPulse);                  // load data 

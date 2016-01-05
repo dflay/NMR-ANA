@@ -47,7 +47,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
 # build the main program 
 $(PROJECT): 
-	$(CC) -I$(INCDIR) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L$(SODIR) -l$(LIBRARY)  
+	$(CC) $(CPPFLAGS) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L$(SODIR) -l$(LIBRARY)
 
 .PHONY: clean
 clean:
