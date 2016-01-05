@@ -18,7 +18,8 @@ LDFLAGS = -shared
 
 # Libraries
 LIBS       = -lm
-TARGET_LIB = NMRANA.so 
+LIBRARY    = NMRANA
+TARGET_LIB = $(LIBRARY).so
  
 # sources 
 SRCDIRS = $(shell find $(SRCDIR) -type d | sed 's/$(SRCDIR)/./g' )
@@ -35,17 +36,18 @@ SRCS    = $(SRCDIR)/NMRAnalysis.cpp         \
 # objects 
 OBJS    = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-all: $(TARGET_LIB) 
+all: $(TARGET_LIB) $(PROJECT)  
 
-# build a shared library, move it to the lib dir, then build the main program 
+# build a shared library, move it to the lib dir 
 $(TARGET_LIB): buildrepo $(OBJS)
 	$(CC) $(CPPFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
 	mv $(TARGET_LIB) $(SODIR) 
-	$(CC) -o $(PROJECT) $(SRCDIR)/main.cpp -I$(INCDIR) $(LIBS) -L$(SODIR) -l$(TARGET_LIB)  
-
 # make objects
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
+# build the main program 
+$(PROJECT): 
+	$(CC) -I$(INCDIR) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L$(SODIR) -l$(LIBRARY)  
 
 .PHONY: clean
 clean:
