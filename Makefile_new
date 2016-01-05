@@ -1,0 +1,63 @@
+# Project name
+PROJECT = nmr_ana 
+
+# Directories
+OBJDIR = obj
+SODIR  = lib  
+SRCDIR = src
+INCDIR = include 
+
+# Compiler
+CC       = g++
+CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g  \
+       -Wmissing-declarations -Wreturn-type -Wunused \
+       -Wcomment -Wformat
+
+# shared object 
+LDFLAGS = -shared  
+
+# Libraries
+LIBS       = -lm
+TARGET_LIB = NMRANA.so 
+ 
+# sources 
+SRCDIRS = $(shell find $(SRCDIR) -type d | sed 's/$(SRCDIR)/./g' )
+SRCS    = $(SRCDIR)/NMRAnalysis.cpp         \
+          $(SRCDIR)/NMRRun.cpp              \
+          $(SRCDIR)/NMRPulse.cpp            \
+          $(SRCDIR)/NMRPulseAnalyzed.cpp    \
+          $(SRCDIR)/NMRFileManager.cpp      \
+          $(SRCDIR)/NMRInputManager.cpp     \
+          $(SRCDIR)/NMRMath.cpp             \
+          $(SRCDIR)/NMRZeroCrossing.cpp     \
+          $(SRCDIR)/NMRUtility.cpp          \
+          $(SRCDIR)/NMRFourierTransform.cpp 
+# objects 
+OBJS    = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+
+all: $(TARGET_LIB) 
+
+# build a shared library
+$(TARGET_LIB): buildrepo $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
+	mv $(TARGET_LIB) $(SODIR) 
+# make objects
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CC) $(CPPFLAGS) -c $< -o $@
+
+.PHONY: clean
+clean:
+	rm -Rf $(PROJECT) $(OBJDIR) $(SODIR) $(SRCDIR)/*~  *~ 
+
+buildrepo:
+	@$(call make-repo)
+
+# Create obj directory structure
+define make-repo
+	for dir in $(SRCDIRS); \
+	do \
+	mkdir -p $(OBJDIR)/$$dir; \
+	mkdir -p $(SODIR)/$$dir; \
+	done
+endef
+
