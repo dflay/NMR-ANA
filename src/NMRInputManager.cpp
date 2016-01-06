@@ -13,8 +13,6 @@ NMRInputManager::NMRInputManager(){
    fVerbosity        = 0;
    fOffsetOrder      = 0; 
    fRunNumber        = 0;
-   fStartRun         = 0;
-   fEndRun           = 0;
    fNumPulses        = 0;
    fStartTimeZC      = 0;
    fEndTimeZC        = 0;
@@ -51,8 +49,6 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fVerbosity        = a.GetVerbosity(); 
    fOffsetOrder      = a.GetOffsetOrder(); 
    fRunNumber        = a.GetRunNumber(); 
-   fStartRun         = a.GetStartRunNumber(); 
-   fEndRun           = a.GetEndRunNumber(); 
    fNumPulses        = a.GetNumPulses(); 
    fStartTimeZC      = a.GetStartTimeZC(); 
    fEndTimeZC        = a.GetEndTimeZC(); 
@@ -81,8 +77,6 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fVerbosity        = a->GetVerbosity(); 
    fOffsetOrder      = a->GetOffsetOrder(); 
    fRunNumber        = a->GetRunNumber(); 
-   fStartRun         = a->GetStartRunNumber(); 
-   fEndRun           = a->GetEndRunNumber(); 
    fNumPulses        = a->GetNumPulses(); 
    fStartTimeZC      = a->GetStartTimeZC(); 
    fEndTimeZC        = a->GetEndTimeZC(); 
@@ -110,8 +104,6 @@ void NMRInputManager::Update(const NMRInputManager &a){
    fVerbosity        = a.GetVerbosity(); 
    fOffsetOrder      = a.GetOffsetOrder(); 
    fRunNumber        = a.GetRunNumber(); 
-   fStartRun         = a.GetStartRunNumber(); 
-   fEndRun           = a.GetEndRunNumber(); 
    fNumPulses        = a.GetNumPulses(); 
    fStartTimeZC      = a.GetStartTimeZC(); 
    fEndTimeZC        = a.GetEndTimeZC(); 
@@ -139,8 +131,6 @@ void NMRInputManager::Update(const NMRInputManager *a){
    fVerbosity        = a->GetVerbosity(); 
    fOffsetOrder      = a->GetOffsetOrder(); 
    fRunNumber        = a->GetRunNumber(); 
-   fStartRun         = a->GetStartRunNumber(); 
-   fEndRun           = a->GetEndRunNumber(); 
    fNumPulses        = a->GetNumPulses(); 
    fStartTimeZC      = a->GetStartTimeZC(); 
    fEndTimeZC        = a->GetEndTimeZC(); 
@@ -165,8 +155,6 @@ void NMRInputManager::GetInputParameters(const char *inpath){
    const char *day                  = "day"; 
    const char *month                = "month"; 
    const char *year                 = "year"; 
-   const char *start_run            = "start_run"; 
-   const char *end_run              = "end_run"; 
    const char *tstart               = "t_start"; 
    const char *tend                 = "t_end"; 
    const char *verb                 = "verbosity"; 
@@ -194,8 +182,6 @@ void NMRInputManager::GetInputParameters(const char *inpath){
                if( NMRUtility::AreEquivStrings(itag,month)       ) fMonth        = (int)ivalue;  
                if( NMRUtility::AreEquivStrings(itag,day)         ) fDay          = (int)ivalue;  
                if( NMRUtility::AreEquivStrings(itag,year)        ) fYear         = (int)ivalue;  
-               if( NMRUtility::AreEquivStrings(itag,start_run)   ) fStartRun     = (int)ivalue;  
-               if( NMRUtility::AreEquivStrings(itag,end_run)     ) fEndRun       = (int)ivalue;  
                if( NMRUtility::AreEquivStrings(itag,tstart)      ) fStartTimeZC  = ivalue;  
                if( NMRUtility::AreEquivStrings(itag,tend)        ) fEndTimeZC    = ivalue;  
                if( NMRUtility::AreEquivStrings(itag,verb)        ) fVerbosity    = (int)ivalue;  
@@ -320,36 +306,33 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
 //______________________________________________________________________________
 void NMRInputManager::Print(){
    std::cout << "============= Input Parameters =============" << std::endl;
-   printf("Month                = %d   \n",fMonth                );  
-   printf("Day                  = %d   \n",fDay                  );  
-   printf("Year                 = %d   \n",fYear                 );  
-   printf("Start Run            = %d   \n",fStartRun             );  
-   printf("End Run              = %d   \n",fEndRun               );     
-   printf("Number of Pulses     = %d   \n",fNumPulses            );  
-   printf("Start Time (ZC)      = %.3E \n",fStartTimeZC          );
-   printf("End Time (ZC)        = %.3E \n",fEndTimeZC            );      
-   printf("Verbosity            = %d   \n",fVerbosity            );     
-   printf("Offset Order         = %d   \n",fOffsetOrder          );
-   printf("Zero Crossing Status = %d   \n",(int)fUseZeroCrossing );
-   printf("Time Fit Status      = %d   \n",(int)fUseTimeFit      );
-   printf("Phase Fit Status     = %d   \n",(int)fUsePhaseFit     );
-   printf("Integer Cycle Status = %d   \n",(int)fUseIntegerCycles);
+   printf("Month                = %d     \n",fMonth                );  
+   printf("Day                  = %d     \n",fDay                  );  
+   printf("Year                 = %d     \n",fYear                 );  
+   printf("Start Time (ZC)      = %.3E s \n",fStartTimeZC          );
+   printf("End Time (ZC)        = %.3E s \n",fEndTimeZC            );      
+   printf("Verbosity            = %d     \n",fVerbosity            );     
+   printf("Offset Order         = %d     \n",fOffsetOrder          );
+   printf("Zero Crossing Status = %d     \n",(int)fUseZeroCrossing );
+   printf("Time Fit Status      = %d     \n",(int)fUseTimeFit      );
+   printf("Phase Fit Status     = %d     \n",(int)fUsePhaseFit     );
+   printf("Integer Cycle Status = %d     \n",(int)fUseIntegerCycles);
 }
 //______________________________________________________________________________
 void NMRInputManager::PrintRunSummary(){
    std::cout << "============= Input Parameters: Run Summary =============" << std::endl;
-   printf("Run Number           = %d   \n",fRunNumber            );  
-   printf("Number of Pulses     = %d   \n",fNumPulses            );  
-   printf("Expected Frequency   = %.3E \n",fExpFreq              );        
-   printf("Sample Frequency     = %.3E \n",fSampleFreq           );        
-   printf("LO Frequency         = %.3E \n",fLOFreq               ); 
-   printf("RF Frequency         = %.3E \n",fRFFreq               ); 
-   printf("LO BNC Voltage       = %.3E \n",fBNCVoltage           );
-   printf("LO NType Voltage     = %.3E \n",fNTypeVoltage         );
-   printf("ADC ID               = %d   \n",fADCID                );       
-   printf("ADC Channel Number   = %d   \n",fADCChannelNumber     );       
-   printf("Number of Samples    = %d   \n",fADCNumSamples        );
-   printf("Signal Length        = %.3E \n",fADCSignalLength      );
+   printf("Run Number           = %d      \n",fRunNumber            );  
+   printf("Number of Pulses     = %d      \n",fNumPulses            );  
+   printf("Expected Frequency   = %.3E Hz \n",fExpFreq              );        
+   printf("Sample Frequency     = %.3E Hz \n",fSampleFreq           );        
+   printf("LO Frequency         = %.3E Hz \n",fLOFreq               ); 
+   printf("Field Frequency      = %.3E Hz \n",fRFFreq               ); 
+   printf("LO BNC Voltage       = %.3E V  \n",fBNCVoltage           );
+   printf("LO NType Voltage     = %.3E V  \n",fNTypeVoltage         );
+   printf("ADC ID               = %d      \n",fADCID                );       
+   printf("ADC Channel Number   = %d      \n",fADCChannelNumber     );       
+   printf("Number of Samples    = %d      \n",fADCNumSamples        );
+   printf("Signal Length        = %.3E s  \n",fADCSignalLength      );
 }
 //______________________________________________________________________________
 void NMRInputManager::PrintRunList(){
