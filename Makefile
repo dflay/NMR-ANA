@@ -50,7 +50,7 @@ $(PROJECT):
 
 .PHONY: clean
 clean:
-	rm -Rf $(PROJECT) $(PROJECT).dSYM $(OBJDIR) $(SRCDIR)/*~  *~ 
+	rm -Rf $(PROJECT) $(PROJECT).dSYM $(TARGET_LIB) $(OBJDIR) $(SRCDIR)/*~  *~ 
 
 buildrepo:
 	@$(call make-repo)
