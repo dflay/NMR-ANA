@@ -38,7 +38,7 @@ OBJS    = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 all: $(TARGET_LIB) $(PROJECT)  
 
-# build a shared library, move it to the lib dir 
+# build a shared library 
 $(TARGET_LIB): buildrepo $(OBJS)
 	$(CC) $(CPPFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
 # make objects
