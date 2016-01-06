@@ -4,7 +4,7 @@
 
    - Finished the Makefile update; we now compile all classes into a shared library, 
      and compile the main program using that library.  Doing things like this should 
-     allow use to use the library in ROOT... 
+     allow us to use the library in ROOT... 
 
 ## 1/4/16, David Flay
 
