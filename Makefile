@@ -41,17 +41,16 @@ all: $(TARGET_LIB) $(PROJECT)
 # build a shared library, move it to the lib dir 
 $(TARGET_LIB): buildrepo $(OBJS)
 	$(CC) $(CPPFLAGS) $(OBJS) -o $@ $(LDFLAGS) 
-	mv $(TARGET_LIB) $(SODIR) 
 # make objects
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
 # build the main program 
 $(PROJECT): 
-	$(CC) $(CPPFLAGS) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L$(SODIR) -l$(LIBRARY)
+	$(CC) $(CPPFLAGS) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L. -l$(LIBRARY)
 
 .PHONY: clean
 clean:
-	rm -Rf $(PROJECT) $(PROJECT).dSYM $(OBJDIR) $(SODIR) $(SRCDIR)/*~  *~ 
+	rm -Rf $(PROJECT) $(PROJECT).dSYM $(OBJDIR) $(SRCDIR)/*~  *~ 
 
 buildrepo:
 	@$(call make-repo)
@@ -61,7 +60,6 @@ define make-repo
 	for dir in $(SRCDIRS); \
 	do \
 	mkdir -p $(OBJDIR)/$$dir; \
-	mkdir -p $(SODIR)/$$dir; \
 	done
 endef
 
