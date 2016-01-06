@@ -1,23 +1,21 @@
-# generate a list of numbers from a string delimited by commas and dashes
+# generate a list of numbers from a string delimited by commas and dashes; 
 # dashes imply that we want to include all numbers in between
-# example: "25,56-60,90" yields a list:
-# 25
-# 56
-# 57
-# 58
-# 59
-# 60
-# 90 
+# example: "25,56-60,90" yields a list containing: 25 56 57 58 59 60 90 
 
-class StringParser: 
+class StringParser:
+        #_______________________________________________________________________ 
         def __init__(self,string):  
-                self.fList   = [] 
-                self.fString = string
+                self.fList      = [] 
+                self.fString    = string
+                self.fVerbosity = 0 
+        #_______________________________________________________________________ 
         def Clear(self): 
                 self.fList   = [] 
                 self.fString = "" 
+        #_______________________________________________________________________ 
         def GenerateList(self):  
-                print "String to parse is: %s" %(self.fString) 
+                if self.fVerbosity>0: 
+		   print "String to parse is: %s" %(self.fString) 
                 # first, split on the comma into a list  
                 arr_com = self.fString.split(",")
                 for entry_1 in arr_com:
@@ -34,7 +32,9 @@ class StringParser:
                       last  = int( float(arr_dash[1]) )  
                       for i in range(first,last+1):     # need the +1 since range works as first <= i < last  
                          self.fList.append( str(i) )
-                print "Generated run list: "
-                for entry in self.fList: 
-                   print entry 
+                if self.fVerbosity>0: 
+                   print "Generated run list: "
+                   for entry in self.fList: 
+                      print entry 
+        #_______________________________________________________________________ 
                    
