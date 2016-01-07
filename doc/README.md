@@ -97,7 +97,7 @@
         indicated (**Start Time** and **End Time** fields)
    - 3: Similar to option 2, but determines the final offset by computing the voltage offset as a function of time
         and fits these offset points to a line 
-   - 4: This option does options 2 and 3, and then does option 2 once more
+   - 4: This option does options 2 and 3, and then does option 2 once more 
 
    Option 2 is the proper setting to use for real data; option 3 and 4 are best suited for simulated data.  
 
