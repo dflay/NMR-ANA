@@ -68,13 +68,41 @@
 ### Graphical User Interface
 
    A graphical user interface (GUI) has been developed.  To run the GUI, run `python gui.py`.  Fill in the input fields
-   to the desired values.  To set the runs to analyze, use the **Run Range** field.  Enter the run numbers separated by 
+   to the desired values.  
+
+   The **Run Range** field is where the user sets the runs to analyze.  Enter the desired run numbers separated by 
    commas; if you want to do all runs between (and including) 20 and 30, for instance, write `20-30`.  The user can
    also do *combinations* of these delimitations, as follows: 
 
    > 1,4,5-10,17
 
-   This will tell the C++ code to analyze runs 1, 4, 5, 6, 7, 8, 9, 10 and 17.     
+   This will tell the C++ code to analyze runs 1, 4, 5, 6, 7, 8, 9, 10 and 17.    
+
+   Under the **Analysis Options** section, there are check boxes for **Zero Crossing**, **Time Fit** and 
+   **Phase Fit**, each of which corresponds to a different analysis method.  Check the analysis type you 
+   would like the code to perform on the data.  The user may choose to use all options.  The options are
+   described as follows:
+
+   - Zero Crossing: Count zero crossings to determine the frequency
+   - Time Fit: Fit the data as a function of time to determine the frequency
+   - Phase Fit: Use a Hilbert Transform to determine the phase of the signal as a function of time 
+     and fit the phase as a function of time to obtain the frequency.  
+
+   The **Offset Correction Order** field corresponds to the voltage offset correction to be applied to the 
+   data.  The pull-down menu gives the options of 0--4.  The values are as follows:
+
+   - 0: No correction
+   - 1: Subtract an average noise level (found from the last millisecond of the data) 
+   - 2: Recursive algorithm to find the proper constant voltage offset to subtract from the data based on the time range 
+        indicated (**Start Time** and **End Time** fields)
+   - 3: Similar to option 2, but determines the final offset by computing the voltage offset as a function of time
+        and fits these offset points to a line 
+   - 4: This option does options 2 and 3, and then does option 2 once more
+
+   Option 2 is the proper setting to use for real data; option 3 and 4 are best suited for simulated data.  
+
+   The **Verbosity** field is used to tell the program how much information should be printed to the screen
+   when running; a higher value indicates more text will be printed to the terminal.  
 
 ## 4. Adding Analysis Classes 
 
