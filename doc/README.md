@@ -88,6 +88,8 @@
    - Phase Fit: Use a Hilbert Transform to determine the phase of the signal as a function of time 
      and fit the phase as a function of time to obtain the frequency.  
 
+   --- 
+
    The **Offset Correction Order** field corresponds to the voltage offset correction to be applied to the 
    data.  The pull-down menu gives the options of 0--4.  The values are as follows:
 
@@ -99,6 +101,8 @@
         and fits these offset points to a line 
    - 4: This option does options 2 and 3, and then does option 2 once more
 
+   ---
+ 
    Option 2 is the proper setting to use for real data; option 3 and 4 are best suited for simulated data.  
 
    The **Verbosity** field is used to tell the program how much information should be printed to the screen
