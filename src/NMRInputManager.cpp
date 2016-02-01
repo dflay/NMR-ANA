@@ -249,8 +249,16 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    char itag[MAX]; 
    
    char *inpath = new char[MAX];
-   char *prefix = new char[MAX]; 
-   sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000);  
+   char *prefix = new char[MAX];
+   if(fMonth>=10 && fDay>=10){  
+      sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   }else if(fMonth>=10 && fDay<10){
+      sprintf(prefix,"./data/%d/%d_%d/%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   }else if(fMonth<10 && fDay>=10){
+      sprintf(prefix,"./data/%d/0%d_%d/0%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   }else if(fMonth<10 && fDay<10){
+      sprintf(prefix,"./data/%d/0%d_%d/0%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   } 
    sprintf(inpath,"%s/run-%d/summary.dat",prefix,RunNumber); 
 
    double ivalue=0; 
@@ -265,7 +273,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    const char *rf_freq           = "RF_frequency";            // frequency of pulse sent to probe
    const char *bnc_voltage       = "bnc_voltage"; 
    const char *ntype_voltage     = "ntype_voltage";
-   const char *num_pulses        = "number_of_pulses";  
+   const char *num_pulses        = "num_pulses";  
    const char *run               = "run_number"; 
    const char *eof               = "end_of_file";  
  
