@@ -32,7 +32,7 @@ class NMRRun{
       void PrintStatistics() const; 
       void PrintPulseData(int index=-1) const; 
       void AddNMRPulse(NMRPulseAnalyzed *aPulse); 
-      // void SetNumPulses(int NumPulses); 
+      void SetNumPulses(int NumPulses); 
       void SetVerbosity(int v)                                 {fVerbosity            = v;} 
       void SetRunNumber(int r)                                 {fRunNumber            = r;} 
       void SetMeanFrequencyZeroCrossingMidpoint(double x)      {fFreqMeanZC[0]        = x;}  

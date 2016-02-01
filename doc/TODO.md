@@ -2,19 +2,10 @@
 
 ## General 
 
-   - The change to arrays did not change the time for processing all that much; additionally, 
-     we are in disagreement with the original code (see ~/NMR/new_ana/ files) by ~ 20 mHz or so.  
-
-   - Segmentation fault problems
+   - Segmentation fault problem (not a priority, and quite possibly is not a problem anymore) 
      - Upon testing, we have a segfault if we turn off all function calls, and just loop 
        over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
        class is causing the problem.   
-   
-   - When using input parameter info, we should only access it through the NMRInputManager; 
-     this should simplify a lot of the code, or at least cut down on making private data members
-     for the date, for instance.  
-
-   - Add capability to do different number of pulses for a given run (?)   
 
    - Improve error handling (?) 
 
@@ -32,6 +23,10 @@
      - Would be useful for once we integrate everything into the GUI 
 
 ## Ideas and Thoughts 
+
+   - When using input parameter info, we should only access it through the NMRInputManager; 
+     this should simplify a lot of the code, or at least cut down on making private data members
+     for the date, for instance.  
 
    - [Important]: RMS noise calculation was not consistent with old code (fixed as of 10/22/15).  
      - Found the source of the problem: applying the offset corrections (higher orders)

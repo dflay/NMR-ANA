@@ -59,24 +59,24 @@ void NMRRun::AddNMRPulse(NMRPulseAnalyzed *aPulse){
       std::cout << "                       new index = " << next_index << std::endl; 
    }
 }
-// //______________________________________________________________________________
-// void NMRRun::SetNumPulses(int NumPulses){
-//    // set a new number of pulses
-//    // first delete the old array
-//    if(fVerbosity>=4) std::cout << "[NMRRun::SetNumPulses]: Deleting " << fNumPulses << " pulses." << std::endl; 
-//    for(int i=0;i<fNumPulses;i++){
-//       delete fPulse[i];
-//    } 
-//    delete[] fPulse; 
-//    // now create a new array of pulses
-//    fNumPulses = NumPulses; 
-//    if(fVerbosity>=4) std::cout << "[NMRRun::SetNumPulses]: Creating " << fNumPulses << " pulses." << std::endl; 
-//    const int N = fNumPulses; 
-//    fPulse = new NMRPulseAnalyzed*[N];
-//    // for(int i=0;i<N;i++){
-//    //    fPulse[i] = new NMRPulseAnalyzed(); 
-//    // } 
-// }
+//______________________________________________________________________________
+void NMRRun::SetNumPulses(int NumPulses){
+   // set a new number of pulses
+   // first delete the old array
+   if(fVerbosity>=4) std::cout << "[NMRRun::SetNumPulses]: Deleting " << fNumPulses << " pulses." << std::endl; 
+   for(int i=0;i<fNumPulses;i++){
+      if(fPulse[i]!=NULL) delete fPulse[i];
+   } 
+   delete[] fPulse; 
+   // now create a new array of pulses
+   fNumPulses = NumPulses; 
+   if(fVerbosity>=4) std::cout << "[NMRRun::SetNumPulses]: Creating " << fNumPulses << " pulses." << std::endl; 
+   const int N = fNumPulses; 
+   fPulse = new NMRPulseAnalyzed*[N];
+   // for(int i=0;i<N;i++){
+   //    fPulse[i] = new NMRPulseAnalyzed(); 
+   // } 
+}
 //______________________________________________________________________________
 void NMRRun::PrintPulseData(int index) const{
    // print all pulses (index<0) or a single pulse
@@ -88,9 +88,9 @@ void NMRRun::PrintPulseData(int index) const{
 }
 //______________________________________________________________________________
 void NMRRun::PrintStatistics() const{
-
-   printf("========================== Run Statistics ========================== \n");
+   printf("========================= Run Statistics ========================== \n");
    printf("Run number:          %d    \n",fRunNumber);
+   printf("Number of pulses:    %d    \n",fNumPulses); 
    printf("Ampl:                mean = %12.7lf std. dev. = %.7lf \n",fMeanAmpl,fSigAmpl);
    printf("Noise RMS:           mean = %12.7lf std. dev. = %.7lf \n",fMeanNoiseRMS,fSigNoiseRMS);
    printf("SNR:                 mean = %12.7lf std. dev. = %.7lf \n",fMeanSNR,fSigSNR);
@@ -99,8 +99,6 @@ void NMRRun::PrintStatistics() const{
    printf("Freq (ZC, least sq): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
    printf("Freq (fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
    printf("Freq (phase fit):    mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
-   printf("=================================================================== \n");
-
 }
 //______________________________________________________________________________
 void NMRRun::ClearData(){
@@ -121,6 +119,7 @@ void NMRRun::ClearData(){
    fSigNumCycles         = 0;      
    for(int i=0;i<fNumPulses;i++){
       delete fPulse[i];
+      fPulse[i] = NULL;   // this might help.
    } 
    for(int i=0;i<3;i++){
       fFreqMeanZC[i] = 0;

@@ -1,5 +1,37 @@
 # CHANGELOG 
 
+## 1/6/16, David Flay
+
+   - Finished the Makefile update; we now compile all classes into a shared library, 
+     and compile the main program using that library.  Doing things like this should 
+     allow us to use the library in ROOT... 
+
+## 1/4/16, David Flay
+
+   - Finished the development of the GUI. 
+
+## 1/2/16, David Flay
+ 
+   - The NMRInputManager now updates on every run by reading the corresponding summary file.  The 
+     changes to the InputManager are propagated to all copies.  This way, the user does not need to 
+     tell the code how many pulses were in a run, as it is already logged by NMR-DAQ. 
+
+## 12/4/15, David Flay
+
+   - Added a GUI to the project; it is not finished yet.  
+
+## 12/1/15, David Flay
+
+   - General maintenence and added functionality to turn on/off the use of integer cycles 
+     in the zero crossing analysis; previously there was only a boolean variable for it 
+     in NMRZeroCrossing, but it was not being changed due to the value contained in NMRInputManager,
+     which itself did not have a corresponding variable.  Everything is now connected. 
+
+   - By changing the expected frequency from 10 kHz to 40 kHz, we now get identical results 
+     with respect to the old code (that used vectors in couting zero crossings).  Again,
+     *one must be careful setting the expected frequency of the data for accurate results*
+     (is there a way to make it so that we do not have to guess?)  
+
 ## 11/30/15, David Flay
 
    - Removed redundant index variable in NMRMath::CountZeroCrossings (use cntr only now). 

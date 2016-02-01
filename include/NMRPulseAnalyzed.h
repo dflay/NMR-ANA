@@ -17,15 +17,17 @@ class NMRPulseAnalyzed: public NMRPulse{
       double fNumCycles;
 
    public:
+      // constructor and destructor 
       NMRPulseAnalyzed(int PulseNumber=0,int NPTS=1);
-      NMRPulseAnalyzed(const NMRPulseAnalyzed &aPulse);         
-      NMRPulseAnalyzed(const NMRPulseAnalyzed *aPulse);         
       ~NMRPulseAnalyzed();
 
       // copy constructors 
+      NMRPulseAnalyzed(const NMRPulseAnalyzed &aPulse);         
+      NMRPulseAnalyzed(const NMRPulseAnalyzed *aPulse);         
+
+      // overload assignment operator  
       NMRPulseAnalyzed& operator=(const NMRPulseAnalyzed &aPulse);  
       NMRPulseAnalyzed* operator=(const NMRPulseAnalyzed *aPulse); 
-      // NMRPulseAnalyzed* Clone() const{return new NMRPulseAnalyzed(this); }    // Make a copy of this class 
 
       void Print(); 
       void ClearData(); 

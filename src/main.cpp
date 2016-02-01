@@ -1,4 +1,4 @@
-/// Test out the new analysis classes
+
 
 #include <iostream> 
 #include <cstdlib> 
@@ -9,22 +9,26 @@
 #include "NMRRun.h"
 #include "NMRFileManager.h"
 #include "NMRAnalysis.h"
-// #include "NMRZeroCrossing.h"
-// #include "NMRFourierTransform.h"
-// #include "NMRInputManager.h"
 
 int main(){
 
-   const char *inpath = "./input/parameters.dat"; 
+   const char *inpath   = "./input/parameters.dat"; 
+   const char *run_list = "./input/runlist.dat";  
 
    NMRFileManager *FM = new NMRFileManager(); 
-   FM->GetInputParameters(inpath); 
+   FM->GetInputParameters(inpath);
+   FM->InputManager->GetRunList(run_list);  
+   FM->InputManager->Print();             
+   FM->InputManager->PrintRunList();  
    FM->InitInputDirectory();
 
-   int NPulses        = FM->InputManager->GetNumPulses();
+   int NPulses        = FM->InputManager->GetNumPulses();       // will be zero upon starting
    int Verbosity      = FM->InputManager->GetVerbosity(); 
-   int StartRunNumber = FM->InputManager->GetStartRunNumber(); 
-   int EndRunNumber   = FM->InputManager->GetEndRunNumber(); 
+   int NumRuns        = FM->InputManager->GetNumberOfRuns();  
+   
+   const int NRUNS = NumRuns; 
+   int RunList[NRUNS]; 
+   for(int i=0;i<NRUNS;i++) RunList[i] = FM->InputManager->GetRun(i);  
  
    NMRPulse *aPulse            = new NMRPulse(1,1); 
    NMRPulseAnalyzed *aPulseAna = new NMRPulseAnalyzed(1,1); 
@@ -34,37 +38,40 @@ int main(){
 
    NMRAnalysis *myAna = new NMRAnalysis();
    myAna->SetFileManager(FM);
-   myAna->InitializeAnalysis();  
 
-   NMRRun *aRun = new NMRRun(NPulses);
+   NMRRun *aRun = new NMRRun(1);                      // initialize to 1 pulse 
    aRun->SetVerbosity(Verbosity);  
-
-   for(int i=StartRunNumber;i<=EndRunNumber;i++){
-      FM->SetRunNumber(i);
-      FM->InitOutputDirectory(); 
-      myAna->SetupForRun(i); 
-      aRun->SetRunNumber(i);
-      // try a loop over pulses 
+  
+   int run_num=0; 
+   for(int i=0;i<NRUNS;i++){
+      run_num = RunList[i]; 
+      FM->InputManager->ReadRunSummary(run_num);      // get details of the run
+      FM->InputManager->PrintRunSummary();            // show new run information  
+      FM->InitOutputDirectory();                      // initiaize output directories  
+      myAna->UpdateFileManager(FM);                   // update the FileManager
+      myAna->InitializeAnalysis();                    // initialize the analysis based on the run 
+      NPulses = FM->InputManager->GetNumPulses();     // update the number of pulses  
+      aRun->SetRunNumber(run_num);                    // set the run number  
+      aRun->SetNumPulses(NPulses);                    // set the number of pulses 
+      // loop over pulses 
       for(int j=1;j<=NPulses;j++){
-         // minimal initialization of the pulse 
-         aPulse->SetPulseNumber(j); 
-         // load data 
-         FM->Load(i,j,aPulse);
-         // compute frequencies, add to analyzed pulse   
-         myAna->CalculateFrequency(aPulse,aPulseAna); 
-         // print results to screen 
-         // aPulseAna->Print(); 
-         // set up for next pulse 
-         aRun->AddNMRPulse(aPulseAna); 
-         aPulse->ClearData();
-         aPulseAna->ClearData();
+         aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
+         FM->Load(run_num,j,aPulse);                  // load data 
+         myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
+         if(Verbosity>4) aPulseAna->Print(); 
+         aRun->AddNMRPulse(aPulseAna);                // add analyzed pulse to the run  
+         aPulse->ClearData();                         // set up for next pulse  
+         aPulseAna->ClearData();                      // set up for next pulse 
       }
-      myAna->CalculateStatistics(aRun); // calculate statistics on the run (mean, std dev, etc) 
-      // aRun->PrintPulseData();        // print data for all pulses to the screen   
-      aRun->PrintStatistics();          // print data for statistics of a run to the screen 
-      FM->PrintResultsToFile(aRun);     // print analysis results for pulses of a run to file  
-      aRun->ClearData();                // clear run data 
+      myAna->CalculateStatistics(aRun);               // calculate statistics on the run (mean, std dev, etc) 
+      if(Verbosity>4) aRun->PrintPulseData();         // print data for all pulses to the screen   
+      aRun->PrintStatistics();                        // print data for statistics of a run to the screen 
+      FM->PrintResultsToFile(aRun);                   // print analysis results for pulses of a run to file  
+      aRun->ClearData();                              // clear run data 
    }
+
+   // end of runs 
+   printf("=================================================================== \n");
 
    // delete objects (order shouldn't matter)  
    delete aPulse;

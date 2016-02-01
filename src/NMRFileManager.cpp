@@ -20,11 +20,10 @@ NMRFileManager::NMRFileManager(){
    fX             = new double[N]; 
    fY             = new double[N]; 
    fEY            = new double[N]; 
-   const int MAX = 1E+6;
-   fNCrossing      = new int[MAX];
-   fCrossingIndex  = new int[MAX];
-   fTcross         = new double[MAX];
-   fVcross         = new double[MAX];
+   fNCrossing     = new int[N];
+   fCrossingIndex = new int[N];
+   fTcross        = new double[N];
+   fVcross        = new double[N];
    ClearDataArrays(); 
 }
 //______________________________________________________________________________
@@ -108,8 +107,17 @@ void NMRFileManager::ClearNZCArrays(){
 //______________________________________________________________________________
 void NMRFileManager::GetInputParameters(const char *inpath){
    InputManager->GetInputParameters(inpath);
-   InputManager->Print(); 
+   // InputManager->Print(); 
    fVerbosity = InputManager->GetVerbosity(); 
+}
+//______________________________________________________________________________
+void NMRFileManager::Update(const NMRFileManager *fm){
+   UpdateInputManager(fm->InputManager);
+}
+//______________________________________________________________________________
+void NMRFileManager::UpdateInputManager(const NMRInputManager *a){
+   // update the input manager when we read in data from a run's summary file 
+   InputManager->Update(a);    
 }
 //______________________________________________________________________________
 int NMRFileManager::DeleteSymLink(const char *suffix){
@@ -192,7 +200,7 @@ int NMRFileManager::MakeDirectory(const char *path){
 //______________________________________________________________________________
 void NMRFileManager::InitInputDirectory(){
 
-   const char *d1 = "./data"; 
+   const char *d1 = "./data-test/"; 
    const int SIZE = 200; 
    char *d2 = new char[SIZE]; 
    char *d3 = new char[SIZE]; 
@@ -236,9 +244,10 @@ void NMRFileManager::InitOutputDirectory(){
    char *d4 = new char[SIZE]; 
    char *d5 = new char[SIZE]; 
 
-   int Month = InputManager->GetMonth(); 
-   int Day   = InputManager->GetDay(); 
-   int Year  = InputManager->GetYear(); 
+   int Month     = InputManager->GetMonth(); 
+   int Day       = InputManager->GetDay(); 
+   int Year      = InputManager->GetYear(); 
+   int RunNumber = InputManager->GetRunNumber(); 
 
    if(Month<10 && Day<10){
       sprintf(d2,"%s/%d"        ,d1,Year); 
@@ -254,7 +263,7 @@ void NMRFileManager::InitOutputDirectory(){
       sprintf(d4,"%s/%d_%d_%d"  ,d3,Month,Day,Year-2000); 
    }
 
-   sprintf(d5,"%s/run-%d",d4,fRunNumber); 
+   sprintf(d5,"%s/run-%d",d4,RunNumber); 
 
    const char *D1 = d1; 
    const char *D2 = d2; 
@@ -1074,6 +1083,9 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    offset_old = offset_new; 
    t_diff_old = t_diff_new; 
 
+   // clear arrays before starting
+   ClearNZCArrays();
+
    do{ 
       offset_new = offset_old - t_diff_old/slope;
       // check the new offset  
@@ -1131,6 +1143,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    if(fVerbosity>=3) std::cout << "[NMRFileManager::GetOffsetZC]: Done." << std::endl;
 
    delete myPulse; 
+   ClearNZCArrays();
 
    if(rc>0 || fOffsetFail==true){
       return 0;

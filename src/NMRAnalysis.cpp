@@ -18,6 +18,7 @@ void NMRAnalysis::InitializeAnalysis(){
 
    // general parameters 
    bool UseZC        = fFileManager->InputManager->GetZeroCrossingStatus();
+   bool UseIntCycles = fFileManager->InputManager->GetIntegerCycleStatus(); 
 
    fVerbosity        = fFileManager->InputManager->GetVerbosity();  
 
@@ -30,12 +31,14 @@ void NMRAnalysis::InitializeAnalysis(){
    if(UseZC){
       UseZeroCrossing(); 
       ZeroCrossing->SetVerbosity(fVerbosity); 
+      ZeroCrossing->UseIntegerCycles(UseIntCycles); 
       ZeroCrossing->UseAll();  
       ZeroCrossing->UseTimeRange(); 
       ZeroCrossing->SetTimeRange(tmin_zc,tmax_zc);
       ZeroCrossing->SetSampleFrequency(SampleFreq); 
       ZeroCrossing->SetExpectedFrequency(ExpFreq); 
       ZeroCrossing->UpdateParameters(); 
+      ZeroCrossing->SetupForRun(); 
    }
 
    // time fit 

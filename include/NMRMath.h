@@ -46,7 +46,6 @@ namespace NMRMath{
                            NMRPulse *aPulse,
                            double *X,double *Y,double *EY,
                            int *NCrossing,int *CrossingIndex,double *tCross,double *vCross); 
-                           // std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross); 
    
 }
 

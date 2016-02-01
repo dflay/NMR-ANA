@@ -1,18 +1,12 @@
-# ID                             Value 
-  month                          12
-  day                            14  
-  year                           2015 
-  start_run                      29
-  end_run                        29
-  number_of_pulses               100 
-  t_start                        0
-  t_end                          5E-3 
-  expected_frequency             10E+3
-  sampling_frequency             10E+6 
-  adc_id                         3316
-  verbosity                      0
-  offset_correction_order        2             
-  zero_crossing                  1 
-  time_fit                       0 
-  phase_fit                      0 
-  end_of_file                    99 
+# ID 	 value
+month                   11
+day                     13
+year                    2015
+t_start                 0.00E+00
+t_end                   5.00E-03
+verbosity               0
+offset_correction_order 2
+zero_crossing           1
+time_fit                0
+phase_fit               0
+end_of_file             99                  

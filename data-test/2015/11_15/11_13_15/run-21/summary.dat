@@ -1,3 +1,5 @@
+run_number            21 
+number_of_pulses      100 
 adc_id                3316    
 adc_number_of_samples 600000    
 adc_clock_frequency   10000000.0000000  
