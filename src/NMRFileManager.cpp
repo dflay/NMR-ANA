@@ -200,7 +200,7 @@ int NMRFileManager::MakeDirectory(const char *path){
 //______________________________________________________________________________
 void NMRFileManager::InitInputDirectory(){
 
-   const char *d1 = "./data-test/"; 
+   const char *d1 = "./data/"; 
    const int SIZE = 200; 
    char *d2 = new char[SIZE]; 
    char *d3 = new char[SIZE]; 
@@ -214,6 +214,10 @@ void NMRFileManager::InitInputDirectory(){
       sprintf(d2,"%s/%d"        ,d1,Year); 
       sprintf(d3,"%s/0%d_%d"    ,d2,Month,Year-2000); 
       sprintf(d4,"%s/0%d_0%d_%d",d3,Month,Day,Year-2000); 
+   }else if(Month<10 && Day>=10){
+      sprintf(d2,"%s/%d"        ,d1,Year); 
+      sprintf(d3,"%s/0%d_%d"     ,d2,Month,Year-2000); 
+      sprintf(d4,"%s/0%d_%d_%d"  ,d3,Month,Day,Year-2000); 
    }else if(Month>=10 && Day<10){
       sprintf(d2,"%s/%d"        ,d1,Year); 
       sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
@@ -253,6 +257,10 @@ void NMRFileManager::InitOutputDirectory(){
       sprintf(d2,"%s/%d"        ,d1,Year); 
       sprintf(d3,"%s/0%d_%d"    ,d2,Month,Year-2000); 
       sprintf(d4,"%s/0%d_0%d_%d",d3,Month,Day,Year-2000); 
+   }else if(Month<10 && Day>=10){
+      sprintf(d2,"%s/%d"        ,d1,Year); 
+      sprintf(d3,"%s/0%d_%d"     ,d2,Month,Year-2000); 
+      sprintf(d4,"%s/0%d_%d_%d"  ,d3,Month,Day,Year-2000); 
    }else if(Month>=10 && Day<10){
       sprintf(d2,"%s/%d"        ,d1,Year); 
       sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
