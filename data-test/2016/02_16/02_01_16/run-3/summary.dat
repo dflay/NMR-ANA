@@ -1,0 +1,12 @@
+run_number            3    
+num_pulses            5    
+adc_id                3316    
+adc_channel_number    1    
+adc_number_of_samples 600000    
+adc_clock_frequency   10000000.0000000  
+adc_signal_length     0.0600000  
+expected_IF_frequency 10000.0000000  
+LO_frequency          61917700.0000000  
+RF_frequency          61877700.0000000  
+bnc_voltage           0.5000000  
+ntype_voltage         16.0000000  
