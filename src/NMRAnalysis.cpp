@@ -109,6 +109,46 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
 
 }
 //______________________________________________________________________________
+void NMRAnalysis::CalculateField(NMRPulseAnalyzed *aPulse){
+
+   int zc=0,zc_mid=0,zc_lin=0,zc_lsq=0;
+   double nc=0,nc_mid=0,nc_lin=0,nc_lsq=0;
+   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
+   double B_mid=0,B_lin=0,B_lsq=0; 
+
+   // general pulse data 
+   int pulse_num    = aPulse->GetPulseNumber(); 
+   double ampl      = aPulse->GetAmplitude(); 
+   double noise_rms = aPulse->GetNoiseRMS();
+   double snr       = ampl/noise_rms; 
+   double ts        = aPulse->GetTimeStamp(); 
+
+   aPulseAnalyzed->SetPulseNumber(pulse_num);
+   aPulseAnalyzed->SetAmplitude(ampl); 
+   aPulseAnalyzed->SetNoiseRMS(noise_rms); 
+   aPulseAnalyzed->SetSignalToNoiseRatio(snr); 
+   aPulseAnalyzed->SetTimeStamp(ts); 
+
+   // field calculation 
+
+   if(fUseZeroCrossing){
+      freq_mid = aPulse->GetFrequencyZeroCrossingMidpoint();  
+      freq_lin = aPulse->GetFrequencyZeroCrossingLinearInterp();  
+      freq_lsq = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
+   }
+
+   if(fUseFit){
+      // TODO: do stuff
+      freq_fit = 0; 
+   }
+
+   if(fUsePhaseFit){
+      // TODO: do stuff
+      freq_ph = 0; 
+   }
+
+}
+//______________________________________________________________________________
 void NMRAnalysis::CalculateStatistics(NMRRun *aRun){
 
    // compute statistics on a run 

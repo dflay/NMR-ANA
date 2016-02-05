@@ -22,7 +22,9 @@ class NMRAnalysis{
       bool fUseFit;  
       bool fUsePhaseFit; 
 
-      int fVerbosity; 
+      int fVerbosity;
+
+      double fFreq_RF;                // frequency used to pulse the probe   
    
       NMRFileManager *fFileManager; 
 
@@ -50,6 +52,8 @@ class NMRAnalysis{
          ZeroCrossing->SetVerbosity(v); 
       } 
 
+      void SetRFFrequency(double f){fFreq_RF = f;} 
+
       void InitializeAnalysis(); 
  
       void UseFit(bool v=true){ 
@@ -66,6 +70,7 @@ class NMRAnalysis{
       } 
 
       void CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAnalyzed); 
+      void CalculateField(NMRPulseAnalyzed *aPulseAnalyzed); 
       void CalculateStatistics(NMRRun *aRun);   
 
 
