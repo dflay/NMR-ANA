@@ -20,7 +20,8 @@ void NMRAnalysis::InitializeAnalysis(){
    bool UseZC        = fFileManager->InputManager->GetZeroCrossingStatus();
    bool UseIntCycles = fFileManager->InputManager->GetIntegerCycleStatus(); 
 
-   fVerbosity        = fFileManager->InputManager->GetVerbosity();  
+   fVerbosity        = fFileManager->InputManager->GetVerbosity(); 
+   fFreq_RF          = fFileManager->InputManager->GetRFFrequency(); 
 
    double tmin_zc    = fFileManager->InputManager->GetStartTimeZC();  
    double tmax_zc    = fFileManager->InputManager->GetEndTimeZC();  
@@ -111,41 +112,46 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
 //______________________________________________________________________________
 void NMRAnalysis::CalculateField(NMRPulseAnalyzed *aPulse){
 
-   int zc=0,zc_mid=0,zc_lin=0,zc_lsq=0;
-   double nc=0,nc_mid=0,nc_lin=0,nc_lsq=0;
    double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
-   double B_mid=0,B_lin=0,B_lsq=0; 
+   double B_mid=0,B_lin=0,B_lsq=0,B_fit,B_ph=0; 
 
-   // general pulse data 
-   int pulse_num    = aPulse->GetPulseNumber(); 
-   double ampl      = aPulse->GetAmplitude(); 
-   double noise_rms = aPulse->GetNoiseRMS();
-   double snr       = ampl/noise_rms; 
-   double ts        = aPulse->GetTimeStamp(); 
-
-   aPulseAnalyzed->SetPulseNumber(pulse_num);
-   aPulseAnalyzed->SetAmplitude(ampl); 
-   aPulseAnalyzed->SetNoiseRMS(noise_rms); 
-   aPulseAnalyzed->SetSignalToNoiseRatio(snr); 
-   aPulseAnalyzed->SetTimeStamp(ts); 
-
-   // field calculation 
+   // field calculation
+   double B0 = fFreq_RF/NMRConstants::gamma_1H;  
 
    if(fUseZeroCrossing){
       freq_mid = aPulse->GetFrequencyZeroCrossingMidpoint();  
       freq_lin = aPulse->GetFrequencyZeroCrossingLinearInterp();  
-      freq_lsq = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
+      freq_lsq = aPulse->GetFrequencyZeroCrossingLeastSquares();
+      B_mid    = B0*(1. + freq_mid/fFreq_RF); 
+      B_lin    = B0*(1. + freq_lin/fFreq_RF); 
+      B_lsq    = B0*(1. + freq_lsq/fFreq_RF); 
+      aPulse->SetFieldZeroCrossingMidpoint(B_mid); 
+      aPulse->SetFieldZeroCrossingLinearInterp(B_lin); 
+      aPulse->SetFieldZeroCrossingLeastSquares(B_lsq); 
    }
 
    if(fUseFit){
       // TODO: do stuff
       freq_fit = 0; 
+      if(freq_fit!=0){
+	 B_fit = B0*(1. + freq_fit/fFreq_RF); 
+      }else{
+	 B_fit = 0;
+      } 
+      aPulse->SetFieldFit(B_fit); 
    }
 
    if(fUsePhaseFit){
       // TODO: do stuff
       freq_ph = 0; 
+      if(freq_ph!=0){
+	 B_ph = B0*(1. + freq_ph/fFreq_RF); 
+      }else{
+	 B_ph = 0;
+      } 
+      aPulse->SetFieldPhaseFit(B_ph); 
    }
+
 
 }
 //______________________________________________________________________________

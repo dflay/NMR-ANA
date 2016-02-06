@@ -11,6 +11,7 @@
 #include "NMRPulseAnalyzed.h"
 #include "NMRZeroCrossing.h"
 #include "NMRFileManager.h"
+#include "NMRConstants.h"
 
 /// To do
 /// 1. Add analysis objects for fitting and phase fitting 
@@ -45,6 +46,8 @@ class NMRAnalysis{
       void UpdateFileManager(NMRFileManager *fm){
          fFileManager->Update(fm); 
          ZeroCrossing->UpdateFileManager(fm); 
+         double freq_rf = fFileManager->InputManager->GetRFFrequency(); 
+         SetRFFrequency(freq_rf);  
       } 
 
       void SetVerbosity(int v){
