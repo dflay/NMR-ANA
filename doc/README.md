@@ -43,6 +43,8 @@
                               of an array and other more complicated functions like least squares fitting algorithms. 
 
    - **NMRUtility**:          A namespace for miscellaneous functions. 
+   
+   - **NMRConstants**:        A namespace for constant values. 
 
 ## 3. Running an Analysis  
 
