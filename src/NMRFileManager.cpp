@@ -299,7 +299,9 @@ void NMRFileManager::InitOutputDirectory(){
 //______________________________________________________________________________
 void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunToFile(aRun); 
+   PrintRunToFileField(aRun); 
    PrintRunFreqStatsToFile(aRun); 
+   PrintRunFieldStatsToFile(aRun); 
    PrintRunMetaStatsToFile(aRun); 
 }
 //______________________________________________________________________________
@@ -374,7 +376,7 @@ void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
    }else{
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header);
-      fprintf(outfile,"%d \t %5.10lf \t %5.10lf \t %10.10lf \t %5.10lf \t %10.10lf \t %5.10lf \t %10.10lf \t %5.10lf \t %10.10lf \t %5.10lf \n",
+      fprintf(outfile,"%d \t %5.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \n",
               run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_fit,sig_fit,mean_ph,sig_ph);
       fclose(outfile);
    }
@@ -495,7 +497,7 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
          b_lsq  = aRun->GetPulseFieldZeroCrossingLeastSquares(i); 
          b_fit  = aRun->GetPulseFieldFit(i); 
          b_ph   = aRun->GetPulseFieldPhaseFit(i); 
-         fprintf(outfile,"%d %5d %20.10lf %20.10lf %20.10lf %20.10lf %20.10lf \n",
+         fprintf(outfile,"%d %5d %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf \n",
                  run,pulse,b_mid,b_lin,b_lsq,b_fit,b_ph);
       }
       fclose(outfile);
