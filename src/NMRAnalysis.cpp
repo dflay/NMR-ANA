@@ -4,7 +4,8 @@ NMRAnalysis::NMRAnalysis(){
    fUseZeroCrossing = false; 
    fUseFit          = false;
    fUsePhaseFit     = false;
-   fVerbosity       = 0; 
+   fVerbosity       = 0;
+   fFreq_ref        = 0; 
    ZeroCrossing     = new NMRZeroCrossing();
    fFileManager     = new NMRFileManager(); 
 }
@@ -20,7 +21,8 @@ void NMRAnalysis::InitializeAnalysis(){
    bool UseZC        = fFileManager->InputManager->GetZeroCrossingStatus();
    bool UseIntCycles = fFileManager->InputManager->GetIntegerCycleStatus(); 
 
-   fVerbosity        = fFileManager->InputManager->GetVerbosity();  
+   fVerbosity        = fFileManager->InputManager->GetVerbosity(); 
+   fFreq_ref         = fFileManager->InputManager->GetRFFrequency(); 
 
    double tmin_zc    = fFileManager->InputManager->GetStartTimeZC();  
    double tmax_zc    = fFileManager->InputManager->GetEndTimeZC();  
@@ -47,6 +49,11 @@ void NMRAnalysis::InitializeAnalysis(){
    // phase fit 
    // TODO 
 
+}
+//______________________________________________________________________________
+void NMRAnalysis::UpdateAnalysis(){
+   // update the analysis (if anything's changed in the FileManager, for instance) 
+   InitializeAnalysis();
 }
 //______________________________________________________________________________
 void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAnalyzed){
@@ -109,6 +116,46 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
 
 }
 //______________________________________________________________________________
+void NMRAnalysis::CalculateMagneticField(NMRPulseAnalyzed *aPulse){
+
+   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
+   double B_mid=0,B_lin=0,B_lsq=0,B_fit,B_ph=0; 
+
+   if(fUseZeroCrossing){
+      freq_mid = aPulse->GetFrequencyZeroCrossingMidpoint();  
+      freq_lin = aPulse->GetFrequencyZeroCrossingLinearInterp();  
+      freq_lsq = aPulse->GetFrequencyZeroCrossingLeastSquares();
+      B_mid    = CalculateField(freq_mid);  
+      B_lin    = CalculateField(freq_lin);  
+      B_lsq    = CalculateField(freq_lsq);  
+      aPulse->SetFieldZeroCrossingMidpoint(B_mid); 
+      aPulse->SetFieldZeroCrossingLinearInterp(B_lin); 
+      aPulse->SetFieldZeroCrossingLeastSquares(B_lsq); 
+   }
+
+   if(fUseFit){
+      // TODO: do stuff
+      freq_fit = 0; 
+      B_fit    = CalculateField(freq_fit);  
+      aPulse->SetFieldFit(B_fit); 
+   }
+
+   if(fUsePhaseFit){
+      // TODO: do stuff
+      freq_ph = 0; 
+      B_ph    = CalculateField(freq_ph);  
+      aPulse->SetFieldPhaseFit(B_ph); 
+   }
+
+}
+//______________________________________________________________________________
+double NMRAnalysis::CalculateField(double Freq_fid){
+   double B0 = fFreq_ref/NMRConstants::gamma_1H;
+   double B  = 0; 
+   if(Freq_fid!=0) B = B0*(1. + Freq_fid/fFreq_ref); 
+   return B;  
+}
+//______________________________________________________________________________
 void NMRAnalysis::CalculateStatistics(NMRRun *aRun){
 
    // compute statistics on a run 
@@ -164,6 +211,36 @@ void NMRAnalysis::CalculateStatistics(NMRRun *aRun){
    double sig_freq_ph  = NMRMath::GetStandardDeviation(N,value); 
    aRun->SetMeanFrequencyPhaseFit(mean_freq_ph); 
    aRun->SetSigmaFrequencyPhaseFit(sig_freq_ph); 
+   // get mean b (zc, midpoint)  
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseFieldZeroCrossingMidpoint(i); 
+   double mean_b_zc_mid = NMRMath::GetMean(N,value); 
+   double sig_b_zc_mid  = NMRMath::GetStandardDeviation(N,value); 
+   aRun->SetMeanFieldZeroCrossingMidpoint(mean_b_zc_mid); 
+   aRun->SetSigmaFieldZeroCrossingMidpoint(sig_b_zc_mid); 
+   // get mean b (zc, linear interp)  
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseFieldZeroCrossingLinearInterp(i); 
+   double mean_b_zc_lin = NMRMath::GetMean(N,value); 
+   double sig_b_zc_lin  = NMRMath::GetStandardDeviation(N,value); 
+   aRun->SetMeanFieldZeroCrossingLinearInterp(mean_b_zc_lin); 
+   aRun->SetSigmaFieldZeroCrossingLinearInterp(sig_b_zc_lin); 
+   // get mean b (zc, least squares)  
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseFieldZeroCrossingLeastSquares(i); 
+   double mean_b_zc_lsq = NMRMath::GetMean(N,value); 
+   double sig_b_zc_lsq  = NMRMath::GetStandardDeviation(N,value); 
+   aRun->SetMeanFieldZeroCrossingLeastSquares(mean_b_zc_lsq); 
+   aRun->SetSigmaFieldZeroCrossingLeastSquares(sig_b_zc_lsq); 
+   // get mean b (fit)  
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseFieldFit(i); 
+   double mean_b_fit = NMRMath::GetMean(N,value); 
+   double sig_b_fit  = NMRMath::GetStandardDeviation(N,value); 
+   aRun->SetMeanFieldFit(mean_b_fit); 
+   aRun->SetSigmaFieldFit(sig_b_fit); 
+   // get mean b (phase fit)  
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseFieldPhaseFit(i); 
+   double mean_b_ph = NMRMath::GetMean(N,value); 
+   double sig_b_ph  = NMRMath::GetStandardDeviation(N,value); 
+   aRun->SetMeanFieldPhaseFit(mean_b_ph); 
+   aRun->SetSigmaFieldPhaseFit(sig_b_ph); 
 
    delete[] value; 
 

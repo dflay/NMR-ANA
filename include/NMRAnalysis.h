@@ -11,6 +11,7 @@
 #include "NMRPulseAnalyzed.h"
 #include "NMRZeroCrossing.h"
 #include "NMRFileManager.h"
+#include "NMRConstants.h"
 
 /// To do
 /// 1. Add analysis objects for fitting and phase fitting 
@@ -22,11 +23,15 @@ class NMRAnalysis{
       bool fUseFit;  
       bool fUsePhaseFit; 
 
-      int fVerbosity; 
+      int fVerbosity;
+
+      double fFreq_ref;                // frequency used to pulse the probe   
    
       NMRFileManager *fFileManager; 
 
       void PrintZeroCrossingDataToFile(int Type); 
+      
+      double CalculateField(double Freq_fid); 
 
    public: 
       NMRAnalysis();
@@ -50,7 +55,10 @@ class NMRAnalysis{
          ZeroCrossing->SetVerbosity(v); 
       } 
 
+      void SetRefFrequency(double f){fFreq_ref = f;} 
+
       void InitializeAnalysis(); 
+      void UpdateAnalysis(); 
  
       void UseFit(bool v=true){ 
          std::cout << "[NMRAnalysis]: Will use fitting method." << std::endl;
@@ -66,8 +74,8 @@ class NMRAnalysis{
       } 
 
       void CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAnalyzed); 
+      void CalculateMagneticField(NMRPulseAnalyzed *aPulseAnalyzed); 
       void CalculateStatistics(NMRRun *aRun);   
-
 
 }; 
 
