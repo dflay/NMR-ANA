@@ -7,6 +7,10 @@ NMRRun::NMRRun(int NumPulses){
    fFreqMeanPhaseFit     = 0;  
    fFreqSigFit           = 0;  
    fFreqSigPhaseFit      = 0;  
+   fBMeanFit             = 0;  
+   fBMeanPhaseFit        = 0;  
+   fBSigFit              = 0;  
+   fBSigPhaseFit         = 0;  
    fRunNumber            = 0;     
    fMeanNumZeroCrossings = 0;                       
    fMeanNoiseRMS         = 0;              
@@ -26,9 +30,13 @@ NMRRun::NMRRun(int NumPulses){
    const int N3 = 3;
    fFreqMeanZC  = new double[N3];  
    fFreqSigZC   = new double[N3]; 
+   fBMeanZC     = new double[N3];  
+   fBSigZC      = new double[N3]; 
    for(int i=0;i<N3;i++){
       fFreqMeanZC[i] = 0;
       fFreqSigZC[i]  = 0;
+      fBMeanZC[i]    = 0;
+      fBSigZC[i]     = 0;
    } 
 }
 //______________________________________________________________________________
@@ -39,6 +47,8 @@ NMRRun::~NMRRun(){
    delete[] fPulse;
    delete[] fFreqMeanZC;  
    delete[] fFreqSigZC;  
+   delete[] fBMeanZC;  
+   delete[] fBSigZC;  
 }
 //______________________________________________________________________________
 void NMRRun::AddNMRPulse(NMRPulseAnalyzed *aPulse){
@@ -46,7 +56,6 @@ void NMRRun::AddNMRPulse(NMRPulseAnalyzed *aPulse){
    int next_index = fPulseIndex + 1; 
    // check how many pulses we have
    if(next_index<=fNumPulses){
-      // fPulse[fPulseIndex] = aPulse->Clone();     
       fPulse[fPulseIndex] = new NMRPulseAnalyzed(aPulse);     
       fPulseIndex++; 
       if(fVerbosity>=3){
@@ -99,6 +108,11 @@ void NMRRun::PrintStatistics() const{
    printf("Freq (ZC, least sq): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
    printf("Freq (fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
    printf("Freq (phase fit):    mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
+   printf("B (ZC, midpoint):    mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[0],fBSigZC[0]);
+   printf("B (ZC, linear):      mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[1],fBSigZC[1]);
+   printf("B (ZC, least sq):    mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[2],fBSigZC[2]);
+   printf("B (fit):             mean = %12.7lf std. dev. = %.7lf \n",fBMeanFit,fBSigFit);
+   printf("B (phase fit):       mean = %12.7lf std. dev. = %.7lf \n",fBMeanPhaseFit,fBSigPhaseFit);
 }
 //______________________________________________________________________________
 void NMRRun::ClearData(){
@@ -107,6 +121,10 @@ void NMRRun::ClearData(){
    fFreqMeanPhaseFit     = 0;  
    fFreqSigFit           = 0;  
    fFreqSigPhaseFit      = 0;  
+   fBMeanFit             = 0;  
+   fBMeanPhaseFit        = 0;  
+   fBSigFit              = 0;  
+   fBSigPhaseFit         = 0;  
    fRunNumber            = 0;     
    fMeanNumZeroCrossings = 0;                       
    fMeanNoiseRMS         = 0;              
@@ -124,6 +142,8 @@ void NMRRun::ClearData(){
    for(int i=0;i<3;i++){
       fFreqMeanZC[i] = 0;
       fFreqSigZC[i]  = 0;
+      fBMeanZC[i]    = 0;
+      fBSigZC[i]     = 0;
    } 
 }
 

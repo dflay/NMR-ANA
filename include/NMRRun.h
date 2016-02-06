@@ -20,7 +20,10 @@ class NMRRun{
       double fSigNoiseRMS ,fSigAmpl  ,fSigSNR   ,fSigNumCycles;   
       double *fFreqMeanZC,*fFreqSigZC;  
       double fFreqMeanFit,fFreqMeanPhaseFit;  
-      double fFreqSigFit ,fFreqSigPhaseFit; 
+      double fFreqSigFit ,fFreqSigPhaseFit;
+      double *fBMeanZC,*fBSigZC;  
+      double fBMeanFit,fBMeanPhaseFit;  
+      double fBSigFit ,fBSigPhaseFit; 
 
       NMRPulseAnalyzed **fPulse;                                    // a double-pointer to NMR Pulses 
 
@@ -45,6 +48,16 @@ class NMRRun{
       void SetSigmaFrequencyZeroCrossingLeastSquares(double x) {fFreqSigZC[2]         = x;}  
       void SetSigmaFrequencyFit(double x)                      {fFreqSigFit           = x;}  
       void SetSigmaFrequencyPhaseFit(double x)                 {fFreqSigPhaseFit      = x;}  
+      void SetMeanFieldZeroCrossingMidpoint(double x)          {fBMeanZC[0]           = x;}  
+      void SetMeanFieldZeroCrossingLinearInterp(double x)      {fBMeanZC[1]           = x;}  
+      void SetMeanFieldZeroCrossingLeastSquares(double x)      {fBMeanZC[2]           = x;}  
+      void SetMeanFieldFit(double x)                           {fBMeanFit             = x;}  
+      void SetMeanFieldPhaseFit(double x)                      {fBMeanPhaseFit        = x;}  
+      void SetSigmaFieldZeroCrossingMidpoint(double x)         {fBSigZC[0]            = x;}  
+      void SetSigmaFieldZeroCrossingLinearInterp(double x)     {fBSigZC[1]            = x;}  
+      void SetSigmaFieldZeroCrossingLeastSquares(double x)     {fBSigZC[2]            = x;}  
+      void SetSigmaFieldFit(double x)                          {fBSigFit              = x;}  
+      void SetSigmaFieldPhaseFit(double x)                     {fBSigPhaseFit         = x;}  
       void SetMeanNumZeroCrossings(int x)                      {fMeanNumZeroCrossings = x;} 
       void SetMeanAmplitude(double x)                          {fMeanAmpl             = x;}  
       void SetMeanNoiseRMS(double x)                           {fMeanNoiseRMS         = x;}  
@@ -64,6 +77,11 @@ class NMRRun{
       double GetPulseFrequencyZeroCrossingLeastSquares(int i) const {return fPulse[i]->GetFrequencyZeroCrossingLeastSquares(); }   
       double GetPulseFrequencyFit(int i)                      const {return fPulse[i]->GetFrequencyFit();                      }   
       double GetPulseFrequencyPhaseFit(int i)                 const {return fPulse[i]->GetFrequencyPhaseFit();                 }   
+      double GetPulseFieldZeroCrossingMidpoint(int i)         const {return fPulse[i]->GetFieldZeroCrossingMidpoint();         }   
+      double GetPulseFieldZeroCrossingLinearInterp(int i)     const {return fPulse[i]->GetFieldZeroCrossingLinearInterp();     }   
+      double GetPulseFieldZeroCrossingLeastSquares(int i)     const {return fPulse[i]->GetFieldZeroCrossingLeastSquares();     }   
+      double GetPulseFieldFit(int i)                          const {return fPulse[i]->GetFieldFit();                          }   
+      double GetPulseFieldPhaseFit(int i)                     const {return fPulse[i]->GetFieldPhaseFit();                     }   
       double GetPulseAmplitude(int i)                         const {return fPulse[i]->GetAmplitude();                         }   
       double GetPulseNoiseRMS(int i)                          const {return fPulse[i]->GetNoiseRMS();                          }   
       double GetPulseSignalToNoiseRatio(int i)                const {return fPulse[i]->GetSignalToNoiseRatio();                }   
@@ -84,6 +102,16 @@ class NMRRun{
       double GetFrequencySigmaFit()                           const {return fFreqSigFit;       } 
       double GetFrequencyMeanPhaseFit()                       const {return fFreqMeanPhaseFit; } 
       double GetFrequencySigmaPhaseFit()                      const {return fFreqSigPhaseFit;  } 
+      double GetFieldMeanZeroCrossingMidpoint()               const {return fBMeanZC[0];       }  
+      double GetFieldMeanZeroCrossingLinearInterp()           const {return fBMeanZC[1];       }  
+      double GetFieldMeanZeroCrossingLeastSquares()           const {return fBMeanZC[2];       }  
+      double GetFieldSigmaZeroCrossingMidpoint()              const {return fBSigZC[0];        }  
+      double GetFieldSigmaZeroCrossingLinearInterp()          const {return fBSigZC[1];        }  
+      double GetFieldSigmaZeroCrossingLeastSquares()          const {return fBSigZC[2];        }  
+      double GetFieldMeanFit()                                const {return fBMeanFit;         } 
+      double GetFieldSigmaFit()                               const {return fBSigFit;          } 
+      double GetFieldMeanPhaseFit()                           const {return fBMeanPhaseFit;    } 
+      double GetFieldSigmaPhaseFit()                          const {return fBSigPhaseFit;     } 
       double GetMeanAmplitude()                               const {return fMeanAmpl;         }  
       double GetMeanNoiseRMS()                                const {return fMeanNoiseRMS;     }  
       double GetMeanNumCycles()                               const {return fMeanNumCycles;    }  

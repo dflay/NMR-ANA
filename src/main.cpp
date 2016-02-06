@@ -49,7 +49,7 @@ int main(){
       FM->InputManager->PrintRunSummary();            // show new run information  
       FM->InitOutputDirectory();                      // initiaize output directories  
       myAna->UpdateFileManager(FM);                   // update the FileManager
-      myAna->InitializeAnalysis();                    // initialize the analysis based on the run 
+      myAna->UpdateAnalysis();                        // initialize the analysis based on the run 
       NPulses = FM->InputManager->GetNumPulses();     // update the number of pulses  
       aRun->SetRunNumber(run_num);                    // set the run number  
       aRun->SetNumPulses(NPulses);                    // set the number of pulses 
@@ -58,6 +58,7 @@ int main(){
          aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
          FM->Load(run_num,j,aPulse);                  // load data 
          myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
+         myAna->CalculateMagneticField(aPulseAna);    // compute magnetic field values    
          if(Verbosity>4) aPulseAna->Print(); 
          aRun->AddNMRPulse(aPulseAna);                // add analyzed pulse to the run  
          aPulse->ClearData();                         // set up for next pulse  

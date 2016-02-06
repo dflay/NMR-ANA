@@ -25,11 +25,13 @@ class NMRAnalysis{
 
       int fVerbosity;
 
-      double fFreq_RF;                // frequency used to pulse the probe   
+      double fFreq_ref;                // frequency used to pulse the probe   
    
       NMRFileManager *fFileManager; 
 
       void PrintZeroCrossingDataToFile(int Type); 
+      
+      double CalculateField(double Freq_fid); 
 
    public: 
       NMRAnalysis();
@@ -46,8 +48,6 @@ class NMRAnalysis{
       void UpdateFileManager(NMRFileManager *fm){
          fFileManager->Update(fm); 
          ZeroCrossing->UpdateFileManager(fm); 
-         double freq_rf = fFileManager->InputManager->GetRFFrequency(); 
-         SetRFFrequency(freq_rf);  
       } 
 
       void SetVerbosity(int v){
@@ -55,9 +55,10 @@ class NMRAnalysis{
          ZeroCrossing->SetVerbosity(v); 
       } 
 
-      void SetRFFrequency(double f){fFreq_RF = f;} 
+      void SetRefFrequency(double f){fFreq_ref = f;} 
 
       void InitializeAnalysis(); 
+      void UpdateAnalysis(); 
  
       void UseFit(bool v=true){ 
          std::cout << "[NMRAnalysis]: Will use fitting method." << std::endl;
@@ -73,9 +74,8 @@ class NMRAnalysis{
       } 
 
       void CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAnalyzed); 
-      void CalculateField(NMRPulseAnalyzed *aPulseAnalyzed); 
+      void CalculateMagneticField(NMRPulseAnalyzed *aPulseAnalyzed); 
       void CalculateStatistics(NMRRun *aRun);   
-
 
 }; 
 
