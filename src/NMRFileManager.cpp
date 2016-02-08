@@ -299,7 +299,9 @@ void NMRFileManager::InitOutputDirectory(){
 //______________________________________________________________________________
 void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunToFile(aRun); 
+   PrintRunToFileField(aRun); 
    PrintRunFreqStatsToFile(aRun); 
+   PrintRunFieldStatsToFile(aRun); 
    PrintRunMetaStatsToFile(aRun); 
 }
 //______________________________________________________________________________
@@ -335,6 +337,46 @@ void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header);
       fprintf(outfile,"%d \t %5.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \n",
+              run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_fit,sig_fit,mean_ph,sig_ph);
+      fclose(outfile);
+   }
+
+   delete[] outpath;
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
+
+   int run            = aRun->GetRunNumber();
+   double mean_zc_mid = aRun->GetFieldMeanZeroCrossingMidpoint();  
+   double mean_zc_lin = aRun->GetFieldMeanZeroCrossingLinearInterp();  
+   double mean_zc_lsq = aRun->GetFieldMeanZeroCrossingLeastSquares();  
+   double sig_zc_mid  = aRun->GetFieldSigmaZeroCrossingMidpoint();  
+   double sig_zc_lin  = aRun->GetFieldSigmaZeroCrossingLinearInterp();  
+   double sig_zc_lsq  = aRun->GetFieldSigmaZeroCrossingLeastSquares();  
+   double mean_fit    = aRun->GetFieldMeanFit();  
+   double sig_fit     = aRun->GetFieldSigmaFit();  
+   double mean_ph     = aRun->GetFieldMeanPhaseFit();  
+   double sig_ph      = aRun->GetFieldSigmaPhaseFit();  
+
+   const int SIZE = 200;
+   char *outpath = new char[SIZE]; 
+   sprintf(outpath,"%s/results_run-field-stats.dat",fOutputBaseDir);
+   const char *header  = 
+   "# Run \t Mean [Mid] (T) \t Sig [Mid] \t Mean [Lin] (T) \t Sig [Lin] (T) \t Mean [Lsq] (T) \t Sig [Lsq] (T) \t Mean [fit] \t Sig [fit] \t Mean [ph] \t Sig [ph]"; 
+
+   const char *mode = "a";  // append data; create if it doesn't exist  
+
+   FILE *outfile;
+   outfile = fopen(outpath,mode); 
+
+   if( outfile==NULL ){
+      std::cout << "[NMRFileManager]: Cannot open the file: " << outpath << std::endl;
+      std::cout << "                  No data will be printed to file." << std::endl;
+   }else{
+      if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
+      if(run==1) fprintf(outfile,"%s \n",header);
+      fprintf(outfile,"%d \t %5.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \n",
               run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_fit,sig_fit,mean_ph,sig_ph);
       fclose(outfile);
    }
@@ -423,6 +465,48 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
 
 }
 //______________________________________________________________________________
+void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
+ 
+   int N   = aRun->GetNumPulses(); 
+   int run = aRun->GetRunNumber();
+
+   int pulse=0;
+   double b_mid=0,b_lin=0,b_lsq=0,b_fit=0,b_ph=0; 
+
+   const int SIZE = 200;
+   char *outpath = new char[SIZE]; 
+   sprintf(outpath,"%s/results_pulse-stats-field.dat",fOutputBaseDir);
+     
+   const char *header  = "# Run \t Pulse \t B [Mid] (T) \t B [Lin] (T) \t B [Lsq] (T) \t B [fit] (T) \t B [ph] (T)"; 
+
+   const char *mode = "a";  // append data; create if it doesn't exist  
+
+   FILE *outfile;
+   outfile = fopen(outpath,mode); 
+
+   if( outfile==NULL ){
+      std::cout << "[NMRFileManager]: Cannot open the file: " << outpath << std::endl;
+      std::cout << "                  No data will be printed to file." << std::endl;
+   }else{
+      if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
+      if(run==1) fprintf(outfile,"%s \n",header); 
+      for(int i=0;i<N;i++){
+         pulse  = aRun->GetPulseNumber(i); 
+         b_mid  = aRun->GetPulseFieldZeroCrossingMidpoint(i); 
+         b_lin  = aRun->GetPulseFieldZeroCrossingLinearInterp(i); 
+         b_lsq  = aRun->GetPulseFieldZeroCrossingLeastSquares(i); 
+         b_fit  = aRun->GetPulseFieldFit(i); 
+         b_ph   = aRun->GetPulseFieldPhaseFit(i); 
+         fprintf(outfile,"%d %5d %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf \n",
+                 run,pulse,b_mid,b_lin,b_lsq,b_fit,b_ph);
+      }
+      fclose(outfile);
+   }
+
+   delete[] outpath;
+
+}
+//______________________________________________________________________________
 void NMRFileManager::AppendToFile(const char *path,const char *header,int i,double a,double b,double c,double d){
 
    const int SIZE = 200;
@@ -442,7 +526,7 @@ void NMRFileManager::AppendToFile(const char *path,const char *header,int i,doub
          if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
          fprintf(outfile,"%s \n",header); 
       }
-      fprintf(outfile,"%d \t %10.3f \t %20.7f \t %20.7f \t %20.7f \n",i,a,b,c,d);
+      fprintf(outfile,"%d \t %10.15lf \t %20.15lf \t %20.15lf \t %20.15lf \n",i,a,b,c,d);
       fclose(outfile);
    }
 

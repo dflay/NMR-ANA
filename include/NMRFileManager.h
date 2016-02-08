@@ -55,7 +55,9 @@ class NMRFileManager{
       void ImportDataRawADCBin(int run,int pulse);
       void Convert(int adcID,const char *Units); 
       void PrintRunToFile(NMRRun *aRun); 
+      void PrintRunToFileField(NMRRun *aRun); 
       void PrintRunFreqStatsToFile(NMRRun *aRun); 
+      void PrintRunFieldStatsToFile(NMRRun *aRun); 
       void PrintRunMetaStatsToFile(NMRRun *aRun); 
       void CalculateRMSNoiseVMax(double t_min,double t_max,double t_thr,double &rms_noise,double &vmax); 
       void CalculateRMSNoiseVMax(double t_thr,NMRPulse *aPulse,double &rms_noise,double &vmax); 

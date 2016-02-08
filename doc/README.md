@@ -14,35 +14,37 @@
 
 ## 2. C++ Classes and Namespaces 
 
-   - NMRPulse:            A basic class containing pulse information: time and voltage data are stored 
-                          in arrays; additionally, variables exist for the maximum amplitude, RMS noise and 
-                          the timestamp associated with when the pulse was acquired.  
+   - **NMRPulse**:            A basic class containing pulse information: time and voltage data are stored 
+                              in arrays; additionally, variables exist for the maximum amplitude, RMS noise and 
+                              the timestamp associated with when the pulse was acquired.  
 
-   - NMRPulseAnalyzed:    An analyzed pulse; the frequency from multiple analyses can be stored to this object; it 
-                          derives from NMRPulse.  
+   - **NMRPulseAnalyzed**:    An analyzed pulse; the frequency from multiple analyses can be stored to this object; it 
+                              derives from NMRPulse.  
 
-   - NMRRun:              A class to store a collection of pulses, along with statistics about those pulses;
-                          for instance, the mean and standard deviations of the various data like frequencies, 
-                          amplitudes, noise, etc. 
+   - **NMRRun**:              A class to store a collection of pulses, along with statistics about those pulses;
+                              for instance, the mean and standard deviations of the various data like frequencies, 
+                              amplitudes, noise, etc. 
 
-   - NMRZeroCrossing:     A frequency analysis class: counts zero crossings of an input pulse and can return 
-                          up to three different types of results: midpoint method, linear interpolation and least squares fitting.  
+   - **NMRZeroCrossing**:     A frequency analysis class: counts zero crossings of an input pulse and can return 
+                              up to three different types of results: midpoint method, linear interpolation and least squares fitting.  
 
-   - NMRAnalysis:         A generic analysis class which has objects of analysis classes (like NMRZeroCrossing) as data members.
-                          Carries out the specified analyses on a given pulse.     
+   - **NMRAnalysis**:         A generic analysis class which has objects of analysis classes (like NMRZeroCrossing) as data members.
+                              Carries out the specified analyses on a given pulse.     
 
-   - NMRFileManager:      This class handles the input and output of all files; it loads data into NMRPulse and also prints 
-                          frequency results to output files.
+   - **NMRFileManager**:      This class handles the input and output of all files; it loads data into NMRPulse and also prints 
+                              frequency results to output files.
 
-   - NMRInputManager:     A public member of NMRFileManager; stores all input parameter information (from `./input/parameters.dat`) 
+   - **NMRInputManager**:     A public member of NMRFileManager; stores all input parameter information (from `./input/parameters.dat`) 
  
-   - NMRFourierTransform: A Fourier transform class; given an array of voltage data, will output the corresponding frequency
-                          spectrum; the output is normalized such that the power spectrum is in Volts.  
+   - **NMRFourierTransform**: A Fourier transform class; given an array of voltage data, will output the corresponding frequency
+                              spectrum; the output is normalized such that the power spectrum is in Volts.  
 
-   - NMRMath:             A namespace that has basic mathematical functions like obtaining the mean or standard deviation 
-                          of an array and other more complicated functions like least squares fitting algorithms. 
+   - **NMRMath**:             A namespace that has basic mathematical functions like obtaining the mean or standard deviation 
+                              of an array and other more complicated functions like least squares fitting algorithms. 
 
-   - NMRUtility:          A namespace for miscellaneous functions. 
+   - **NMRUtility**:          A namespace for miscellaneous functions. 
+   
+   - **NMRConstants**:        A namespace for constant values. 
 
 ## 3. Running an Analysis  
 
