@@ -526,7 +526,7 @@ void NMRFileManager::AppendToFile(const char *path,const char *header,int i,doub
          if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
          fprintf(outfile,"%s \n",header); 
       }
-      fprintf(outfile,"%d \t %10.15lf \t %20.15lf \t %20.15lf \t %20.15lf \n",i,a,b,c,d);
+      fprintf(outfile,"%d \t %10.3lf \t %20.15E \t %20.15E \t %20.15lf \n",i,a,b,c,d);
       fclose(outfile);
    }
 
