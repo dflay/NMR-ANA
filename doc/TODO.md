@@ -7,7 +7,9 @@
        over nothing, and delete the objects at the end; in particular, the NMRAnalysis 
        class is causing the problem.   
 
-   - Improve error handling (?) 
+   - Improve error handling (?)
+
+   - Add phase fit (N_cycles vs zc time) analysis to the zero crossing class 
 
 ## Classes to Complete or Add: 
 
