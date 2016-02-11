@@ -28,6 +28,7 @@ class NMRZeroCrossing{
       double fTMin,fTMax;                                     // time range to consider when fUseTimeRange is true 
       double *fX,*fY,*fEY;                                    // "analysis arrays": store data for fitting here  
       double *fFREQ;                                          // final frequency results 
+      double *fFREQ_ph;                                       // final frequency results (phase fit of t_zc)  
       double *fNC;                                            // number of cycles
       double fSampleFreq;                                     // sample frequency
       double fExpFreq;                                        // expected frequency  
@@ -55,6 +56,8 @@ class NMRZeroCrossing{
       void SetStepSize(int i)                               {fStep = i;     } 
 
       int CalculateFrequencies(int &TrueNumCrossings,double &FreqFullRange);
+     
+      double GetFrequencyFromPhaseFit(); 
 
    public:
       NMRZeroCrossing();
@@ -106,25 +109,29 @@ class NMRZeroCrossing{
 
       int Calculate(NMRPulse *aPulse);                                       // runs the calculation based on choices 
       // int GetNumAnaBins()                      const {return fNCrossing.size();}  
-      int GetNumAnaBins()                      const {return fNZC;}  
-      int GetCrossingNumber(int i)             const {return fNCrossing[i];}  
-      int GetCrossingIndex(int i)              const {return fCrossingIndex[i];}  
-      int GetNumZeroCrossingsMidpoint()        const {return fZC[0];} 
-      int GetNumZeroCrossingsLinearInterp()    const {return fZC[1];} 
-      int GetNumZeroCrossingsLeastSquares()    const {return fZC[2];} 
+      int GetNumAnaBins()                       const {return fNZC;}  
+      int GetCrossingNumber(int i)              const {return fNCrossing[i];}  
+      int GetCrossingIndex(int i)               const {return fCrossingIndex[i];}  
+      int GetNumZeroCrossingsMidpoint()         const {return fZC[0];} 
+      int GetNumZeroCrossingsLinearInterp()     const {return fZC[1];} 
+      int GetNumZeroCrossingsLeastSquares()     const {return fZC[2];} 
 
-      double GetNumCyclesMidpoint()            const {return fNC[0];} 
-      double GetNumCyclesLinearInterp()        const {return fNC[1];} 
-      double GetNumCyclesLeastSquares()        const {return fNC[2];} 
+      double GetNumCyclesMidpoint()             const {return fNC[0];} 
+      double GetNumCyclesLinearInterp()         const {return fNC[1];} 
+      double GetNumCyclesLeastSquares()         const {return fNC[2];} 
 
-      double GetFrequencyMidpoint()            const {return fFREQ[0];} 
-      double GetFrequencyLinearInterp()        const {return fFREQ[1];} 
-      double GetFrequencyLeastSquares()        const {return fFREQ[2];} 
+      double GetFrequencyMidpoint()             const {return fFREQ[0];} 
+      double GetFrequencyLinearInterp()         const {return fFREQ[1];} 
+      double GetFrequencyLeastSquares()         const {return fFREQ[2];} 
 
-      double GetTimeAtCrossing(int i)          const {return fTcross[i];} 
-      double GetVoltageAtCrossing(int i)       const {return fVcross[i];} 
-      double GetFrequencyAtCrossing(int i)     const {return fFreqAtCrossing[i];} 
-      double GetNumberOfCylces(int i)          const {return fNumCycles[i];} 
+      double GetFrequencyMidpointPhaseFit()     const {return fFREQ_ph[0];} 
+      double GetFrequencyLinearInterpPhaseFit() const {return fFREQ_ph[1];} 
+      double GetFrequencyLeastSquaresPhaseFit() const {return fFREQ_ph[2];} 
+
+      double GetTimeAtCrossing(int i)           const {return fTcross[i];} 
+      double GetVoltageAtCrossing(int i)        const {return fVcross[i];} 
+      double GetFrequencyAtCrossing(int i)      const {return fFreqAtCrossing[i];} 
+      double GetNumberOfCylces(int i)           const {return fNumCycles[i];} 
 
 };
 

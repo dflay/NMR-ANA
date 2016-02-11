@@ -27,16 +27,24 @@ NMRRun::NMRRun(int NumPulses){
    // for(int i=0;i<N;i++){
    //    fPulse[i] = new NMRPulseAnalyzed(i+1,1); 
    // }
-   const int N3 = 3;
-   fFreqMeanZC  = new double[N3];  
-   fFreqSigZC   = new double[N3]; 
-   fBMeanZC     = new double[N3];  
-   fBSigZC      = new double[N3]; 
+   const int N3   = 3;
+   fFreqMeanZC    = new double[N3];  
+   fFreqSigZC     = new double[N3]; 
+   fFreqMeanZC_ph = new double[N3];  
+   fFreqSigZC_ph  = new double[N3]; 
+   fBMeanZC       = new double[N3];  
+   fBSigZC        = new double[N3]; 
+   fBMeanZC_ph    = new double[N3];  
+   fBSigZC_ph     = new double[N3]; 
    for(int i=0;i<N3;i++){
-      fFreqMeanZC[i] = 0;
-      fFreqSigZC[i]  = 0;
-      fBMeanZC[i]    = 0;
-      fBSigZC[i]     = 0;
+      fFreqMeanZC[i]    = 0;
+      fFreqSigZC[i]     = 0;
+      fBMeanZC[i]       = 0;
+      fBSigZC[i]        = 0;
+      fFreqMeanZC_ph[i] = 0;
+      fFreqSigZC_ph[i]  = 0;
+      fBMeanZC_ph[i]    = 0;
+      fBSigZC_ph[i]     = 0;
    } 
 }
 //______________________________________________________________________________
@@ -48,7 +56,11 @@ NMRRun::~NMRRun(){
    delete[] fFreqMeanZC;  
    delete[] fFreqSigZC;  
    delete[] fBMeanZC;  
-   delete[] fBSigZC;  
+   delete[] fBSigZC; 
+   delete[] fFreqMeanZC_ph;  
+   delete[] fFreqSigZC_ph;  
+   delete[] fBMeanZC_ph;  
+   delete[] fBSigZC_ph;   
 }
 //______________________________________________________________________________
 void NMRRun::AddNMRPulse(NMRPulseAnalyzed *aPulse){
@@ -100,19 +112,25 @@ void NMRRun::PrintStatistics() const{
    printf("========================= Run Statistics ========================== \n");
    printf("Run number:          %d    \n",fRunNumber);
    printf("Number of pulses:    %d    \n",fNumPulses); 
-   printf("Ampl:                mean = %12.7lf std. dev. = %.7lf \n",fMeanAmpl,fSigAmpl);
-   printf("Noise RMS:           mean = %12.7lf std. dev. = %.7lf \n",fMeanNoiseRMS,fSigNoiseRMS);
-   printf("SNR:                 mean = %12.7lf std. dev. = %.7lf \n",fMeanSNR,fSigSNR);
-   printf("Freq (ZC, midpoint): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[0],fFreqSigZC[0]);
-   printf("Freq (ZC, linear):   mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[1],fFreqSigZC[1]);
-   printf("Freq (ZC, least sq): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
-   printf("Freq (fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
-   printf("Freq (phase fit):    mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
-   printf("B (ZC, midpoint):    mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[0],fBSigZC[0]);
-   printf("B (ZC, linear):      mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[1],fBSigZC[1]);
-   printf("B (ZC, least sq):    mean = %12.7lf std. dev. = %.7lf \n",fBMeanZC[2],fBSigZC[2]);
-   printf("B (fit):             mean = %12.7lf std. dev. = %.7lf \n",fBMeanFit,fBSigFit);
-   printf("B (phase fit):       mean = %12.7lf std. dev. = %.7lf \n",fBMeanPhaseFit,fBSigPhaseFit);
+   printf("Ampl:                      mean = %12.7lf std. dev. = %.7lf \n",fMeanAmpl,fSigAmpl);
+   printf("Noise RMS:                 mean = %12.7lf std. dev. = %.7lf \n",fMeanNoiseRMS,fSigNoiseRMS);
+   printf("SNR:                       mean = %12.7lf std. dev. = %.7lf \n",fMeanSNR,fSigSNR);
+   printf("Freq (ZC, midpoint):       mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[0],fFreqSigZC[0]);
+   printf("Freq (ZC, linear):         mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[1],fFreqSigZC[1]);
+   printf("Freq (ZC, least sq):       mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
+   printf("Freq (ZC, midpoint phase): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[0],fFreqSigZC_ph[0]);
+   printf("Freq (ZC, linear phase):   mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[1],fFreqSigZC_ph[1]);
+   printf("Freq (ZC, least sq phase): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[2],fFreqSigZC_ph[2]);
+   printf("Freq (fit):                mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
+   printf("Freq (phase fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
+   printf("B (ZC, midpoint):          mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[0],fBSigZC[0]);
+   printf("B (ZC, linear):            mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[1],fBSigZC[1]);
+   printf("B (ZC, least sq):          mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[2],fBSigZC[2]);
+   printf("B (ZC, midpoint phase):    mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC_ph[0],fBSigZC_ph[0]);
+   printf("B (ZC, linear phase):      mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC_ph[1],fBSigZC_ph[1]);
+   printf("B (ZC, least sq phase):    mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC_ph[2],fBSigZC_ph[2]);
+   printf("B (fit):                   mean = %12.15lf std. dev. = %.15lf \n",fBMeanFit,fBSigFit);
+   printf("B (phase fit):             mean = %12.15lf std. dev. = %.15lf \n",fBMeanPhaseFit,fBSigPhaseFit);
 }
 //______________________________________________________________________________
 void NMRRun::ClearData(){
@@ -140,10 +158,14 @@ void NMRRun::ClearData(){
       fPulse[i] = NULL;   // this might help.
    } 
    for(int i=0;i<3;i++){
-      fFreqMeanZC[i] = 0;
-      fFreqSigZC[i]  = 0;
-      fBMeanZC[i]    = 0;
-      fBSigZC[i]     = 0;
+      fFreqMeanZC[i]    = 0;
+      fFreqSigZC[i]     = 0;
+      fBMeanZC[i]       = 0;
+      fBSigZC[i]        = 0;
+      fFreqMeanZC_ph[i] = 0;
+      fFreqSigZC_ph[i]  = 0;
+      fBMeanZC_ph[i]    = 0;
+      fBSigZC_ph[i]     = 0;
    } 
 }
 

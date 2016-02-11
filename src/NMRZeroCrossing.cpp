@@ -17,13 +17,15 @@ NMRZeroCrossing::NMRZeroCrossing(){
    fNZC              = 0;
    // fFileManager     = new NMRFileManager(); 
    const int N = 3;
-   fZC   = new int[N];
-   fFREQ = new double[N];
-   fNC   = new double[N];
+   fZC      = new int[N];
+   fFREQ    = new double[N];
+   fFREQ_ph = new double[N];
+   fNC      = new double[N];
    for(int i=0;i<N;i++){
-      fFREQ[i] = 0;  
-      fZC[i]   = 0;  
-      fNC[i]   = 0; 
+      fFREQ[i]    = 0;  
+      fFREQ_ph[i] = 0;  
+      fZC[i]      = 0;  
+      fNC[i]      = 0; 
    } 
    const int NN = fNPTS;
    fX  = new double[NN]; 
@@ -45,6 +47,7 @@ NMRZeroCrossing::~NMRZeroCrossing(){
    delete[] fY; 
    delete[] fEY;
    delete[] fFREQ;
+   delete[] fFREQ_ph;
    delete[] fZC; 
    delete[] fNC;
    delete[] fNCrossing;
@@ -168,27 +171,31 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    int zc_mid=0,zc_lin=0,zc_lsq=0;
    double nc_mid=0,nc_lin=0,nc_lsq=0; 
    double freq_mid=0,freq_lin=0,freq_lsq=0;
+   double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0;  // fit num cycles vs t_zc to a line 
 
    if(fUseMidpoint){
       CountZeroCrossings(1,aPulse);
-      rc_fr  = CalculateFrequencies(zc_mid,freq_mid);
-      nc_mid = ( (double)zc_mid - 1.)/2.; 
+      rc_fr       = CalculateFrequencies(zc_mid,freq_mid);
+      freq_mid_ph = GetFrequencyFromPhaseFit(); 
+      nc_mid      = ( (double)zc_mid - 1.)/2.; 
       PrintVectorData(1,PulseNumber); 
       Reset(); 
    }
    rc += rc_fr; 
    if(fUseLinearInterp){
       CountZeroCrossings(2,aPulse);
-      rc_fr  = CalculateFrequencies(zc_lin,freq_lin);
-      nc_lin = ( (double)zc_lin - 1.)/2.; 
+      rc_fr       = CalculateFrequencies(zc_lin,freq_lin);
+      freq_lin_ph = GetFrequencyFromPhaseFit(); 
+      nc_lin      = ( (double)zc_lin - 1.)/2.; 
       PrintVectorData(2,PulseNumber); 
       Reset(); 
    }
    rc += rc_fr; 
    if(fUseLeastSq){
       CountZeroCrossings(3,aPulse);
-      rc_fr  = CalculateFrequencies(zc_lsq,freq_lsq);
-      nc_lsq = ( (double)zc_lsq - 1.)/2.; 
+      rc_fr       = CalculateFrequencies(zc_lsq,freq_lsq);
+      freq_lsq_ph = GetFrequencyFromPhaseFit(); 
+      nc_lsq      = ( (double)zc_lsq - 1.)/2.; 
       PrintVectorData(3,PulseNumber); 
       Reset(); 
    }
@@ -198,6 +205,10 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    fFREQ[0] = freq_mid; 
    fFREQ[1] = freq_lin;
    fFREQ[2] = freq_lsq;
+
+   fFREQ_ph[0] = freq_mid_ph; 
+   fFREQ_ph[1] = freq_lin_ph;
+   fFREQ_ph[2] = freq_lsq_ph;
 
    fZC[0]   = zc_mid;    
    fZC[1]   = zc_lin;    
@@ -285,5 +296,11 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
    
    return ret_code; 
 
+}
+//______________________________________________________________________________
+double NMRZeroCrossing::GetFrequencyFromPhaseFit(){
+   double freq=0,intercept=0,r=0;
+   NMRMath::LeastSquaresFitting(fNZC,fTcross,fNumCycles,intercept,freq,r); 
+   return freq;
 }
 

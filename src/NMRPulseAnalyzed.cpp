@@ -16,9 +16,13 @@ NMRPulseAnalyzed::NMRPulseAnalyzed(int PulseNumber,int NPTS){
    fNumPoints        = NPTS; 
    const int N3      = 3; 
    fFREQ_zc          = new double[N3]; 
+   fFREQ_zc_ph       = new double[N3]; 
    fB_zc             = new double[N3]; 
-   for(int i=0;i<N3;i++) fFREQ_zc[i] = 0.;  
-   for(int i=0;i<N3;i++) fB_zc[i]    = 0.;  
+   fB_zc_ph          = new double[N3]; 
+   for(int i=0;i<N3;i++) fFREQ_zc[i]    = 0.;  
+   for(int i=0;i<N3;i++) fFREQ_zc_ph[i] = 0.;  
+   for(int i=0;i<N3;i++) fB_zc[i]       = 0.;  
+   for(int i=0;i<N3;i++) fB_zc_ph[i]    = 0.;  
 }
 //______________________________________________________________________________
 NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed &aPulse): NMRPulse(aPulse){  
@@ -37,15 +41,23 @@ NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed &aPulse): NMRPulse(aPu
    fSNR              = aPulse.GetSignalToNoiseRatio();
    fNumPoints        = aPulse.GetNumPoints(); 
    // deep copy: base constructor does this (for times and voltages) 
-   const int N3 = 3; 
-   fFREQ_zc     = new double[N3]; 
-   fFREQ_zc[0]  = aPulse.GetFrequencyZeroCrossingMidpoint(); 
-   fFREQ_zc[1]  = aPulse.GetFrequencyZeroCrossingLinearInterp(); 
-   fFREQ_zc[2]  = aPulse.GetFrequencyZeroCrossingLeastSquares(); 
-   fB_zc        = new double[N3]; 
-   fB_zc[0]     = aPulse.GetFieldZeroCrossingMidpoint(); 
-   fB_zc[1]     = aPulse.GetFieldZeroCrossingLinearInterp(); 
-   fB_zc[2]     = aPulse.GetFieldZeroCrossingLeastSquares(); 
+   const int N3    = 3; 
+   fFREQ_zc        = new double[N3]; 
+   fFREQ_zc[0]     = aPulse.GetFrequencyZeroCrossingMidpoint(); 
+   fFREQ_zc[1]     = aPulse.GetFrequencyZeroCrossingLinearInterp(); 
+   fFREQ_zc[2]     = aPulse.GetFrequencyZeroCrossingLeastSquares(); 
+   fB_zc           = new double[N3]; 
+   fB_zc[0]        = aPulse.GetFieldZeroCrossingMidpoint(); 
+   fB_zc[1]        = aPulse.GetFieldZeroCrossingLinearInterp(); 
+   fB_zc[2]        = aPulse.GetFieldZeroCrossingLeastSquares(); 
+   fFREQ_zc_ph     = new double[N3]; 
+   fFREQ_zc_ph[0]  = aPulse.GetFrequencyZeroCrossingMidpointPhaseFit(); 
+   fFREQ_zc_ph[1]  = aPulse.GetFrequencyZeroCrossingLinearInterpPhaseFit(); 
+   fFREQ_zc_ph[2]  = aPulse.GetFrequencyZeroCrossingLeastSquaresPhaseFit(); 
+   fB_zc_ph        = new double[N3]; 
+   fB_zc_ph[0]     = aPulse.GetFieldZeroCrossingMidpointPhaseFit(); 
+   fB_zc_ph[1]     = aPulse.GetFieldZeroCrossingLinearInterpPhaseFit(); 
+   fB_zc_ph[2]     = aPulse.GetFieldZeroCrossingLeastSquaresPhaseFit(); 
 }
 //______________________________________________________________________________
 NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed *aPulse): NMRPulse(aPulse){
@@ -64,15 +76,23 @@ NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed *aPulse): NMRPulse(aPu
    fSNR              = aPulse->GetSignalToNoiseRatio();
    fNumPoints        = aPulse->GetNumPoints(); 
    // deep copy: base constructor does this (for times and voltages)  
-   const int N3 = 3; 
-   fFREQ_zc     = new double[N3]; 
-   fFREQ_zc[0]  = aPulse->GetFrequencyZeroCrossingMidpoint(); 
-   fFREQ_zc[1]  = aPulse->GetFrequencyZeroCrossingLinearInterp(); 
-   fFREQ_zc[2]  = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
-   fB_zc        = new double[N3]; 
-   fB_zc[0]     = aPulse->GetFieldZeroCrossingMidpoint(); 
-   fB_zc[1]     = aPulse->GetFieldZeroCrossingLinearInterp(); 
-   fB_zc[2]     = aPulse->GetFieldZeroCrossingLeastSquares(); 
+   const int N3    = 3; 
+   fFREQ_zc        = new double[N3]; 
+   fFREQ_zc[0]     = aPulse->GetFrequencyZeroCrossingMidpoint(); 
+   fFREQ_zc[1]     = aPulse->GetFrequencyZeroCrossingLinearInterp(); 
+   fFREQ_zc[2]     = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
+   fB_zc           = new double[N3]; 
+   fB_zc[0]        = aPulse->GetFieldZeroCrossingMidpoint(); 
+   fB_zc[1]        = aPulse->GetFieldZeroCrossingLinearInterp(); 
+   fB_zc[2]        = aPulse->GetFieldZeroCrossingLeastSquares(); 
+   fFREQ_zc_ph     = new double[N3]; 
+   fFREQ_zc_ph[0]  = aPulse->GetFrequencyZeroCrossingMidpointPhaseFit(); 
+   fFREQ_zc_ph[1]  = aPulse->GetFrequencyZeroCrossingLinearInterpPhaseFit(); 
+   fFREQ_zc_ph[2]  = aPulse->GetFrequencyZeroCrossingLeastSquaresPhaseFit(); 
+   fB_zc_ph        = new double[N3]; 
+   fB_zc_ph[0]     = aPulse->GetFieldZeroCrossingMidpointPhaseFit(); 
+   fB_zc_ph[1]     = aPulse->GetFieldZeroCrossingLinearInterpPhaseFit(); 
+   fB_zc_ph[2]     = aPulse->GetFieldZeroCrossingLeastSquaresPhaseFit(); 
 }
 //______________________________________________________________________________
 NMRPulseAnalyzed& NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed &aPulse){
@@ -91,15 +111,23 @@ NMRPulseAnalyzed& NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed &aPulse){
    fSNR              = aPulse.GetSignalToNoiseRatio();
    fNumPoints        = aPulse.GetNumPoints(); 
    // deep copy (a lot of this is done in the NMRPulse class)  
-   const int N3 = 3; 
-   fFREQ_zc     = new double[N3]; 
-   fFREQ_zc[0]  = aPulse.GetFrequencyZeroCrossingMidpoint(); 
-   fFREQ_zc[1]  = aPulse.GetFrequencyZeroCrossingLinearInterp(); 
-   fFREQ_zc[2]  = aPulse.GetFrequencyZeroCrossingLeastSquares(); 
-   fB_zc        = new double[N3]; 
-   fB_zc[0]     = aPulse.GetFieldZeroCrossingMidpoint(); 
-   fB_zc[1]     = aPulse.GetFieldZeroCrossingLinearInterp(); 
-   fB_zc[2]     = aPulse.GetFieldZeroCrossingLeastSquares(); 
+   const int N3    = 3; 
+   fFREQ_zc        = new double[N3]; 
+   fFREQ_zc[0]     = aPulse.GetFrequencyZeroCrossingMidpoint(); 
+   fFREQ_zc[1]     = aPulse.GetFrequencyZeroCrossingLinearInterp(); 
+   fFREQ_zc[2]     = aPulse.GetFrequencyZeroCrossingLeastSquares(); 
+   fB_zc           = new double[N3]; 
+   fB_zc[0]        = aPulse.GetFieldZeroCrossingMidpoint(); 
+   fB_zc[1]        = aPulse.GetFieldZeroCrossingLinearInterp(); 
+   fB_zc[2]        = aPulse.GetFieldZeroCrossingLeastSquares(); 
+   fFREQ_zc_ph     = new double[N3]; 
+   fFREQ_zc_ph[0]  = aPulse.GetFrequencyZeroCrossingMidpointPhaseFit(); 
+   fFREQ_zc_ph[1]  = aPulse.GetFrequencyZeroCrossingLinearInterpPhaseFit(); 
+   fFREQ_zc_ph[2]  = aPulse.GetFrequencyZeroCrossingLeastSquaresPhaseFit(); 
+   fB_zc_ph        = new double[N3]; 
+   fB_zc_ph[0]     = aPulse.GetFieldZeroCrossingMidpointPhaseFit(); 
+   fB_zc_ph[1]     = aPulse.GetFieldZeroCrossingLinearInterpPhaseFit(); 
+   fB_zc_ph[2]     = aPulse.GetFieldZeroCrossingLeastSquaresPhaseFit(); 
 
    return *this; 
 }
@@ -119,15 +147,23 @@ NMRPulseAnalyzed* NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed* aPulse){
    fSNR              = aPulse->GetSignalToNoiseRatio();
    fNumPoints        = aPulse->GetNumPoints(); 
    // deep copy (a lot of this is done in the NMRPulse class)  
-   const int N3 = 3; 
-   fFREQ_zc     = new double[N3]; 
-   fFREQ_zc[0]  = aPulse->GetFrequencyZeroCrossingMidpoint(); 
-   fFREQ_zc[1]  = aPulse->GetFrequencyZeroCrossingLinearInterp(); 
-   fFREQ_zc[2]  = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
-   fB_zc        = new double[N3]; 
-   fB_zc[0]     = aPulse->GetFieldZeroCrossingMidpoint(); 
-   fB_zc[1]     = aPulse->GetFieldZeroCrossingLinearInterp(); 
-   fB_zc[2]     = aPulse->GetFieldZeroCrossingLeastSquares(); 
+   const int N3    = 3; 
+   fFREQ_zc        = new double[N3]; 
+   fFREQ_zc[0]     = aPulse->GetFrequencyZeroCrossingMidpoint(); 
+   fFREQ_zc[1]     = aPulse->GetFrequencyZeroCrossingLinearInterp(); 
+   fFREQ_zc[2]     = aPulse->GetFrequencyZeroCrossingLeastSquares(); 
+   fB_zc           = new double[N3]; 
+   fB_zc[0]        = aPulse->GetFieldZeroCrossingMidpoint(); 
+   fB_zc[1]        = aPulse->GetFieldZeroCrossingLinearInterp(); 
+   fB_zc[2]        = aPulse->GetFieldZeroCrossingLeastSquares(); 
+   fFREQ_zc_ph     = new double[N3]; 
+   fFREQ_zc_ph[0]  = aPulse->GetFrequencyZeroCrossingMidpointPhaseFit(); 
+   fFREQ_zc_ph[1]  = aPulse->GetFrequencyZeroCrossingLinearInterpPhaseFit(); 
+   fFREQ_zc_ph[2]  = aPulse->GetFrequencyZeroCrossingLeastSquaresPhaseFit(); 
+   fB_zc_ph        = new double[N3]; 
+   fB_zc_ph[0]     = aPulse->GetFieldZeroCrossingMidpointPhaseFit(); 
+   fB_zc_ph[1]     = aPulse->GetFieldZeroCrossingLinearInterpPhaseFit(); 
+   fB_zc_ph[2]     = aPulse->GetFieldZeroCrossingLeastSquaresPhaseFit(); 
 
    return this; 
 }
@@ -135,7 +171,9 @@ NMRPulseAnalyzed* NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed* aPulse){
 NMRPulseAnalyzed::~NMRPulseAnalyzed(){
    // I think the base class destructor is called... 
    delete[] fFREQ_zc;  
+   delete[] fFREQ_zc_ph;  
    delete[] fB_zc;  
+   delete[] fB_zc_ph;  
 }
 //______________________________________________________________________________
 void NMRPulseAnalyzed::ClearData(){
@@ -154,30 +192,38 @@ void NMRPulseAnalyzed::ClearData(){
       fVoltage[i]    = 0;
       fVoltageErr[i] = 0;
    }
-   for(int i=0;i<3;i++) fFREQ_zc[i] = 0; 
-   for(int i=0;i<3;i++) fB_zc[i]    = 0; 
+   for(int i=0;i<3;i++) fFREQ_zc[i]    = 0; 
+   for(int i=0;i<3;i++) fFREQ_zc_ph[i] = 0; 
+   for(int i=0;i<3;i++) fB_zc[i]       = 0; 
+   for(int i=0;i<3;i++) fB_zc_ph[i]    = 0; 
 }
 //______________________________________________________________________________
 void NMRPulseAnalyzed::Print(){
    printf("================ NMR Pulse ================ \n");
-   printf("PulseNumber        = %d         \n",fPulseNumber     );
-   printf("TimeStamp          = %.7lf s    \n",fTimeStamp       );
-   printf("NumPoints          = %d         \n",fNumPoints       );
-   printf("NumZeroCrossings   = %d         \n",fNumZeroCrossings);
-   printf("NumCycles          = %.3lf      \n",fNumCycles       );
-   printf("Ampl               = %.7lf V    \n",fAmpl            );
-   printf("NoiseRMS           = %.7lf V    \n",fNoiseRMS        );
-   printf("SNR                = %.7lf      \n",fSNR             );
-   printf("Freq (ZC midpoint) = %.7lf Hz   \n",fFREQ_zc[0]      );
-   printf("Freq (ZC linear)   = %.7lf Hz   \n",fFREQ_zc[1]      );
-   printf("Freq (ZC least sq) = %.7lf Hz   \n",fFREQ_zc[2]      );
-   printf("Freq (Fit)         = %.7lf Hz   \n",fFREQ_fit        );
-   printf("Freq (Phase Fit)   = %.7lf Hz   \n",fFREQ_ph         );
-   printf("B Field (ZC midpoint) = %.7lf T \n",fB_zc[0]         );
-   printf("B Field (ZC linear)   = %.7lf T \n",fB_zc[1]         );
-   printf("B Field (ZC least sq) = %.7lf T \n",fB_zc[2]         );
-   printf("B Field (Fit)         = %.7lf T \n",fB_fit           );
-   printf("B Field (Phase Fit)   = %.7lf T \n",fB_ph            );
+   printf("PulseNumber                 = %d         \n",fPulseNumber     );
+   printf("TimeStamp                   = %.7lf s    \n",fTimeStamp       );
+   printf("NumPoints                   = %d         \n",fNumPoints       );
+   printf("NumZeroCrossings            = %d         \n",fNumZeroCrossings);
+   printf("NumCycles                   = %.3lf      \n",fNumCycles       );
+   printf("Ampl                        = %.7lf V    \n",fAmpl            );
+   printf("NoiseRMS                    = %.7lf V    \n",fNoiseRMS        );
+   printf("SNR                         = %.7lf      \n",fSNR             );
+   printf("Freq (ZC midpoint)          = %.7lf Hz   \n",fFREQ_zc[0]      );
+   printf("Freq (ZC linear)            = %.7lf Hz   \n",fFREQ_zc[1]      );
+   printf("Freq (ZC least sq)          = %.7lf Hz   \n",fFREQ_zc[2]      );
+   printf("Freq (ZC midpoint phase)    = %.7lf Hz   \n",fFREQ_zc_ph[0]   );
+   printf("Freq (ZC linear phase)      = %.7lf Hz   \n",fFREQ_zc_ph[1]   );
+   printf("Freq (ZC least sq phase)    = %.7lf Hz   \n",fFREQ_zc_ph[2]   );
+   printf("Freq (Fit)                  = %.7lf Hz   \n",fFREQ_fit        );
+   printf("Freq (Phase Fit)            = %.7lf Hz   \n",fFREQ_ph         );
+   printf("B Field (ZC midpoint)       = %.15lf T   \n",fB_zc[0]         );
+   printf("B Field (ZC linear)         = %.15lf T   \n",fB_zc[1]         );
+   printf("B Field (ZC least sq)       = %.15lf T   \n",fB_zc[2]         );
+   printf("B Field (ZC midpoint phase) = %.15lf T   \n",fB_zc_ph[0]      );
+   printf("B Field (ZC linear phase)   = %.15lf T   \n",fB_zc_ph[1]      );
+   printf("B Field (ZC least sq phase) = %.15lf T   \n",fB_zc_ph[2]      );
+   printf("B Field (Fit)               = %.15lf T   \n",fB_fit           );
+   printf("B Field (Phase Fit)         = %.15lf T   \n",fB_ph            );
    // for(int i=0;i<fNumPoints;i++){
    //    std::cout << "time = " << fTime[i] << "\t" << "voltage = " << fVoltage[i] << "\t" << "voltage err = "<< fVoltageErr[i] << std::endl;
    // }

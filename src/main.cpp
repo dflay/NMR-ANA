@@ -22,11 +22,10 @@ int main(){
    FM->InputManager->PrintRunList();  
    FM->InitInputDirectory();
 
-   int NPulses        = FM->InputManager->GetNumPulses();       // will be zero upon starting
-   int Verbosity      = FM->InputManager->GetVerbosity(); 
-   int NumRuns        = FM->InputManager->GetNumberOfRuns();  
+   int NPulses     = FM->InputManager->GetNumPulses();       // will be zero upon starting
+   int Verbosity   = FM->InputManager->GetVerbosity(); 
+   const int NRUNS = FM->InputManager->GetNumberOfRuns();  
    
-   const int NRUNS = NumRuns; 
    int RunList[NRUNS]; 
    for(int i=0;i<NRUNS;i++) RunList[i] = FM->InputManager->GetRun(i);  
  
