@@ -304,6 +304,7 @@ void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunFieldStatsToFile(aRun); 
    PrintRunMetaStatsToFile(aRun); 
 }
+
 //______________________________________________________________________________
 void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 
@@ -504,6 +505,34 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
    }
 
    delete[] outpath;
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunStatsToFile(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFreqToFileZC(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFreqToFileTimeFit(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFreqToFileHilbert(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFieldToFileZC(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFieldToFileTimeFit(NMRRun *aRun){
+
+}
+//______________________________________________________________________________
+void NMRFileManager::PrintRunFieldToFileHilbert(NMRRun *aRun){
 
 }
 //______________________________________________________________________________

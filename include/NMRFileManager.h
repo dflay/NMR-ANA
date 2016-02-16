@@ -58,7 +58,16 @@ class NMRFileManager{
       void PrintRunToFileField(NMRRun *aRun); 
       void PrintRunFreqStatsToFile(NMRRun *aRun); 
       void PrintRunFieldStatsToFile(NMRRun *aRun); 
+
+      void PrintRunStatsToFile(NMRRun *aRun); 
       void PrintRunMetaStatsToFile(NMRRun *aRun); 
+      void PrintRunFreqToFileZC(NMRRun *aRun); 
+      void PrintRunFreqToFileTimeFit(NMRRun *aRun); 
+      void PrintRunFreqFileHilbert(NMRRun *aRun);
+      void PrintRunFieldToFileZC(NMRRun *aRun); 
+      void PrintRunFieldToFileTimeFit(NMRRun *aRun); 
+      void PrintRunFieldToFileHilbert(NMRRun *aRun); 
+
       void CalculateRMSNoiseVMax(double t_min,double t_max,double t_thr,double &rms_noise,double &vmax); 
       void CalculateRMSNoiseVMax(double t_thr,NMRPulse *aPulse,double &rms_noise,double &vmax); 
       void GetOffsetLinear(double input_offset,NMRPulse *aPulse,double *offset); 
