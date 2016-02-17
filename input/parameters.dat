@@ -1,9 +1,9 @@
 # ID 	 value
 month                   2
-day                     1
+day                     16
 year                    2016
 t_start                 0.00E+00
-t_end                   5.00E-03
+t_end                   1.00E-03
 verbosity               0
 offset_correction_order 2
 zero_crossing           1

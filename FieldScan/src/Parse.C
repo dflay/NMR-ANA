@@ -1,9 +1,26 @@
 
+void ParseDataTwoProbes(vector<int> MechSw,vector<double> ampl,vector<double> noise,vector<double> B,vector<double> &B1,vector<double> &B2); 
 void ParseDataTwoProbes(vector<double> B,vector<double> &B1,vector<double> &B2); 
 void ParseData(int run,vector<double> Ampl,vector<double> B,vector<double> &B1,vector<double> &B2); 
 void ParseData(int run,vector<double> Ampl,vector<double> Noise,vector<double> B,vector<double> &B1,vector<double> &B2); 
 void DeleteZeroes(vector<double> &v); 
 
+//______________________________________________________________________________
+void ParseDataTwoProbes(int sw_a,int sw_b,vector<int> MechSw,vector<double> ampl,vector<double> noise,
+                        vector<double> B,vector<double> &B1,vector<double> &B2){
+
+   const int N = B.size();
+
+   int start = 1;  // leave off the first pulse (sometimes is garbage)  
+   int end   = N;  
+
+   for(int i=start;i<end;i++){
+      if( (ampl[i]>0.050 && ampl[i]<1.100)&&(ampl[i] > noise[i]) ){
+         if(MechSw[i]==sw_a) B1.push_back(B[i]); 
+         if(MechSw[i]==sw_b) B2.push_back(B[i]);
+      } 
+   }
+}
 //______________________________________________________________________________
 void ParseDataTwoProbes(vector<double> B,vector<double> &B1,vector<double> &B2){
 
