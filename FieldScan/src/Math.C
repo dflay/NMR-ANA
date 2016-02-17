@@ -1,4 +1,5 @@
-#define GAMMA_p   42.576E+6 
+#define GAMMA_p   42.576E+6
+#define DEG_TO_RAD 0.0174533 
 
 double GetMean(vector<double> x); 
 double GetStandardDeviation(vector<double> x); 

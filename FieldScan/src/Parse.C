@@ -20,6 +20,22 @@ void ParseDataTwoProbes(int sw_a,int sw_b,vector<int> MechSw,vector<double> ampl
          if(MechSw[i]==sw_b) B2.push_back(B[i]);
       } 
    }
+ 
+   int M1 = B1.size(); 
+   int M2 = B2.size();
+
+   if(M1==M2){
+
+   }else{
+      do{
+	 if(M1>M2) B1.pop_back();
+	 if(M2>M1) B2.pop_back();
+	 M1 = B1.size();
+	 M2 = B2.size();
+	 cout << "M1 = " << M1 << "\t" << "M2 = " << M2 << endl;
+      }while(M1!=M2); 
+   }
+
 }
 //______________________________________________________________________________
 void ParseDataTwoProbes(vector<double> B,vector<double> &B1,vector<double> &B2){
