@@ -50,21 +50,21 @@ TGraphAsymmErrors *GetTGraphAsymmErrors(vector<double> x,vector<double> y,vector
 // 
 /// Graph parameters 
 //______________________________________________________________________________
-void SetGraphParameters(TGraph *g,int Marker,int Color,int width = 1){
+void SetGraphParameters(TGraph *g,int Marker,int Color,int width){
    g->SetMarkerStyle(Marker); 
    g->SetMarkerColor(Color); 
    g->SetLineColor(Color); 
    g->SetLineWidth(width); 
 }
 //______________________________________________________________________________
-void SetGraphParameters(TGraphErrors *g,int Marker,int Color,int width = 1){
+void SetGraphParameters(TGraphErrors *g,int Marker,int Color,int width){
    g->SetMarkerStyle(Marker); 
    g->SetMarkerColor(Color); 
    g->SetLineColor(Color); 
    g->SetLineWidth(width); 
 }
 //______________________________________________________________________________
-void SetGraphParameters(TGraphAsymmErrors *g,int Marker,int Color,int width = 1){
+void SetGraphParameters(TGraphAsymmErrors *g,int Marker,int Color,int width){
    g->SetMarkerStyle(Marker); 
    g->SetMarkerColor(Color); 
    g->SetLineColor(Color); 

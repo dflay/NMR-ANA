@@ -39,13 +39,17 @@ void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noi
    int cntr=0;
    double iampl,inoise,izc,inc,ifa,ifb,ifc,ifd,ife;
 
+   const int NLines = 1; 
+   const int SIZE = 2048; 
+   char buf[SIZE]; 
+
    ifstream infile;
    infile.open(inpath);
    if( infile.fail() ){
       cout << "Cannot open the file: " << inpath << endl;
       exit(1);  
    }else{
-      // for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
+      for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
       while( !infile.eof() ){
 	 infile >> irun >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
          if(irun==Run){
