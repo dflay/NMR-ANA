@@ -1,6 +1,8 @@
 void ImportData(TString inpath,int RunNumber,vector<double> &B); 
-void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise);
-void ImportRunParams(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi); 
+void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC);
+void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi); 
+void ImportRunParams4(TString inpath,vector<int> &Run,
+                      vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi); 
 void ImportMechSwParams(TString inpath,int Run,vector<int> &MechSw); 
 
 //______________________________________________________________________________
@@ -33,7 +35,7 @@ void ImportData(TString inpath,int Run,vector<double> &B){
 
 }
 //______________________________________________________________________________
-void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise){
+void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC){
 
    int irun=0,ipulse=0;
    int cntr=0;
@@ -53,10 +55,11 @@ void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noi
       while( !infile.eof() ){
 	 infile >> irun >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
          if(irun==Run){
-            // cout << irun << "\t" << Form("%.5lf",iampl) << endl;
+            // cout << irun << "\t" << ipulse << "\t" << Form("%.5lf",ifc) << endl;
 	    cntr++;
 	    Ampl.push_back(iampl);
 	    Noise.push_back(inoise); 
+            ZC.push_back(izc); 
          } 
       }
       infile.close(); 
@@ -65,7 +68,7 @@ void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noi
 
 }
 //______________________________________________________________________________
-void ImportRunParams(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi){
+void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi){
 
    int cntr=0;
    double irun,islota,islotb,iazi,iz;
@@ -99,6 +102,45 @@ void ImportRunParams(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<i
 
 }
 //______________________________________________________________________________
+void ImportRunParams4(TString inpath,vector<int> &Run,
+                      vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi){
+
+   int cntr=0;
+   double irun,islota,islotb,islotc,islotd,iazi,iz;
+
+   const int NLines = 1; 
+   const int SIZE = 2048; 
+   char buf[SIZE]; 
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
+      while( !infile.eof() ){
+	 infile >> irun >> islota >> islotb >> islotc >> islotd >> iazi >> iz; 
+	 cntr++;
+	 // cout << irun << "\t" << islota << "\t" << islotb << "\t" << iazi << endl;
+	 Run.push_back(irun);
+	 SlotA.push_back(islota);
+	 SlotB.push_back(islotb);
+	 SlotC.push_back(islotc);
+	 SlotD.push_back(islotd);
+	 Azi.push_back(iazi);
+      }
+      Run.pop_back(); 
+      SlotA.pop_back();
+      SlotB.pop_back();
+      SlotC.pop_back();
+      SlotD.pop_back();
+      Azi.pop_back();
+      infile.close(); 
+   }
+
+}
+//______________________________________________________________________________
 void ImportMechSwParams(TString inpath,int Run,vector<int> &MechSw){
 
    int cntr=0,irun=0,ipulse=0,isw=0;
@@ -116,8 +158,10 @@ void ImportMechSwParams(TString inpath,int Run,vector<int> &MechSw){
       while( !infile.eof() ){
 	 infile >> irun >> ipulse >> isw; 
 	 cntr++;
-	 // cout << irun << "\t" << islota << "\t" << islotb << "\t" << iazi << endl;
-	 if(irun==Run) MechSw.push_back(isw);
+	 if(irun==Run){
+            MechSw.push_back(isw);
+            // cout << irun << "\t" << ipulse << "\t" << isw << endl;
+         }
       }
       // MechSw.pop_back(); 
       infile.close(); 
