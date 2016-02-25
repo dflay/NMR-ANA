@@ -1,5 +1,6 @@
 void ImportData(TString inpath,int RunNumber,vector<double> &B); 
 void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC);
+void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<double> &dB); 
 void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi); 
 void ImportRunParams4(TString inpath,vector<int> &Run,
                       vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi); 
@@ -64,6 +65,28 @@ void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noi
       }
       infile.close(); 
       // B.pop_back();
+   }
+
+}
+//______________________________________________________________________________
+void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<double> &dB){
+
+   int cntr=0;
+   double ix,iy,iz,ib,idb,ibr,idbr;
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      while( !infile.eof() ){
+	 infile >> ix >> iy >> iz >> ib >> idb >> ibr >> idbr; 
+	 z.push_back(iz);
+         B.push_back(ib);
+         dB.push_back(idb);
+      }
+      infile.close(); 
    }
 
 }
