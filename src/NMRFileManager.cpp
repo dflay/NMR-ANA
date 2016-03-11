@@ -308,23 +308,29 @@ void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
 //______________________________________________________________________________
 void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 
-   int run            = aRun->GetRunNumber();
-   double mean_zc_mid = aRun->GetFrequencyMeanZeroCrossingMidpoint();  
-   double mean_zc_lin = aRun->GetFrequencyMeanZeroCrossingLinearInterp();  
-   double mean_zc_lsq = aRun->GetFrequencyMeanZeroCrossingLeastSquares();  
-   double sig_zc_mid  = aRun->GetFrequencySigmaZeroCrossingMidpoint();  
-   double sig_zc_lin  = aRun->GetFrequencySigmaZeroCrossingLinearInterp();  
-   double sig_zc_lsq  = aRun->GetFrequencySigmaZeroCrossingLeastSquares();  
-   double mean_fit    = aRun->GetFrequencyMeanFit();  
-   double sig_fit     = aRun->GetFrequencySigmaFit();  
-   double mean_ph     = aRun->GetFrequencyMeanPhaseFit();  
-   double sig_ph      = aRun->GetFrequencySigmaPhaseFit();  
+   int run               = aRun->GetRunNumber();
+   double mean_zc_mid    = aRun->GetFrequencyMeanZeroCrossingMidpoint();  
+   double mean_zc_lin    = aRun->GetFrequencyMeanZeroCrossingLinearInterp();  
+   double mean_zc_lsq    = aRun->GetFrequencyMeanZeroCrossingLeastSquares();  
+   double sig_zc_mid     = aRun->GetFrequencySigmaZeroCrossingMidpoint();  
+   double sig_zc_lin     = aRun->GetFrequencySigmaZeroCrossingLinearInterp();  
+   double sig_zc_lsq     = aRun->GetFrequencySigmaZeroCrossingLeastSquares();  
+   double mean_zc_mid_ph = aRun->GetFrequencyMeanZeroCrossingMidpointPhaseFit();  
+   double mean_zc_lin_ph = aRun->GetFrequencyMeanZeroCrossingLinearInterpPhaseFit();  
+   double mean_zc_lsq_ph = aRun->GetFrequencyMeanZeroCrossingLeastSquaresPhaseFit();  
+   double sig_zc_mid_ph  = aRun->GetFrequencySigmaZeroCrossingMidpointPhaseFit();  
+   double sig_zc_lin_ph  = aRun->GetFrequencySigmaZeroCrossingLinearInterpPhaseFit();  
+   double sig_zc_lsq_ph  = aRun->GetFrequencySigmaZeroCrossingLeastSquaresPhaseFit();  
+   // double mean_fit       = aRun->GetFrequencyMeanFit();  
+   // double sig_fit        = aRun->GetFrequencySigmaFit();  
+   // double mean_ph        = aRun->GetFrequencyMeanPhaseFit();  
+   // double sig_ph         = aRun->GetFrequencySigmaPhaseFit();  
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
    sprintf(outpath,"%s/results_run-freq-stats.dat",fOutputBaseDir);
    const char *header  = 
-   "# Run \t Mean [Mid] (Hz) \t Sig [Mid] \t Mean [Lin] (Hz) \t Sig [Lin] (Hz) \t Mean [Lsq] (Hz) \t Sig [Lsq] (Hz) \t Mean [fit] \t Sig [fit] \t Mean [ph] \t Sig [ph]"; 
+   "# Run \t Mean [Mid] (Hz) \t Sig [Mid] \t Mean [Lin] (Hz) \t Sig [Lin] (Hz) \t Mean [Lsq] (Hz) \t Sig [Lsq] (Hz) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
    const char *mode = "a";  // append data; create if it doesn't exist  
 
@@ -337,8 +343,8 @@ void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
    }else{
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header);
-      fprintf(outfile,"%d \t %5.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \n",
-              run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_fit,sig_fit,mean_ph,sig_ph);
+      fprintf(outfile,"%d \t %5.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \t %10.7lf \t %5.7lf \n",
+              run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_zc_mid_ph,sig_zc_mid_ph,mean_zc_lin_ph,sig_zc_lin_ph,mean_zc_lsq_ph,sig_zc_lsq_ph);
       fclose(outfile);
    }
 
@@ -348,23 +354,29 @@ void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 //______________________________________________________________________________
 void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
 
-   int run            = aRun->GetRunNumber();
-   double mean_zc_mid = aRun->GetFieldMeanZeroCrossingMidpoint();  
-   double mean_zc_lin = aRun->GetFieldMeanZeroCrossingLinearInterp();  
-   double mean_zc_lsq = aRun->GetFieldMeanZeroCrossingLeastSquares();  
-   double sig_zc_mid  = aRun->GetFieldSigmaZeroCrossingMidpoint();  
-   double sig_zc_lin  = aRun->GetFieldSigmaZeroCrossingLinearInterp();  
-   double sig_zc_lsq  = aRun->GetFieldSigmaZeroCrossingLeastSquares();  
-   double mean_fit    = aRun->GetFieldMeanFit();  
-   double sig_fit     = aRun->GetFieldSigmaFit();  
-   double mean_ph     = aRun->GetFieldMeanPhaseFit();  
-   double sig_ph      = aRun->GetFieldSigmaPhaseFit();  
+   int run               = aRun->GetRunNumber();
+   double mean_zc_mid    = aRun->GetFieldMeanZeroCrossingMidpoint();  
+   double mean_zc_lin    = aRun->GetFieldMeanZeroCrossingLinearInterp();  
+   double mean_zc_lsq    = aRun->GetFieldMeanZeroCrossingLeastSquares();  
+   double sig_zc_mid     = aRun->GetFieldSigmaZeroCrossingMidpoint();  
+   double sig_zc_lin     = aRun->GetFieldSigmaZeroCrossingLinearInterp();  
+   double sig_zc_lsq     = aRun->GetFieldSigmaZeroCrossingLeastSquares();  
+   double mean_zc_mid_ph = aRun->GetFieldMeanZeroCrossingMidpointPhaseFit();  
+   double mean_zc_lin_ph = aRun->GetFieldMeanZeroCrossingLinearInterpPhaseFit();  
+   double mean_zc_lsq_ph = aRun->GetFieldMeanZeroCrossingLeastSquaresPhaseFit();  
+   double sig_zc_mid_ph  = aRun->GetFieldSigmaZeroCrossingMidpointPhaseFit();  
+   double sig_zc_lin_ph  = aRun->GetFieldSigmaZeroCrossingLinearInterpPhaseFit();  
+   double sig_zc_lsq_ph  = aRun->GetFieldSigmaZeroCrossingLeastSquaresPhaseFit();  
+   // double mean_fit       = aRun->GetFieldMeanFit();  
+   // double sig_fit        = aRun->GetFieldSigmaFit();  
+   // double mean_ph        = aRun->GetFieldMeanPhaseFit();  
+   // double sig_ph         = aRun->GetFieldSigmaPhaseFit();  
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
    sprintf(outpath,"%s/results_run-field-stats.dat",fOutputBaseDir);
    const char *header  = 
-   "# Run \t Mean [Mid] (T) \t Sig [Mid] \t Mean [Lin] (T) \t Sig [Lin] (T) \t Mean [Lsq] (T) \t Sig [Lsq] (T) \t Mean [fit] \t Sig [fit] \t Mean [ph] \t Sig [ph]"; 
+   "# Run \t Mean [Mid] (T) \t Sig [Mid] \t Mean [Lin] (T) \t Sig [Lin] (T) \t Mean [Lsq] (T) \t Sig [Lsq] (T) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
    const char *mode = "a";  // append data; create if it doesn't exist  
 
@@ -377,8 +389,8 @@ void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
    }else{
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header);
-      fprintf(outfile,"%d \t %5.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \n",
-              run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_fit,sig_fit,mean_ph,sig_ph);
+      fprintf(outfile,"%d \t %5.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf \t %10.15lf \t %5.15lf  \n",
+              run,mean_zc_mid,sig_zc_mid,mean_zc_lin,sig_zc_lin,mean_zc_lsq,sig_zc_lsq,mean_zc_mid_ph,sig_zc_mid_ph,mean_zc_lin_ph,sig_zc_lin_ph,mean_zc_lsq_ph,sig_zc_lsq_ph);
       fclose(outfile);
    }
 
@@ -425,13 +437,14 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
 
    int pulse=0,zc=0;
    double ampl=0,rms_noise=0,nc=0,snr=0;
-   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0; 
+   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
+   double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0; 
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
    sprintf(outpath,"%s/results_pulse-stats.dat",fOutputBaseDir);
      
-   const char *header  = "# Run \t Pulse \t Max Ampl (V) \t RMS Noise (V) \t Zc \t Nc \t Freq [Mid] (Hz) \t Freq [Lin] (Hz) \t Freq [Lsq] (Hz) \t Freq [fit] (Hz) \t Freq [ph] (Hz)"; 
+   const char *header  = "# Run \t Pulse \t Max Ampl (V) \t RMS Noise (V) \t Zc \t Nc \t Freq [Mid] (Hz) \t Freq [Lin] (Hz) \t Freq [Lsq] (Hz) \t Freq [mid ph] (Hz) \t Freq [lin ph] (Hz) \t Freq [lsq ph] (Hz)"; 
 
    const char *mode = "a";  // append data; create if it doesn't exist  
 
@@ -454,10 +467,13 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
          freq_mid  = aRun->GetPulseFrequencyZeroCrossingMidpoint(i); 
          freq_lin  = aRun->GetPulseFrequencyZeroCrossingLinearInterp(i); 
          freq_lsq  = aRun->GetPulseFrequencyZeroCrossingLeastSquares(i); 
+         freq_mid_ph = aRun->GetPulseFrequencyZeroCrossingMidpointPhaseFit(i); 
+         freq_lin_ph = aRun->GetPulseFrequencyZeroCrossingLinearInterpPhaseFit(i); 
+         freq_lsq_ph = aRun->GetPulseFrequencyZeroCrossingLeastSquaresPhaseFit(i); 
          freq_fit  = aRun->GetPulseFrequencyFit(i); 
          freq_ph   = aRun->GetPulseFrequencyPhaseFit(i); 
-         fprintf(outfile,"%d %5d %5.7lf %20.7lf %5d %5.3lf %20.7lf %20.7lf %20.7lf %20.7lf %20.7lf \n",
-                 run,pulse,ampl,rms_noise,zc,nc,freq_mid,freq_lin,freq_lsq,freq_fit,freq_ph);
+         fprintf(outfile,"%d %5d %5.7lf %20.7lf %5d %5.3lf %20.7lf %20.7lf %20.7lf %20.7lf %20.7lf %20.7lf \n",
+                 run,pulse,ampl,rms_noise,zc,nc,freq_mid,freq_lin,freq_lsq,freq_mid_ph,freq_lin_ph,freq_lsq_ph);
       }
       fclose(outfile);
    }
@@ -473,6 +489,7 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
 
    int pulse=0;
    double b_mid=0,b_lin=0,b_lsq=0,b_fit=0,b_ph=0; 
+   double b_mid_ph=0,b_lin_ph=0,b_lsq_ph=0; 
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
@@ -492,14 +509,17 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header); 
       for(int i=0;i<N;i++){
-         pulse  = aRun->GetPulseNumber(i); 
-         b_mid  = aRun->GetPulseFieldZeroCrossingMidpoint(i); 
-         b_lin  = aRun->GetPulseFieldZeroCrossingLinearInterp(i); 
-         b_lsq  = aRun->GetPulseFieldZeroCrossingLeastSquares(i); 
-         b_fit  = aRun->GetPulseFieldFit(i); 
-         b_ph   = aRun->GetPulseFieldPhaseFit(i); 
-         fprintf(outfile,"%d %5d %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf \n",
-                 run,pulse,b_mid,b_lin,b_lsq,b_fit,b_ph);
+         pulse    = aRun->GetPulseNumber(i); 
+         b_mid    = aRun->GetPulseFieldZeroCrossingMidpoint(i); 
+         b_lin    = aRun->GetPulseFieldZeroCrossingLinearInterp(i); 
+         b_lsq    = aRun->GetPulseFieldZeroCrossingLeastSquares(i); 
+         b_mid_ph = aRun->GetPulseFieldZeroCrossingMidpointPhaseFit(i); 
+         b_lin_ph = aRun->GetPulseFieldZeroCrossingLinearInterpPhaseFit(i); 
+         b_lsq_ph = aRun->GetPulseFieldZeroCrossingLeastSquaresPhaseFit(i); 
+         b_fit    = aRun->GetPulseFieldFit(i); 
+         b_ph     = aRun->GetPulseFieldPhaseFit(i); 
+         fprintf(outfile,"%d %5d %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf \n",
+                 run,pulse,b_mid,b_lin,b_lsq,b_mid_ph,b_lin_ph,b_lsq_ph);
       }
       fclose(outfile);
    }

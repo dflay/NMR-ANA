@@ -63,7 +63,7 @@ class NMRFileManager{
       void PrintRunMetaStatsToFile(NMRRun *aRun); 
       void PrintRunFreqToFileZC(NMRRun *aRun); 
       void PrintRunFreqToFileTimeFit(NMRRun *aRun); 
-      void PrintRunFreqFileHilbert(NMRRun *aRun);
+      void PrintRunFreqToFileHilbert(NMRRun *aRun);
       void PrintRunFieldToFileZC(NMRRun *aRun); 
       void PrintRunFieldToFileTimeFit(NMRRun *aRun); 
       void PrintRunFieldToFileHilbert(NMRRun *aRun); 
