@@ -5,7 +5,8 @@ NMRAnalysis::NMRAnalysis(){
    fUseFit          = false;
    fUsePhaseFit     = false;
    fVerbosity       = 0;
-   fFreq_ref        = 0; 
+   fFreq_pts        = 0; 
+   fFreq_LO         = 0; 
    ZeroCrossing     = new NMRZeroCrossing();
    fFileManager     = new NMRFileManager(); 
 }
@@ -22,7 +23,8 @@ void NMRAnalysis::InitializeAnalysis(){
    bool UseIntCycles = fFileManager->InputManager->GetIntegerCycleStatus(); 
 
    fVerbosity        = fFileManager->InputManager->GetVerbosity(); 
-   fFreq_ref         = fFileManager->InputManager->GetRFFrequency(); 
+   fFreq_pts         = fFileManager->InputManager->GetRFFrequency(); 
+   fFreq_LO          = fFileManager->InputManager->GetLOFrequency(); 
 
    double tmin_zc    = fFileManager->InputManager->GetStartTimeZC();  
    double tmax_zc    = fFileManager->InputManager->GetEndTimeZC();  
@@ -170,9 +172,10 @@ void NMRAnalysis::CalculateMagneticField(NMRPulseAnalyzed *aPulse){
 }
 //______________________________________________________________________________
 double NMRAnalysis::CalculateField(double Freq_fid){
-   double B0 = fFreq_ref/NMRConstants::gamma_1H;
+   // double B0 = fFreq_pts/NMRConstants::gamma_1H;
+   double B0 = fFreq_LO/NMRConstants::gamma_1H;
    double B  = 0; 
-   if(Freq_fid!=0) B = B0*(1. + Freq_fid/fFreq_ref); 
+   if(Freq_fid!=0) B = B0*(1. + Freq_fid/fFreq_LO); 
    return B;  
 }
 //______________________________________________________________________________
