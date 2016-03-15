@@ -23,7 +23,7 @@ void NMRAnalysis::InitializeAnalysis(){
    bool UseIntCycles = fFileManager->InputManager->GetIntegerCycleStatus(); 
 
    fVerbosity        = fFileManager->InputManager->GetVerbosity(); 
-   fFreq_pts         = fFileManager->InputManager->GetRFFrequency(); 
+   fFreq_pts         = fFileManager->InputManager->GetPTSFrequency(); 
    fFreq_LO          = fFileManager->InputManager->GetLOFrequency(); 
 
    double tmin_zc    = fFileManager->InputManager->GetStartTimeZC();  
