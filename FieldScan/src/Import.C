@@ -1,6 +1,10 @@
 void ImportData(TString inpath,int RunNumber,vector<double> &B); 
+void ImportDataAlt(TString inpath,int sw,vector<double> &B); 
+void ImportDataAlt2(TString inpath,int sw,vector<double> &x); 
 void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC);
 void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<double> &dB); 
+void ImportScanDataAlt(TString inpath,vector<double> &x,vector<double> &y,vector<double> &z,vector<double> &th,
+                       vector<double> &B,vector<double> &dB);
 void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi); 
 void ImportRunParams4(TString inpath,vector<int> &Run,
                       vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi); 
@@ -25,11 +29,53 @@ void ImportData(TString inpath,int Run,vector<double> &B){
       for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
       while( !infile.eof() ){
 	 infile >> irun >> ipulse >> iB_mid >> iB_lin >> iB_lsq >> iB_fit >> iB_ph; 
+         if( irun==80 && ipulse==3 ) continue; 
          if(irun==Run){
 	    cntr++;
 	    // cout << cntr << "\t" << irun << "\t" << Form("%.15lf",iB_lsq) << endl;
 	    B.push_back(iB_lsq);
          } 
+      }
+      infile.close(); 
+   }
+
+}
+//______________________________________________________________________________
+void ImportDataAlt(TString inpath,int sw,vector<double> &B){
+
+   int cntr=0;
+   double irun,isw,ipulse,iB_mid,iB_lin,iB_lsq,iB_fit,iB_ph;
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      while( !infile.eof() ){
+         infile >> irun >> isw >> ipulse >> iB_mid >> iB_lin >> iB_lsq >> iB_fit >> iB_ph; 
+         if(isw==sw) B.push_back(iB_lsq);
+      }
+      infile.close(); 
+   }
+
+}
+//______________________________________________________________________________
+void ImportDataAlt2(TString inpath,int sw,vector<double> &x){
+
+   int cntr=0;
+   int irun,isw,ipulse; 
+   double iampl,inoise,izc,inc,ifa,ifb,ifc,ifd,ife;
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      while( !infile.eof() ){
+	 infile >> irun >> isw >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
+         if(isw==sw) x.push_back(inoise);
       }
       infile.close(); 
    }
@@ -88,6 +134,61 @@ void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<do
       }
       infile.close(); 
    }
+
+   z.pop_back(); 
+   B.pop_back(); 
+   dB.pop_back(); 
+
+}
+//______________________________________________________________________________
+void ImportScanDataAlt(TString inpath,vector<double> &x,vector<double> &y,vector<double> &z,vector<double> &th,
+                       vector<double> &B,vector<double> &dB){
+
+   int cntr=0;
+   double ir,ith,ithr,ix,iy,iz,ib,idb,ibr,idbr;
+
+   double iTH=0;
+   double dth = 360./32.; 
+
+   const int NLines = 1; 
+   const int SIZE = 2048; 
+   char buf[SIZE]; 
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
+      while( !infile.eof() ){
+	 infile >> ir >> ith >> iz >> ib >> idb >> ibr >> idbr;
+         iTH  = (ith-1.)*dth;
+         ithr = ith*DEG_TO_RAD; 
+         ix   = ir*TMath::Cos(ithr);  
+         iy   = ir*TMath::Sin(ithr);  
+         ix  += 0;
+         iy  += 0;
+         iz  += 0;
+         ith += 0;
+         ib  += 0;
+         idb += 0;
+	 x.push_back(ix);
+	 y.push_back(iy);
+	 z.push_back(iz);
+	 th.push_back(iTH);
+         B.push_back(ib);
+         dB.push_back(idb);
+      }
+      infile.close(); 
+   }
+ 
+   x.pop_back();
+   y.pop_back();
+   z.pop_back();
+   th.pop_back();
+   B.pop_back();
+   dB.pop_back();
 
 }
 //______________________________________________________________________________

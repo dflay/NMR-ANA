@@ -52,10 +52,15 @@ int GetColorIndex(int index);
 
 void FieldScan(){
 
-   int M=0,D=0,Yr=0; 
+   int M=0,D=0,Yr=0;
+   int r_dsv=0;  
+
+   bool PlotGIF = false; 
 
    cout << "Enter date (M D Y): ";
    cin  >> M >> D >> Yr; 
+   cout << "Enter dynamic radius (cm): ";
+   cin  >> r_dsv; 
 
    TString date,mdy; 
 
@@ -121,10 +126,12 @@ void FieldScan(){
    double x_c=0,y_c=0,z_c=0; 
    double x_d=0,y_d=0,z_d=0; 
 
-   // double B0 = 61.79E+6/GAMMA_p; 
-   // double B0 = 1.4513; 
-   // double B0 = 62.316E+6/GAMMA_p; 
-   double B0 = 61.742E+6/GAMMA_p; 
+   // double B0 = 61.742E+6/GAMMA_p; 
+   // double B0 = 61.743E+6/GAMMA_p;  // I = 157.60 A  
+   // double B0 = 61.930E+6/GAMMA_p;  // I = 157.62 A 
+   // double B0 = 62.080E+6/GAMMA_p;  // I = 157.64 A 
+   // double B0 = 62.154E+6/GAMMA_p;     // I = 157.66 A 
+   double B0 = 61.754E+6/GAMMA_p;  // I = 157.60 A  
    double BA_avg=0,BA_avg_err=0;
    double BA_rel=0,BA_rel_err=0;  
    double BB_avg=0,BB_avg_err=0; 
@@ -149,22 +156,6 @@ void FieldScan(){
    int dummy=0;
    int cntr=0,cntr2=4;  
 
-   // int color[28] = {kOrange  ,kRed   ,kBlue  ,kGreen,
-   //                  kOrange+1,kRed+1 ,kBlue+1,kGreen+1,
-   //                  kOrange+2,kRed+2 ,kBlue+2,kGreen+2,
-   //                  kOrange+3,kRed+3 ,kBlue+3,kGreen+3,
-   //                  kOrange+4,kRed+4 ,kBlue+4,kGreen+4,
-   //                  kOrange+5,kMagenta,kAzure+5,kTeal+7,
-   //                  kCyan    ,kCyan+1,kCyan+2,kViolet
-   //                 }; 
-
-   // int color[30] = {kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1,
-   //                  kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1,
-   //                  kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1,
-   //                  kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1,
-   //                  kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1
-   //                 }; 
-
    int color[6] = {kBlack,kRed,kBlue,kGreen+2,kMagenta,kCyan+1}; 
    int iColor=0; 
 
@@ -188,21 +179,16 @@ void FieldScan(){
 
    const int N = Run.size();
    for(int i=0;i<N;i++){
-      // if( Run[i]>=410 && Run[i]<=412){
-      //    cout << Run[i] << " WAIT." << endl;
-      //    cin >> dummy; 
-      // }
-      // mech_path = prefix + Form("mech-sw_%s.dat",mdy.Data());
       ImportData(data_path,Run[i],b);                              // read in data for a run (contains data for two probes) 
-      ImportData2(data_path_2,Run[i],ampl,noise,zeroc);                  // read in data for a run (contains data for two probes) 
+      ImportData2(data_path_2,Run[i],ampl,noise,zeroc);            // read in data for a run (contains data for two probes) 
       ImportMechSwParams(mech_path,Run[i],MechSw);
       // ParseDataTwoProbes(sw_a,sw_b,MechSw,ampl,noise,zc,b,BA,BB);     // parse data into two vectors: one for probe A, the other for probe B 
-      ParseDataFourProbes(sw_a,sw_b,sw_c,sw_d,MechSw,ampl,noise,zeroc,b,BA,BB,BC,BD);     // parse data into four vectors: one for probe A, the other for probe B 
+      ParseDataFourProbes(sw_a,sw_b,sw_c,sw_d,MechSw,ampl,noise,zeroc,b,BA,BB,BC,BD);     // parse data into four vectors: one each for A, B, C and D  
       // calculate coordinates 
-      GetCoordinates(SlotA[i],Azi[i],th0,x_a,y_a,z_a,th_a); 
-      GetCoordinates(SlotB[i],Azi[i],th0,x_b,y_b,z_b,th_b);
-      GetCoordinates(SlotC[i],Azi[i],th0,x_c,y_c,z_c,th_c);
-      GetCoordinates(SlotD[i],Azi[i],th0,x_d,y_d,z_d,th_d);
+      GetCoordinates(r_dsv,SlotA[i],Azi[i],th0,x_a,y_a,z_a,th_a); 
+      GetCoordinates(r_dsv,SlotB[i],Azi[i],th0,x_b,y_b,z_b,th_b);
+      GetCoordinates(r_dsv,SlotC[i],Azi[i],th0,x_c,y_c,z_c,th_c);
+      GetCoordinates(r_dsv,SlotD[i],Azi[i],th0,x_d,y_d,z_d,th_d);
       // calculate statistics 
       BA_avg     = GetMean(BA);      
       BA_avg_err = GetStandardErrorOfTheMean(BA);      
@@ -223,6 +209,10 @@ void FieldScan(){
          FillVectors(x_d,y_d,z_d,th_d,BD_avg,BD_avg_err,BD_rel,BD_rel_err,xd,yd,zd,pd,bd,bd_err,bdr,bdr_err);
 	 cntr++;
       }else{
+         ia = SlotA[i-1]; // cntr2 - 3;  
+         ib = SlotB[i-1]; // cntr2 - 2;  
+         ic = SlotC[i-1]; // cntr2 - 1;  
+         id = SlotD[i-1]; // cntr2; 
 	 TGraphErrors *ga = GetTGraphErrors(pa,bar,bar_err); 
          TGraphErrors *gb = GetTGraphErrors(pb,bbr,bbr_err); 
          TGraphErrors *gc = GetTGraphErrors(pc,bcr,bcr_err); 
@@ -231,21 +221,17 @@ void FieldScan(){
          SetGraphParameters(gb,20,kBlack); 
          SetGraphParameters(gc,20,kBlack); 
          SetGraphParameters(gd,20,kBlack); 
-         probe_a = prefix_pr + Form("probe-%d.dat",cntr2-3);
+         probe_a = prefix_pr + Form("probe-%d.dat",ia);
 	 PrintToFile(probe_a,xa,ya,za,ba,ba_err,bar,bar_err); 
-         probe_b = prefix_pr + Form("probe-%d.dat",cntr2-2);
+         probe_b = prefix_pr + Form("probe-%d.dat",ib);
 	 PrintToFile(probe_b,xb,yb,zb,bb,bb_err,bbr,bbr_err); 
-         probe_c = prefix_pr + Form("probe-%d.dat",cntr2-1);
+         probe_c = prefix_pr + Form("probe-%d.dat",ic);
 	 PrintToFile(probe_c,xc,yc,zc,bc,bc_err,bcr,bcr_err); 
-         probe_d = prefix_pr + Form("probe-%d.dat",cntr2);
+         probe_d = prefix_pr + Form("probe-%d.dat",id);
 	 PrintToFile(probe_d,xd,yd,zd,bd,bd_err,bdr,bdr_err); 
+
 	 if(cntr2>24) cntr2 = 4;
-         ia = cntr2 - 3;  
-         ib = cntr2 - 2;  
-         ic = cntr2 - 1;  
-         id = cntr2; 
-  
-         cout << cntr << "\t" << cntr2 << "\t" << ia << "\t" << ib << "\t" << ic << "\t" << id << endl;
+         cout << "cntr = " << cntr << "\t" << "ia = " << ia << "\t" << "ib = " << ib << "\t" << "ic = " << ic << "\t" << "id = " << id << endl;
 
          if(ia<7){
             iColor = GetColorIndex(ia);  
@@ -305,10 +291,10 @@ void FieldScan(){
 
 	 cntr2 += 4;
 	 cntr   = 0;
-         ia = cntr2 - 3;  
-         ib = cntr2 - 2;  
-         ic = cntr2 - 1;  
-         id = cntr2; 
+         ia = SlotA[i-1] + 4; // cntr2 - 3;  
+         ib = SlotB[i-1] + 4; // cntr2 - 2;  
+         ic = SlotC[i-1] + 4; // cntr2 - 1;  
+         id = SlotD[i-1] + 4; // cntr2; 
  
          ClearVectors(xa,ya,za,pa,ba,ba_err,bar,bar_err); 
          ClearVectors(xb,yb,zb,pb,bb,bb_err,bbr,bbr_err); 
@@ -321,7 +307,13 @@ void FieldScan(){
          FillVectors(x_c,y_c,z_c,th_c,BC_avg,BC_avg_err,BC_rel,BC_rel_err,xc,yc,zc,pc,bc,bc_err,bcr,bcr_err); 
          FillVectors(x_d,y_d,z_d,th_d,BD_avg,BD_avg_err,BD_rel,BD_rel_err,xd,yd,zd,pd,bd,bd_err,bdr,bdr_err);
       }
-      if( TMath::Abs(BA_rel)<1000 && TMath::Abs(BB_rel)< 1000 ){  
+      cout << "RUN: " << Run[i] << endl;
+      cout << "B0 = " << Form("%.10lf",B0) << endl;  
+      cout << x_a << "\t" << y_a << "\t" << z_a << endl;
+      cout << x_b << "\t" << y_b << "\t" << z_b << endl;
+      cout << x_c << "\t" << y_c << "\t" << z_c << endl;
+      cout << x_d << "\t" << y_d << "\t" << z_d << endl;
+      if( (TMath::Abs(x_a)<500)&&(TMath::Abs(y_a)<500) &&(TMath::Abs(z_a)<500) ){  
 	 // probe A 
 	 myData.x      = x_a;        
 	 myData.y      = y_a;        
@@ -339,7 +331,16 @@ void FieldScan(){
 	 dB1A.push_back(BA_avg_err); 
 	 B1R.push_back(BA_rel);      
 	 dB1R.push_back(BA_rel_err); 
-	 myTree->Fill();  
+	 myTree->Fill(); 
+	 cout << "probe A: " << SlotA[i] 
+	    << " x = "     << Form("%.3lf" ,x_a) 
+	    << " y = "     << Form("%.3lf" ,y_a) 
+	    << " z = "     << Form("%.3lf" ,z_a) 
+	    << " th = "    << Form("%.3lf" ,th_a) 
+	    << " B = "     << Form("%.10lf",BA_avg) << " +/- " << Form("%.10lf",BA_avg_err) << " " 
+	    << " ("        << Form("%.3lf" ,BA_rel) << " +/- " << Form("%.3lf" ,BA_rel_err)  << " ppm)" << endl; 
+      } 
+      if( (TMath::Abs(x_b)<500)&&(TMath::Abs(y_b)<500) &&(TMath::Abs(z_b)<500) ){  
 	 // probe B 
 	 myData.x      = x_b;        
 	 myData.y      = y_b;        
@@ -357,7 +358,17 @@ void FieldScan(){
 	 dB2A.push_back(BB_avg_err); 
 	 B2R.push_back(BB_rel);      
 	 dB2R.push_back(BB_rel_err); 
-	 myTree->Fill();  
+	 myTree->Fill(); 
+	 cout << "probe B: " << SlotB[i] 
+	    << " x = "     << Form("%.3lf" ,x_b) 
+	    << " y = "     << Form("%.3lf" ,y_b) 
+	    << " z = "     << Form("%.3lf" ,z_b) 
+	    << " th = "    << Form("%.3lf" ,th_b) 
+	    << " B = "     << Form("%.10lf",BB_avg) << " +/- " << Form("%.10lf",BB_avg_err) << " " 
+	    << " ("        << Form("%.3lf" ,BB_rel)  << " +/- " << Form("%.3lf" ,BB_rel_err) << " ppm)" << endl; 
+
+       }  
+      if( (TMath::Abs(x_c)<500)&&(TMath::Abs(y_c)<500) &&(TMath::Abs(z_c)<500) ){  
 	 // probe C 
 	 myData.x      = x_c;        
 	 myData.y      = y_c;        
@@ -375,7 +386,17 @@ void FieldScan(){
 	 dB3A.push_back(BC_avg_err); 
 	 B3R.push_back(BC_rel);      
 	 dB3R.push_back(BC_rel_err); 
-	 myTree->Fill();  
+	 myTree->Fill(); 
+	 cout << "probe C: " << SlotC[i] 
+	    << " x = "     << Form("%.3lf" ,x_c) 
+	    << " y = "     << Form("%.3lf" ,y_c) 
+	    << " z = "     << Form("%.3lf" ,z_c) 
+	    << " th = "    << Form("%.3lf" ,th_c) 
+	    << " B = "     << Form("%.10lf",BC_avg) << " +/- " << Form("%.10lf",BC_avg_err) << " " 
+	    << " ("        << Form("%.3lf" ,BC_rel) << " +/- " << Form("%.3lf" ,BC_rel_err)  << " ppm)" << endl; 
+
+      } 
+      if( (TMath::Abs(x_d)<500)&&(TMath::Abs(y_d)<500) &&(TMath::Abs(z_d)<500) ){  
 	 // probe D 
 	 myData.x      = x_d;        
 	 myData.y      = y_d;        
@@ -394,41 +415,15 @@ void FieldScan(){
 	 B4R.push_back(BD_rel);      
 	 dB4R.push_back(BD_rel_err); 
 	 myTree->Fill();  
-	 cout << "RUN: " << Run[i] << endl;
-	 cout << "B0 = " << Form("%.10lf",B0) << endl;  
-	 cout << "probe A: " << SlotA[i] 
-	    << " x = "     << Form("%.3lf" ,x_a) 
-	    << " y = "     << Form("%.3lf" ,y_a) 
-	    << " z = "     << Form("%.3lf" ,z_a) 
-	    << " th = "    << Form("%.3lf" ,th_a) 
-	    << " B = "     << Form("%.10lf",BA_avg) << " +/- " << Form("%.10lf",BA_avg_err) << " " 
-	    << " ("        << Form("%.3lf" ,BA_rel) << " +/- " << Form("%.3lf" ,BA_rel_err)  << " ppm)" << endl; 
-	 cout << "probe B: " << SlotB[i] 
-	    << " x = "     << Form("%.3lf" ,x_b) 
-	    << " y = "     << Form("%.3lf" ,y_b) 
-	    << " z = "     << Form("%.3lf" ,z_b) 
-	    << " th = "    << Form("%.3lf" ,th_b) 
-	    << " B = "     << Form("%.10lf",BB_avg) << " +/- " << Form("%.10lf",BB_avg_err) << " " 
-	    << " ("        << Form("%.3lf" ,BB_rel)  << " +/- " << Form("%.3lf" ,BB_rel_err) << " ppm)" << endl; 
-	 cout << "probe C: " << SlotC[i] 
-	    << " x = "     << Form("%.3lf" ,x_c) 
-	    << " y = "     << Form("%.3lf" ,y_c) 
-	    << " z = "     << Form("%.3lf" ,z_c) 
-	    << " th = "    << Form("%.3lf" ,th_c) 
-	    << " B = "     << Form("%.10lf",BC_avg) << " +/- " << Form("%.10lf",BC_avg_err) << " " 
-	    << " ("        << Form("%.3lf" ,BC_rel) << " +/- " << Form("%.3lf" ,BC_rel_err)  << " ppm)" << endl; 
-	 cout << "probe D: " << SlotD[i] 
-	    << " x = "     << Form("%.3lf" ,x_d) 
-	    << " y = "     << Form("%.3lf" ,y_d) 
-	    << " z = "     << Form("%.3lf" ,z_d) 
-	    << " th = "    << Form("%.3lf" ,th_d) 
-	    << " B = "     << Form("%.10lf",BD_avg) << " +/- " << Form("%.10lf",BD_avg_err) << " " 
-	    << " ("        << Form("%.3lf" ,BD_rel)  << " +/- " << Form("%.3lf" ,BD_rel_err) << " ppm)" << endl; 
-	 cout << "=========================================================================================================================" << endl;
-	 // if( TMath::Abs(BA_rel)>160 || TMath::Abs(BB_rel)>160){ 
-	 //    cin >> dummy;
-	 // }
+         cout << "probe D: " << SlotD[i] 
+            << " x = "     << Form("%.3lf" ,x_d) 
+            << " y = "     << Form("%.3lf" ,y_d) 
+            << " z = "     << Form("%.3lf" ,z_d) 
+            << " th = "    << Form("%.3lf" ,th_d) 
+            << " B = "     << Form("%.10lf",BD_avg) << " +/- " << Form("%.10lf",BD_avg_err) << " " 
+            << " ("        << Form("%.3lf" ,BD_rel)  << " +/- " << Form("%.3lf" ,BD_rel_err) << " ppm)" << endl; 
       }
+      cout << "=========================================================================================================================" << endl;
       // get ready for next run 
       b.clear(); 
       BA.clear();
@@ -459,10 +454,10 @@ void FieldScan(){
    iColor = GetColorIndex(24); 
    AddToMultiGraph(gd,24,color[iColor],mg4,L4);
 
-   TString outpath_a = Form("./probe/probe-21.dat");
-   TString outpath_b = Form("./probe/probe-22.dat");
-   TString outpath_c = Form("./probe/probe-23.dat");
-   TString outpath_d = Form("./probe/probe-24.dat");
+   TString outpath_a = Form("./probe/probe-11.dat");
+   TString outpath_b = Form("./probe/probe-12.dat");
+   TString outpath_c = Form("./probe/probe-13.dat");
+   TString outpath_d = Form("./probe/probe-14.dat");
 
    PrintToFile(outpath_a,xa,ya,za,ba,ba_err,bar,bar_err); 
    PrintToFile(outpath_b,xb,yb,zb,bb,bb_err,bbr,bbr_err); 
@@ -476,20 +471,24 @@ void FieldScan(){
    c1->SetFillColor(kWhite);
    c1->cd(); 
 
-   myTree->Draw("y:x:z:B_rel","","colz");
-   // for (int i=0; i<360; i+=5){
-   //    gPad->SetPhi(i);gPad->SetTheta(15);
-   //    gPad->Update();
-   //    if (i==0){
-   //       c1->Print("anim.gif+10(");
-   //    }else{
-   //       c1->Print("anim.gif+");
-   //    }
-   // }  
-   //gPad->SetPhi(25);gPad->SetTheta(15);
-   //gPad->Update();
-   // c1->Print("anim.gif++)");
-
+   if(PlotGIF){
+      for (int i=0; i<360; i+=5){
+         gPad->SetPhi(i);gPad->SetTheta(15);
+         gPad->Update();
+         if (i==0){
+            c1->Print("anim.gif+10(");
+         }else{
+            c1->Print("anim.gif+");
+         }
+      }  
+      gPad->SetPhi(25);
+      gPad->SetTheta(15);
+      gPad->Update();
+      c1->Print("anim.gif++)");
+   }else{
+      myTree->Draw("y:x:z:B_rel","","colz");
+   }
+  
    TCanvas *c2 = new TCanvas("c2","Probe vs Azimuth",1200,800);
    c2->SetFillColor(kWhite);
    c2->Divide(2,2);
@@ -581,7 +580,6 @@ int GetColorIndex(int index){
    }else if(index>=13 && index<19){
       color = index - 12;
    }else if(index>=19 && index<25){
-      cout << "HELLO " << index << endl;
       color = index - 18; 
    }
    return color-1; 

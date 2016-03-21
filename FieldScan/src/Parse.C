@@ -21,7 +21,7 @@ void ParseDataFourProbes(int sw_a,int sw_b,int sw_c,int sw_d,
    // cout << "LAST PULSE: " << N << endl;
 
    for(int i=start;i<end;i++){
-      if( (ampl[i]>0.050 && ampl[i]<2.00)&&(ampl[i] > noise[i])&&(zc[i]>5) ){
+      if( (ampl[i]>0.020 && ampl[i]<2.00)&&(ampl[i] > noise[i])&&(zc[i]>5) ){
          if(MechSw[i]==sw_a) B1.push_back(B[i]); 
          if(MechSw[i]==sw_b) B2.push_back(B[i]);
          if(MechSw[i]==sw_c) B3.push_back(B[i]);
