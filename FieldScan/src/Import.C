@@ -75,7 +75,10 @@ void ImportDataAlt2(TString inpath,int sw,vector<double> &x){
    }else{
       while( !infile.eof() ){
 	 infile >> irun >> isw >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
-         if(isw==sw) x.push_back(inoise);
+         if(isw==sw){
+            x.push_back(ifa);
+            cout << ifa << endl;
+         }
       }
       infile.close(); 
    }

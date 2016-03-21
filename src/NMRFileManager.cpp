@@ -5,7 +5,7 @@ NMRFileManager::NMRFileManager(){
    fVerbosity     = 0; 
    fNPTS          = 0;
    fNCycles       = 10;  
-   fSIZE          = 1E+6; 
+   fSIZE          = 10E+6; 
    fTStart        = 0;    // 0 s 
    fTEnd          = 100;  // 100 s 
    fDataDir       = new char[200]();   // initializes to '0' 
@@ -761,9 +761,11 @@ void NMRFileManager::ImportDataRawADCBin(int run,int pulse){
    unsigned short *arr = new unsigned short[size];
    memcpy(arr,(unsigned short *)memblock,size); 
 
+   double MB = 1.0E+6; 
+
    const int NPTS = (int)size/2; 
-   if(fVerbosity>=3) std::cout << "[NMRFileManager]: File size:          " << size << std::endl;
-   if(fVerbosity>=3) std::cout << "[NMRFileManager]: Number of samples:  " << NPTS << std::endl;
+   if(fVerbosity>=3) std::cout << "[NMRFileManager]: File size:          " << size/MB << " MB" << std::endl;
+   if(fVerbosity>=3) std::cout << "[NMRFileManager]: Number of samples:  " << NPTS    << std::endl;
    for(int i=0;i<NPTS;i++){
       fSample[i]    = i; 
       fADCCounts[i] = arr[i]; 

@@ -49,7 +49,7 @@ class daq(Tkinter.Tk):
       # header label
       self.RunInfoLabel_str = Tkinter.StringVar()
       self.RunInfoLabel_str.set("RUN PARAMETERS") 
-      self.RunInfoLabel     = Tkinter.Label(self,textvariable=self.RunInfoLabel_str,anchor="w",font="Helvetica 14 bold") 
+      self.RunInfoLabel     = Tkinter.Label(self,textvariable=self.RunInfoLabel_str,anchor="w",font="Helvetica 12 bold") 
       self.RunInfoLabel.grid(column=ColumnOffset+0,row=RowOffset+0) 
 
       # ----------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class daq(Tkinter.Tk):
       # header label
       self.AnaOptLabel_str = Tkinter.StringVar()
       self.AnaOptLabel_str.set("ANALYSIS OPTIONS") 
-      self.AnaOptLabel     = Tkinter.Label(self,textvariable=self.AnaOptLabel_str,anchor="w",font="Helvetica 14 bold") 
+      self.AnaOptLabel     = Tkinter.Label(self,textvariable=self.AnaOptLabel_str,anchor="w",font="Helvetica 12 bold") 
       self.AnaOptLabel.grid(column=ColumnOffset+0,row=RowOffset+9) 
       # # ----------------------------------------------------------------------------------
       # start time  
@@ -165,7 +165,7 @@ class daq(Tkinter.Tk):
       # header label
       self.UtilOptLabel_str = Tkinter.StringVar()
       self.UtilOptLabel_str.set("UTILITY OPTIONS") 
-      self.UtilOptLabel     = Tkinter.Label(self,textvariable=self.UtilOptLabel_str,anchor="w",font="Helvetica 14 bold") 
+      self.UtilOptLabel     = Tkinter.Label(self,textvariable=self.UtilOptLabel_str,anchor="w",font="Helvetica 12 bold") 
       self.UtilOptLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
  
       # ----------------------------------------------------------------------------------
