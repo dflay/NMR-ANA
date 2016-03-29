@@ -118,7 +118,7 @@
 
 ## 5. Authors and Contact Information 
 
-   Authors:     David Flay and Zac Meadows  
+   Authors:     David Flay  
    Affiliation: UMass Amherst   
    Contact:     David (flay@umass.edu) 
 
