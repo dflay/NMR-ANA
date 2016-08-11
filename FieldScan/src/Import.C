@@ -1,10 +1,12 @@
 void ImportData(TString inpath,int RunNumber,vector<double> &B); 
 void ImportDataAlt(TString inpath,int sw,vector<double> &B); 
 void ImportDataAlt2(TString inpath,int sw,vector<double> &x); 
+void ImportDataAlt3(TString inpath,vector<double> &x,vector<double> &dx); 
 void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC);
 void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<double> &dB); 
 void ImportScanDataAlt(TString inpath,vector<double> &x,vector<double> &y,vector<double> &z,vector<double> &th,
                        vector<double> &B,vector<double> &dB);
+void ImportScanDataFreq(TString inpath,double F_LO,vector<double> &y,vector<double> &F,vector<double> &dF); 
 void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<int> &SlotB,vector<int> &Azi); 
 void ImportRunParams4(TString inpath,vector<int> &Run,
                       vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi); 
@@ -85,6 +87,29 @@ void ImportDataAlt2(TString inpath,int sw,vector<double> &x){
 
 }
 //______________________________________________________________________________
+void ImportDataAlt3(TString inpath,vector<double> &x,vector<double> &dx){
+
+   double ix=0,idx=0;
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      while( !infile.eof() ){
+	 infile >> ix >> idx; 
+            x.push_back(ix);
+            dx.push_back(idx);
+      }
+      infile.close(); 
+   }
+
+   x.pop_back();
+   dx.pop_back();
+
+}
+//______________________________________________________________________________
 void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC){
 
    int irun=0,ipulse=0;
@@ -141,6 +166,34 @@ void ImportScanData(TString inpath,vector<double> &z,vector<double> &B,vector<do
    z.pop_back(); 
    B.pop_back(); 
    dB.pop_back(); 
+
+}
+//______________________________________________________________________________
+void ImportScanDataFreq(TString inpath,double F_LO,vector<double> &y,vector<double> &F,vector<double> &dF){
+
+   int cntr=0;
+   double ix,iy,iz;
+   double ifreq=0,iF=0,idfreq=0; 
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      while( !infile.eof() ){
+	 infile >> ix >> iy >> iz >> ifreq >> idfreq; 
+         iF = F_LO + ifreq; 
+	 y.push_back(iy);
+         F.push_back(iF);
+         dF.push_back(idfreq);
+      }
+      infile.close(); 
+   }
+
+   y.pop_back(); 
+   F.pop_back(); 
+   dF.pop_back(); 
 
 }
 //______________________________________________________________________________
