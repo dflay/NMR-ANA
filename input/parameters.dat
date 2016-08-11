@@ -1,0 +1,12 @@
+# ID 	 value
+month                   8
+day                     11
+year                    2016
+t_start                 1.00E-04
+t_end                   8.00E-03
+verbosity               0
+offset_correction_order 2
+zero_crossing           1
+time_fit                0
+phase_fit               0
+end_of_file             99                  
