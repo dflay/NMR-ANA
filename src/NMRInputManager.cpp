@@ -246,22 +246,22 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    // - the number of pulses 
 
    const int MAX = 2000; 
-   char itag[MAX]; 
+   char itag[MAX],ivalue[MAX]; 
    
    char *inpath = new char[MAX];
-   char *prefix = new char[MAX];
-   if(fMonth>=10 && fDay>=10){  
-      sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   }else if(fMonth>=10 && fDay<10){
-      sprintf(prefix,"./data/%d/%d_%d/%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   }else if(fMonth<10 && fDay>=10){
-      sprintf(prefix,"./data/%d/0%d_%d/0%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   }else if(fMonth<10 && fDay<10){
-      sprintf(prefix,"./data/%d/0%d_%d/0%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   } 
-   sprintf(inpath,"%s/run-%d/summary.dat",prefix,RunNumber); 
+   // char *prefix = new char[MAX];
+   // if(fMonth>=10 && fDay>=10){  
+   //    sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   // }else if(fMonth>=10 && fDay<10){
+   //    sprintf(prefix,"./data/%d/%d_%d/%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   // }else if(fMonth<10 && fDay>=10){
+   //    sprintf(prefix,"./data/%d/0%d_%d/0%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   // }else if(fMonth<10 && fDay<10){
+   //    sprintf(prefix,"./data/%d/0%d_%d/0%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
+   // } 
+   sprintf(inpath,"./data/run-%04d/summary.dat",RunNumber); 
 
-   double ivalue=0; 
+   // double ivalue=0; 
 
    const char *adc               = "adc_id"; 
    const char *adc_ch            = "adc_channel_number"; 
@@ -288,18 +288,18 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
          infile >> itag >> ivalue; 
          // printf("%s %15.2lf \n",itag,ivalue);
          if( !NMRUtility::AreEquivStrings(itag,eof) ){
-            if( NMRUtility::AreEquivStrings(itag,run)               ) fRunNumber        = (int)ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,num_pulses)        ) fNumPulses        = (int)ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,adc)               ) fADCID            = (int)ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,adc_ch)            ) fADCChannelNumber = (int)ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,adc_num_samples)   ) fADCNumSamples    = (int)ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,adc_clock_freq)    ) fSampleFreq       = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,adc_signal_length) ) fADCSignalLength  = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,exp_freq)          ) fExpFreq          = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,lo_freq)           ) fLOFreq           = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,rf_freq)           ) fPTSFreq          = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,bnc_voltage)       ) fBNCVoltage       = ivalue;  
-            if( NMRUtility::AreEquivStrings(itag,ntype_voltage)     ) fNTypeVoltage     = ivalue;  
+            if( NMRUtility::AreEquivStrings(itag,run)               ) fRunNumber        = atoi(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,num_pulses)        ) fNumPulses        = atoi(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,adc)               ) fADCID            = atoi(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,adc_ch)            ) fADCChannelNumber = atoi(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,adc_num_samples)   ) fADCNumSamples    = atoi(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,adc_clock_freq)    ) fSampleFreq       = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,adc_signal_length) ) fADCSignalLength  = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,exp_freq)          ) fExpFreq          = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,lo_freq)           ) fLOFreq           = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,rf_freq)           ) fPTSFreq          = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,bnc_voltage)       ) fBNCVoltage       = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,ntype_voltage)     ) fNTypeVoltage     = atof(ivalue);  
          }else{
             break;
          }
@@ -308,7 +308,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    }
 
    delete inpath;
-   delete prefix; 
+   // delete prefix; 
 
 }
 //______________________________________________________________________________

@@ -54,29 +54,29 @@ class daq(Tkinter.Tk):
 
       # ----------------------------------------------------------------------------------
       # date 
-      self.DateLabel_str = Tkinter.StringVar() 
-      self.DateLabel_str.set("Date") 
-      self.DateLabel     = Tkinter.Label(self,textvariable=self.DateLabel_str,anchor="w") 
-      self.DateLabel.grid(column=ColumnOffset+0,row=RowOffset+1)   
+      # self.DateLabel_str = Tkinter.StringVar() 
+      # self.DateLabel_str.set("Date") 
+      # self.DateLabel     = Tkinter.Label(self,textvariable=self.DateLabel_str,anchor="w") 
+      # self.DateLabel.grid(column=ColumnOffset+0,row=RowOffset+1)   
 
       # pull down menu
-      self.mon_str   = Tkinter.StringVar()
-      self.day_str   = Tkinter.StringVar()
-      self.year_str  = Tkinter.StringVar()
+      # self.mon_str   = Tkinter.StringVar()
+      # self.day_str   = Tkinter.StringVar()
+      # self.year_str  = Tkinter.StringVar()
 
-      self.mon_str.set("Month") 
-      self.day_str.set("Day") 
-      self.year_str.set("Year") 
+      # self.mon_str.set("Month") 
+      # self.day_str.set("Day") 
+      # self.year_str.set("Year") 
 
-      # month 
-      self.month_opt = Tkinter.OptionMenu(self,self.mon_str,*self.Month)
-      self.month_opt.grid(column=ColumnOffset+1,row=RowOffset+1) 
-      # day 
-      self.day_opt = Tkinter.OptionMenu(self,self.day_str,*self.Day)
-      self.day_opt.grid(column=ColumnOffset+2,row=RowOffset+1) 
-      # year 
-      self.year_opt = Tkinter.OptionMenu(self,self.year_str,*self.Year)
-      self.year_opt.grid(column=ColumnOffset+3,row=RowOffset+1) 
+      # # month 
+      # self.month_opt = Tkinter.OptionMenu(self,self.mon_str,*self.Month)
+      # self.month_opt.grid(column=ColumnOffset+1,row=RowOffset+1) 
+      # # day 
+      # self.day_opt = Tkinter.OptionMenu(self,self.day_str,*self.Day)
+      # self.day_opt.grid(column=ColumnOffset+2,row=RowOffset+1) 
+      # # year 
+      # self.year_opt = Tkinter.OptionMenu(self,self.year_str,*self.Year)
+      # self.year_opt.grid(column=ColumnOffset+3,row=RowOffset+1) 
 
       # # ----------------------------------------------------------------------------------
       # start run info 
@@ -240,22 +240,22 @@ class daq(Tkinter.Tk):
        eof_str      = "%-20s    %-20s" %(EOF,NINETYNINE)
        # grab values 
        # date
-       month        = "" 
-       mon_val      = self.mon_str.get()
-       if mon_val == "Jan": month = "1" 
-       if mon_val == "Feb": month = "2" 
-       if mon_val == "Mar": month = "3" 
-       if mon_val == "Apr": month = "4" 
-       if mon_val == "May": month = "5" 
-       if mon_val == "Jun": month = "6" 
-       if mon_val == "Jul": month = "7" 
-       if mon_val == "Aug": month = "8" 
-       if mon_val == "Sep": month = "9" 
-       if mon_val == "Oct": month = "10" 
-       if mon_val == "Nov": month = "11" 
-       if mon_val == "Dec": month = "12" 
-       day          = self.day_str.get()
-       year         = self.year_str.get()
+       # month        = "" 
+       # mon_val      = self.mon_str.get()
+       # if mon_val == "Jan": month = "1" 
+       # if mon_val == "Feb": month = "2" 
+       # if mon_val == "Mar": month = "3" 
+       # if mon_val == "Apr": month = "4" 
+       # if mon_val == "May": month = "5" 
+       # if mon_val == "Jun": month = "6" 
+       # if mon_val == "Jul": month = "7" 
+       # if mon_val == "Aug": month = "8" 
+       # if mon_val == "Sep": month = "9" 
+       # if mon_val == "Oct": month = "10" 
+       # if mon_val == "Nov": month = "11" 
+       # if mon_val == "Dec": month = "12" 
+       # day          = self.day_str.get()
+       # year         = self.year_str.get()
        # run range
        # convert to a regular string, don't use StringVar in the class StringParser
        run_str      = str( self.RunEntry.get() )   
@@ -288,9 +288,9 @@ class daq(Tkinter.Tk):
        time_fit_status  = self.time_fit_chk_var.get()  # time fit 
        phase_fit_status = self.phase_fit_chk_var.get() # phase fit 
        # build strings for parameter file 
-       line1            = "month                   %s"   %(month)
-       line2            = "day                     %s"   %(day)
-       line3            = "year                    %s"   %(year)
+       # line1            = "month                   %s"   %(month)
+       # line2            = "day                     %s"   %(day)
+       # line3            = "year                    %s"   %(year)
        line4            = "t_start                 %.2E" %(t_start_dbl)
        line5            = "t_end                   %.2E" %(t_end_dbl)
        line6            = "verbosity               %s"   %(verb)
@@ -298,7 +298,8 @@ class daq(Tkinter.Tk):
        line8            = "zero_crossing           %d"   %(zc_status)
        line9            = "time_fit                %d"   %(time_fit_status)
        line10           = "phase_fit               %d"   %(phase_fit_status)
-       paramList        = [header,line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,eof_str] 
+       # paramList        = [header,line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,eof_str] 
+       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,eof_str] 
        # get file names ready  
        param_fn         = "parameters.dat"
        run_fn           = "runlist.dat"

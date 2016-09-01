@@ -199,101 +199,31 @@ int NMRFileManager::MakeDirectory(const char *path){
 }
 //______________________________________________________________________________
 void NMRFileManager::InitInputDirectory(){
-
    const char *d1 = "./data/"; 
-   const int SIZE = 200; 
-   char *d2 = new char[SIZE]; 
-   char *d3 = new char[SIZE]; 
-   char *d4 = new char[SIZE]; 
-
-   int Month = InputManager->GetMonth(); 
-   int Day   = InputManager->GetDay(); 
-   int Year  = InputManager->GetYear(); 
-
-   if(Month<10 && Day<10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/0%d_%d"    ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/0%d_0%d_%d",d3,Month,Day,Year-2000); 
-   }else if(Month<10 && Day>=10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/0%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/0%d_%d_%d"  ,d3,Month,Day,Year-2000); 
-   }else if(Month>=10 && Day<10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/%d_0%d_%d" ,d3,Month,Day,Year-2000); 
-   }else if(Month>=10 && Day>=10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/%d_%d_%d"  ,d3,Month,Day,Year-2000); 
-   }
-
-   const char *D4 = d4; 
-
-   strcpy(fDataDir,D4);
- 
-   // delete the arrays
-   delete[] d2; 
-   delete[] d3; 
-   delete[] d4;
-
+   strcpy(fDataDir,d1);
 }
 //______________________________________________________________________________
 void NMRFileManager::InitOutputDirectory(){
 
-   const char *d1 = "./output"; 
    const int SIZE = 200; 
+   const char *d1 = "./output"; 
    char *d2 = new char[SIZE]; 
-   char *d3 = new char[SIZE]; 
-   char *d4 = new char[SIZE]; 
-   char *d5 = new char[SIZE]; 
 
-   int Month     = InputManager->GetMonth(); 
-   int Day       = InputManager->GetDay(); 
-   int Year      = InputManager->GetYear(); 
    int RunNumber = InputManager->GetRunNumber(); 
-
-   if(Month<10 && Day<10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/0%d_%d"    ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/0%d_0%d_%d",d3,Month,Day,Year-2000); 
-   }else if(Month<10 && Day>=10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/0%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/0%d_%d_%d"  ,d3,Month,Day,Year-2000); 
-   }else if(Month>=10 && Day<10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/%d_0%d_%d" ,d3,Month,Day,Year-2000); 
-   }else if(Month>=10 && Day>=10){
-      sprintf(d2,"%s/%d"        ,d1,Year); 
-      sprintf(d3,"%s/%d_%d"     ,d2,Month,Year-2000); 
-      sprintf(d4,"%s/%d_%d_%d"  ,d3,Month,Day,Year-2000); 
-   }
-
-   sprintf(d5,"%s/run-%d",d4,RunNumber); 
+   sprintf(d2,"%s/run-%04d",d1,RunNumber); 
 
    const char *D1 = d1; 
    const char *D2 = d2; 
-   const char *D3 = d3; 
-   const char *D4 = d4; 
-   const char *D5 = d5; 
 
    int rc=0;
    rc = MakeDirectory(D1); 
    rc = MakeDirectory(D2); 
-   rc = MakeDirectory(D3); 
-   rc = MakeDirectory(D4); 
-   rc = MakeDirectory(D5); 
 
-   strcpy(fOutputBaseDir,D4); 
-   strcpy(fOutputDir    ,D5);
+   strcpy(fOutputBaseDir,D1); 
+   strcpy(fOutputDir    ,D2);
 
    // delete the arrays
    delete[] d2; 
-   delete[] d3; 
-   delete[] d4;
-   delete[] d5;
 
 }
 //______________________________________________________________________________
@@ -328,7 +258,7 @@ void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
-   sprintf(outpath,"%s/results_run-freq-stats.dat",fOutputBaseDir);
+   sprintf(outpath,"%s/results_run-freq-stats.dat",fOutputDir);
    const char *header  = 
    "# Run \t Mean [Mid] (Hz) \t Sig [Mid] \t Mean [Lin] (Hz) \t Sig [Lin] (Hz) \t Mean [Lsq] (Hz) \t Sig [Lsq] (Hz) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
@@ -374,7 +304,7 @@ void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
-   sprintf(outpath,"%s/results_run-field-stats.dat",fOutputBaseDir);
+   sprintf(outpath,"%s/results_run-field-stats.dat",fOutputDir);
    const char *header  = 
    "# Run \t Mean [Mid] (T) \t Sig [Mid] \t Mean [Lin] (T) \t Sig [Lin] (T) \t Mean [Lsq] (T) \t Sig [Lsq] (T) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
@@ -408,7 +338,7 @@ void NMRFileManager::PrintRunMetaStatsToFile(NMRRun *aRun){
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
-   sprintf(outpath,"%s/results_run-meta-stats.dat",fOutputBaseDir);
+   sprintf(outpath,"%s/results_run-meta-stats.dat",fOutputDir);
    const char *header  = "# Run \t Mean Ampl (V) \t Sig Ampl (V) \t Mean Noise RMS (V) \t Sig Noise RMS (V)"; 
 
    const char *mode = "a";  // append data; create if it doesn't exist  
@@ -442,7 +372,7 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
-   sprintf(outpath,"%s/results_pulse-stats.dat",fOutputBaseDir);
+   sprintf(outpath,"%s/results_pulse-stats.dat",fOutputDir);
      
    const char *header  = "# Run \t Pulse \t Max Ampl (V) \t RMS Noise (V) \t Zc \t Nc \t Freq [Mid] (Hz) \t Freq [Lin] (Hz) \t Freq [Lsq] (Hz) \t Freq [mid ph] (Hz) \t Freq [lin ph] (Hz) \t Freq [lsq ph] (Hz)"; 
 
@@ -493,7 +423,7 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
-   sprintf(outpath,"%s/results_pulse-stats-field.dat",fOutputBaseDir);
+   sprintf(outpath,"%s/results_pulse-stats-field.dat",fOutputDir);
      
    const char *header  = "# Run \t Pulse \t B [Mid] (T) \t B [Lin] (T) \t B [Lsq] (T) \t B [fit] (T) \t B [ph] (T)"; 
 
@@ -693,7 +623,7 @@ double NMRFileManager::GetPulseTimeStamp(int run,int pulse){
    char *run_dir  = new char[SIZE];
    char *inpath   = new char[SIZE]; 
 
-   sprintf(run_dir,"run-%d"  ,run); 
+   sprintf(run_dir,"run-%04d"  ,run); 
    sprintf(inpath ,"%s/%s/timestamps.dat",fDataDir,run_dir);
 
    ifstream infile;
@@ -735,7 +665,7 @@ void NMRFileManager::ImportDataRawADCBin(int run,int pulse){
    char *pulse_fn = new char[SIZE];
    char *inpath   = new char[SIZE]; 
 
-   sprintf(run_dir  ,"run-%d"  ,run); 
+   sprintf(run_dir  ,"run-%04d"  ,run); 
    sprintf(pulse_fn ,"%d.bin"  ,pulse); 
    sprintf(inpath   ,"%s/%s/%s",fDataDir,run_dir,pulse_fn);
 
