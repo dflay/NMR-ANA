@@ -210,7 +210,7 @@ void NMRFileManager::InitOutputDirectory(){
    char *d2 = new char[SIZE]; 
 
    int RunNumber = InputManager->GetRunNumber(); 
-   sprintf(d2,"%s/run-%04d",d1,RunNumber); 
+   sprintf(d2,"%s/run-%05d",d1,RunNumber); 
 
    const char *D1 = d1; 
    const char *D2 = d2; 
@@ -623,7 +623,7 @@ double NMRFileManager::GetPulseTimeStamp(int run,int pulse){
    char *run_dir  = new char[SIZE];
    char *inpath   = new char[SIZE]; 
 
-   sprintf(run_dir,"run-%04d"  ,run); 
+   sprintf(run_dir,"run-%05d"  ,run); 
    sprintf(inpath ,"%s/%s/timestamps.dat",fDataDir,run_dir);
 
    ifstream infile;
@@ -665,7 +665,7 @@ void NMRFileManager::ImportDataRawADCBin(int run,int pulse){
    char *pulse_fn = new char[SIZE];
    char *inpath   = new char[SIZE]; 
 
-   sprintf(run_dir  ,"run-%04d"  ,run); 
+   sprintf(run_dir  ,"run-%05d"  ,run); 
    sprintf(pulse_fn ,"%d.bin"  ,pulse); 
    sprintf(inpath   ,"%s/%s/%s",fDataDir,run_dir,pulse_fn);
 
