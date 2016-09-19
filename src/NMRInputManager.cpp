@@ -259,7 +259,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    // }else if(fMonth<10 && fDay<10){
    //    sprintf(prefix,"./data/%d/0%d_%d/0%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
    // } 
-   sprintf(inpath,"./data/run-%04d/summary.dat",RunNumber); 
+   sprintf(inpath,"./data/run-%05d/summary.dat",RunNumber); 
 
    // double ivalue=0; 
 
@@ -281,7 +281,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    infile.open(inpath,std::ios::in);
 
    if( infile.fail() ){
-      printf("[NMRFileManager::ReadRunSummary]: Cannot open the file: %s.  Exiting... \n",inpath);
+      printf("[NMRInputManager::ReadRunSummary]: Cannot open the file: %s.  Exiting... \n",inpath);
       exit(1);
    }else{
       while( !infile.eof() ){
