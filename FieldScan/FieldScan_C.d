@@ -72,7 +72,8 @@
 ./FieldScan_C.so: /usr/local/root_v5-34-30/include/root/TVirtualTreePlayer.h
 ./FieldScan_C.so: /usr/local/root_v5-34-30/include/root/TRandom3.h
 ./FieldScan_C.so: /usr/local/root_v5-34-30/include/root/TRandom.h
-./FieldScan_C.so: ./src/Coordinates.C ./src/Math.C ./src/Graph.C
-./FieldScan_C.so: ./src/Import.C ./src/Parse.C ./src/Generate.C ./src/Field.C
+./FieldScan_C.so: ./src/enum_types.h ./src/Coordinates.C ./src/Math.C
+./FieldScan_C.so: ./src/Graph.C ./src/Import.C ./src/Parse.C ./src/Generate.C
+./FieldScan_C.so: ./src/Field.C
 ./FieldScan_C.so: /usr/local/root_v5-34-30//include/root/cintdictversion.h /usr/local/root_v5-34-30//include/root/RVersion.h
 FieldScan_C__ROOTBUILDVERSION= 5.34/30

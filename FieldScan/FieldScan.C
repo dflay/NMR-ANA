@@ -17,6 +17,7 @@
 #include <iostream> 
 #include <fstream> 
 
+#include "./src/enum_types.h"
 #include "./src/Coordinates.C"
 #include "./src/Math.C"
 #include "./src/Graph.C"
@@ -26,6 +27,8 @@
 #include "./src/Field.C"
 
 using namespace std; 
+
+int gUnits=1;  // 0 = Hz, 1 = ppm, 2 = ppb 
 
 struct FieldData{
    double x;
@@ -62,24 +65,11 @@ void FieldScan(){
    cout << "Enter dynamic radius (cm): ";
    cin  >> r_dsv; 
 
-   TString date,mdy; 
-
-   if(M<10  && D<10){
-      date = Form("20%d/0%d_%d/0%d_0%d_%d/",Yr,M,Yr,M,D,Yr);
-      mdy  = Form("0%d_0%d_%d",M,D,Yr);
-   }else if(M>=10 && D<10){
-      date = Form("20%d/%d_%d/%d_0%d_%d/"  ,Yr,M,Yr,M,D,Yr);
-      mdy  = Form("%d_0%d_%d"  ,M,D,Yr);
-   }else if(M<10  && D>=10){ 
-      date = Form("20%d/0%d_%d/0%d_%d_%d/" ,Yr,M,Yr,M,D,Yr); 
-      mdy  = Form("0%d_%d_%d" ,M,D,Yr); 
-   }else if(M>=10 && D>=10){
-      date = Form("20%d/%d_%d/%d_%d_%d/"   ,Yr,M,Yr,M,D,Yr); 
-      mdy  = Form("%d_%d_%d"   ,M,D,Yr); 
-   }
+   TString date = Form("20%02d/%02d_%02d/%02d_%02d_%02d/",Yr,M,Yr,M,D,Yr);
+   TString mdy  = Form("%02d_%02d_%02d",M,D,Yr);
 
    TString prefix      = Form("./input/test/");
-   TString prefix_alt  = Form("./output/%s",date.Data());
+   TString prefix_alt  = Form("./output/old_output/%s",date.Data());
    TString run_path    = prefix + Form("runlist_%s.dat",mdy.Data()); 
    // TString data_path   = prefix + Form("results_pulse-stats-field_%s.dat",mdy.Data()); 
    // TString data_path_2 = prefix + Form("results_pulse-stats_%s.dat",mdy.Data()); 
@@ -131,7 +121,11 @@ void FieldScan(){
    // double B0 = 61.930E+6/GAMMA_p;  // I = 157.62 A 
    // double B0 = 62.080E+6/GAMMA_p;  // I = 157.64 A 
    // double B0 = 62.154E+6/GAMMA_p;     // I = 157.66 A 
-   double B0 = 61.754E+6/GAMMA_p;  // I = 157.60 A  
+   // double B0 = 61.754E+6/GAMMA_p;  // I = 157.60 A  
+
+   double f_lo  = 61.744E+6; 
+   double f_pi2 = 61.754E+6;  
+
    double BA_avg=0,BA_avg_err=0;
    double BA_rel=0,BA_rel_err=0;  
    double BB_avg=0,BB_avg_err=0; 
@@ -151,7 +145,7 @@ void FieldScan(){
    int sw_d = 4; 
    vector<int> MechSw; 
   
-   TString mech_path = Form("./data/%s/mech-sw.dat",date.Data());
+   TString mech_path = Form("./data/old_data/%s/mech-sw.dat",date.Data());
 
    int dummy=0;
    int cntr=0,cntr2=4;  
@@ -179,8 +173,8 @@ void FieldScan(){
 
    const int N = Run.size();
    for(int i=0;i<N;i++){
-      ImportData(data_path,Run[i],b);                              // read in data for a run (contains data for two probes) 
-      ImportData2(data_path_2,Run[i],ampl,noise,zeroc);            // read in data for a run (contains data for two probes) 
+      // ImportData(data_path,Run[i],b);                              // read in data for a run (contains data for two probes) 
+      ImportDataNew(data_path_2,Run[i],ampl,noise,zeroc,b);          // read in data for a run (contains data for two probes) 
       ImportMechSwParams(mech_path,Run[i],MechSw);
       // ParseDataTwoProbes(sw_a,sw_b,MechSw,ampl,noise,zc,b,BA,BB);     // parse data into two vectors: one for probe A, the other for probe B 
       ParseDataFourProbes(sw_a,sw_b,sw_c,sw_d,MechSw,ampl,noise,zeroc,b,BA,BB,BC,BD);     // parse data into four vectors: one each for A, B, C and D  
@@ -190,18 +184,23 @@ void FieldScan(){
       GetCoordinates(r_dsv,SlotC[i],Azi[i],th0,x_c,y_c,z_c,th_c);
       GetCoordinates(r_dsv,SlotD[i],Azi[i],th0,x_d,y_d,z_d,th_d);
       // calculate statistics 
-      BA_avg     = GetMean(BA);      
-      BA_avg_err = GetStandardErrorOfTheMean(BA);      
-      CalculateB_rel(B0,BA_avg,BA_avg_err,BA_rel,BA_rel_err);  
-      BB_avg     = GetMean(BB);      
-      BB_avg_err = GetStandardErrorOfTheMean(BB);  
-      CalculateB_rel(B0,BB_avg,BB_avg_err,BB_rel,BB_rel_err); 
-      BC_avg     = GetMean(BC);      
-      BC_avg_err = GetStandardErrorOfTheMean(BC);      
-      CalculateB_rel(B0,BC_avg,BC_avg_err,BC_rel,BC_rel_err);  
-      BD_avg     = GetMean(BD);      
-      BD_avg_err = GetStandardErrorOfTheMean(BD);  
-      CalculateB_rel(B0,BD_avg,BD_avg_err,BD_rel,BD_rel_err); 
+      CalculateStats(gUnits,f_lo,f_pi2,BA,BA_avg,BA_avg_err,BA_rel,BA_rel_err); 
+      CalculateStats(gUnits,f_lo,f_pi2,BB,BB_avg,BB_avg_err,BB_rel,BB_rel_err); 
+      CalculateStats(gUnits,f_lo,f_pi2,BC,BC_avg,BC_avg_err,BC_rel,BC_rel_err); 
+      CalculateStats(gUnits,f_lo,f_pi2,BD,BD_avg,BD_avg_err,BD_rel,BD_rel_err); 
+      // calculate statistics 
+      // BA_avg     = GetMean(BA);      
+      // BA_avg_err = GetStandardErrorOfTheMean(BA);      
+      // CalculateB_rel(B0,BA_avg,BA_avg_err,BA_rel,BA_rel_err);  
+      // BB_avg     = GetMean(BB);      
+      // BB_avg_err = GetStandardErrorOfTheMean(BB);  
+      // CalculateB_rel(B0,BB_avg,BB_avg_err,BB_rel,BB_rel_err); 
+      // BC_avg     = GetMean(BC);      
+      // BC_avg_err = GetStandardErrorOfTheMean(BC);      
+      // CalculateB_rel(B0,BC_avg,BC_avg_err,BC_rel,BC_rel_err);  
+      // BD_avg     = GetMean(BD);      
+      // BD_avg_err = GetStandardErrorOfTheMean(BD);  
+      // CalculateB_rel(B0,BD_avg,BD_avg_err,BD_rel,BD_rel_err); 
       if( cntr<32 ){  // number of azimuthal positions 
          FillVectors(x_a,y_a,z_a,th_a,BA_avg,BA_avg_err,BA_rel,BA_rel_err,xa,ya,za,pa,ba,ba_err,bar,bar_err); 
          FillVectors(x_b,y_b,z_b,th_b,BB_avg,BB_avg_err,BB_rel,BB_rel_err,xb,yb,zb,pb,bb,bb_err,bbr,bbr_err); 
@@ -221,13 +220,13 @@ void FieldScan(){
          SetGraphParameters(gb,20,kBlack); 
          SetGraphParameters(gc,20,kBlack); 
          SetGraphParameters(gd,20,kBlack); 
-         probe_a = prefix_pr + Form("probe-%d.dat",ia);
+         probe_a = prefix_pr + Form("probe-%02d.dat",ia);
 	 PrintToFile(probe_a,xa,ya,za,ba,ba_err,bar,bar_err); 
-         probe_b = prefix_pr + Form("probe-%d.dat",ib);
+         probe_b = prefix_pr + Form("probe-%02d.dat",ib);
 	 PrintToFile(probe_b,xb,yb,zb,bb,bb_err,bbr,bbr_err); 
-         probe_c = prefix_pr + Form("probe-%d.dat",ic);
+         probe_c = prefix_pr + Form("probe-%02d.dat",ic);
 	 PrintToFile(probe_c,xc,yc,zc,bc,bc_err,bcr,bcr_err); 
-         probe_d = prefix_pr + Form("probe-%d.dat",id);
+         probe_d = prefix_pr + Form("probe-%02d.dat",id);
 	 PrintToFile(probe_d,xd,yd,zd,bd,bd_err,bdr,bdr_err); 
 
 	 if(cntr2>24) cntr2 = 4;
@@ -308,7 +307,8 @@ void FieldScan(){
          FillVectors(x_d,y_d,z_d,th_d,BD_avg,BD_avg_err,BD_rel,BD_rel_err,xd,yd,zd,pd,bd,bd_err,bdr,bdr_err);
       }
       cout << "RUN: " << Run[i] << endl;
-      cout << "B0 = " << Form("%.10lf",B0) << endl;  
+      // cout << "B0 = " << Form("%.10lf",B0) << endl;  
+      cout << "F_pi2 = " << Form("%.10lf",f_pi2) << endl;  
       cout << x_a << "\t" << y_a << "\t" << z_a << endl;
       cout << x_b << "\t" << y_b << "\t" << z_b << endl;
       cout << x_c << "\t" << y_c << "\t" << z_c << endl;
@@ -337,7 +337,7 @@ void FieldScan(){
 	    << " y = "     << Form("%.3lf" ,y_a) 
 	    << " z = "     << Form("%.3lf" ,z_a) 
 	    << " th = "    << Form("%.3lf" ,th_a) 
-	    << " B = "     << Form("%.10lf",BA_avg) << " +/- " << Form("%.10lf",BA_avg_err) << " " 
+	    << " B = "     << Form("%.10lf",BA_avg) << " +/- " << Form("%.10lf",BA_avg_err) << " Hz" 
 	    << " ("        << Form("%.3lf" ,BA_rel) << " +/- " << Form("%.3lf" ,BA_rel_err)  << " ppm)" << endl; 
       } 
       if( (TMath::Abs(x_b)<500)&&(TMath::Abs(y_b)<500) &&(TMath::Abs(z_b)<500) ){  
@@ -364,7 +364,7 @@ void FieldScan(){
 	    << " y = "     << Form("%.3lf" ,y_b) 
 	    << " z = "     << Form("%.3lf" ,z_b) 
 	    << " th = "    << Form("%.3lf" ,th_b) 
-	    << " B = "     << Form("%.10lf",BB_avg) << " +/- " << Form("%.10lf",BB_avg_err) << " " 
+	    << " B = "     << Form("%.10lf",BB_avg) << " +/- " << Form("%.10lf",BB_avg_err) << " Hz" 
 	    << " ("        << Form("%.3lf" ,BB_rel)  << " +/- " << Form("%.3lf" ,BB_rel_err) << " ppm)" << endl; 
 
        }  
@@ -392,7 +392,7 @@ void FieldScan(){
 	    << " y = "     << Form("%.3lf" ,y_c) 
 	    << " z = "     << Form("%.3lf" ,z_c) 
 	    << " th = "    << Form("%.3lf" ,th_c) 
-	    << " B = "     << Form("%.10lf",BC_avg) << " +/- " << Form("%.10lf",BC_avg_err) << " " 
+	    << " B = "     << Form("%.10lf",BC_avg) << " +/- " << Form("%.10lf",BC_avg_err) << " Hz" 
 	    << " ("        << Form("%.3lf" ,BC_rel) << " +/- " << Form("%.3lf" ,BC_rel_err)  << " ppm)" << endl; 
 
       } 
@@ -420,7 +420,7 @@ void FieldScan(){
             << " y = "     << Form("%.3lf" ,y_d) 
             << " z = "     << Form("%.3lf" ,z_d) 
             << " th = "    << Form("%.3lf" ,th_d) 
-            << " B = "     << Form("%.10lf",BD_avg) << " +/- " << Form("%.10lf",BD_avg_err) << " " 
+            << " B = "     << Form("%.10lf",BD_avg) << " +/- " << Form("%.10lf",BD_avg_err) << " Hz" 
             << " ("        << Form("%.3lf" ,BD_rel)  << " +/- " << Form("%.3lf" ,BD_rel_err) << " ppm)" << endl; 
       }
       cout << "=========================================================================================================================" << endl;
@@ -454,10 +454,10 @@ void FieldScan(){
    iColor = GetColorIndex(24); 
    AddToMultiGraph(gd,24,color[iColor],mg4,L4);
 
-   TString outpath_a = Form("./probe/probe-11.dat");
-   TString outpath_b = Form("./probe/probe-12.dat");
-   TString outpath_c = Form("./probe/probe-13.dat");
-   TString outpath_d = Form("./probe/probe-14.dat");
+   TString outpath_a = prefix_pr + Form("probe-11.dat");
+   TString outpath_b = prefix_pr + Form("probe-12.dat");
+   TString outpath_c = prefix_pr + Form("probe-13.dat");
+   TString outpath_d = prefix_pr + Form("probe-14.dat");
 
    PrintToFile(outpath_a,xa,ya,za,ba,ba_err,bar,bar_err); 
    PrintToFile(outpath_b,xb,yb,zb,bb,bb_err,bbr,bbr_err); 
@@ -492,6 +492,8 @@ void FieldScan(){
    TCanvas *c2 = new TCanvas("c2","Probe vs Azimuth",1200,800);
    c2->SetFillColor(kWhite);
    c2->Divide(2,2);
+
+   gPad->Update();
 
    c2->cd(1); 
    mg1->Draw("a");

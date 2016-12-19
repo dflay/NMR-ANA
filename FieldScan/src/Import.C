@@ -11,6 +11,7 @@ void ImportRunParams2(TString inpath,vector<int> &Run,vector<int> &SlotA,vector<
 void ImportRunParams4(TString inpath,vector<int> &Run,
                       vector<int> &SlotA,vector<int> &SlotB,vector<int> &SlotC,vector<int> &SlotD,vector<int> &Azi); 
 void ImportMechSwParams(TString inpath,int Run,vector<int> &MechSw); 
+void ImportDataNew(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC,vector<double> &F); 
 
 //______________________________________________________________________________
 void ImportData(TString inpath,int Run,vector<double> &B){
@@ -79,7 +80,7 @@ void ImportDataAlt2(TString inpath,int sw,vector<double> &x){
 	 infile >> irun >> isw >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
          if(isw==sw){
             x.push_back(ifa);
-            cout << ifa << endl;
+            // cout << ifa << endl;
          }
       }
       infile.close(); 
@@ -135,6 +136,40 @@ void ImportData2(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noi
 	    Ampl.push_back(iampl);
 	    Noise.push_back(inoise); 
             ZC.push_back(izc); 
+         } 
+      }
+      infile.close(); 
+      // B.pop_back();
+   }
+
+}
+//______________________________________________________________________________
+void ImportDataNew(TString inpath,int Run,vector<double> &Ampl,vector<double> &Noise,vector<double> &ZC,vector<double> &F){
+
+   int irun=0,ipulse=0;
+   int cntr=0;
+   double iampl,inoise,izc,inc,ifa,ifb,ifc,ifd,ife;
+
+   const int NLines = 1; 
+   const int SIZE = 2048; 
+   char buf[SIZE]; 
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      cout << "Cannot open the file: " << inpath << endl;
+      exit(1);  
+   }else{
+      for(int i=0;i<NLines;i++) infile.getline(buf,SIZE);
+      while( !infile.eof() ){
+	 infile >> irun >> ipulse >> iampl >> inoise >> izc >> inc >> ifa >> ifb >> ifc >> ifd >> ife; 
+         if(irun==Run){
+            // cout << irun << "\t" << ipulse << "\t" << Form("%.5lf",ifc) << endl;
+	    cntr++;
+	    Ampl.push_back(iampl);
+	    Noise.push_back(inoise); 
+            ZC.push_back(izc);
+            F.push_back(ifc);  
          } 
       }
       infile.close(); 

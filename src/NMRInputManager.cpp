@@ -19,7 +19,7 @@ NMRInputManager::NMRInputManager(){
    fExpFreq          = 0;
    fSampleFreq       = 0;
    fLOFreq           = 0; 
-   fPTSFreq          = 0; 
+   fPi2Freq          = 0; 
    fADCNumSamples    = 0;
    fADCSignalLength  = 0;
    fBNCVoltage       = 0;
@@ -55,7 +55,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fExpFreq          = a.GetExpectedFrequency(); 
    fSampleFreq       = a.GetSampleFrequency(); 
    fLOFreq           = a.GetLOFrequency();
-   fPTSFreq          = a.GetPTSFrequency();
+   fPi2Freq          = a.GetPi2Frequency();
    fADCNumSamples    = a.GetNumSamples(); 
    fADCSignalLength  = a.GetSignalLength();
    fBNCVoltage       = a.GetBNCVoltage();     
@@ -83,7 +83,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fExpFreq          = a->GetExpectedFrequency(); 
    fSampleFreq       = a->GetSampleFrequency(); 
    fLOFreq           = a->GetLOFrequency();
-   fPTSFreq          = a->GetPTSFrequency();
+   fPi2Freq          = a->GetPi2Frequency();
    fADCNumSamples    = a->GetNumSamples(); 
    fADCSignalLength  = a->GetSignalLength();
    fBNCVoltage       = a->GetBNCVoltage();     
@@ -110,7 +110,7 @@ void NMRInputManager::Update(const NMRInputManager &a){
    fExpFreq          = a.GetExpectedFrequency(); 
    fSampleFreq       = a.GetSampleFrequency(); 
    fLOFreq           = a.GetLOFrequency();
-   fPTSFreq          = a.GetPTSFrequency();
+   fPi2Freq          = a.GetPi2Frequency();
    fADCNumSamples    = a.GetNumSamples(); 
    fADCSignalLength  = a.GetSignalLength();
    fBNCVoltage       = a.GetBNCVoltage();     
@@ -137,7 +137,7 @@ void NMRInputManager::Update(const NMRInputManager *a){
    fExpFreq          = a->GetExpectedFrequency(); 
    fSampleFreq       = a->GetSampleFrequency(); 
    fLOFreq           = a->GetLOFrequency();
-   fPTSFreq          = a->GetPTSFrequency();
+   fPi2Freq          = a->GetPi2Frequency();
    fADCNumSamples    = a->GetNumSamples(); 
    fADCSignalLength  = a->GetSignalLength();
    fBNCVoltage       = a->GetBNCVoltage();     
@@ -249,19 +249,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    char itag[MAX],ivalue[MAX]; 
    
    char *inpath = new char[MAX];
-   // char *prefix = new char[MAX];
-   // if(fMonth>=10 && fDay>=10){  
-   //    sprintf(prefix,"./data/%d/%d_%d/%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   // }else if(fMonth>=10 && fDay<10){
-   //    sprintf(prefix,"./data/%d/%d_%d/%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   // }else if(fMonth<10 && fDay>=10){
-   //    sprintf(prefix,"./data/%d/0%d_%d/0%d_%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   // }else if(fMonth<10 && fDay<10){
-   //    sprintf(prefix,"./data/%d/0%d_%d/0%d_0%d_%d",fYear,fMonth,fYear-2000,fMonth,fDay,fYear-2000); 
-   // } 
    sprintf(inpath,"./data/run-%05d/summary.dat",RunNumber); 
-
-   // double ivalue=0; 
 
    const char *adc               = "adc_id"; 
    const char *adc_ch            = "adc_channel_number"; 
@@ -270,7 +258,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    const char *adc_signal_length = "adc_signal_length"; 
    const char *exp_freq          = "expected_IF_frequency"; 
    const char *lo_freq           = "LO_frequency";            // local oscillator frequency
-   const char *rf_freq           = "RF_frequency";            // frequency of pulse sent to probe
+   const char *rf_freq           = "pi2_frequency_1";         // frequency of pulse sent to probe
    const char *bnc_voltage       = "bnc_voltage"; 
    const char *ntype_voltage     = "ntype_voltage";
    const char *num_pulses        = "num_pulses";  
@@ -297,7 +285,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
             if( NMRUtility::AreEquivStrings(itag,adc_signal_length) ) fADCSignalLength  = atof(ivalue);  
             if( NMRUtility::AreEquivStrings(itag,exp_freq)          ) fExpFreq          = atof(ivalue);  
             if( NMRUtility::AreEquivStrings(itag,lo_freq)           ) fLOFreq           = atof(ivalue);  
-            if( NMRUtility::AreEquivStrings(itag,rf_freq)           ) fPTSFreq          = atof(ivalue);  
+            if( NMRUtility::AreEquivStrings(itag,rf_freq)           ) fPi2Freq          = atof(ivalue);  
             if( NMRUtility::AreEquivStrings(itag,bnc_voltage)       ) fBNCVoltage       = atof(ivalue);  
             if( NMRUtility::AreEquivStrings(itag,ntype_voltage)     ) fNTypeVoltage     = atof(ivalue);  
          }else{
@@ -334,7 +322,7 @@ void NMRInputManager::PrintRunSummary(){
    printf("Expected Frequency   = %.3E Hz \n",fExpFreq              );        
    printf("Sample Frequency     = %.3E Hz \n",fSampleFreq           );        
    printf("LO Frequency         = %.3E Hz \n",fLOFreq               ); 
-   printf("Field Frequency      = %.3E Hz \n",fPTSFreq              ); 
+   printf("pi/2 Frequency       = %.3E Hz \n",fPi2Freq              ); 
    printf("LO BNC Voltage       = %.3E V  \n",fBNCVoltage           );
    printf("LO NType Voltage     = %.3E V  \n",fNTypeVoltage         );
    printf("ADC ID               = %d      \n",fADCID                );       

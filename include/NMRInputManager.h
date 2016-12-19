@@ -21,7 +21,7 @@ class NMRInputManager{
       int fADCNumSamples;
 
       double fStartTimeZC,fEndTimeZC;
-      double fExpFreq,fSampleFreq,fLOFreq,fPTSFreq; 
+      double fExpFreq,fSampleFreq,fLOFreq,fPi2Freq; 
       double fBNCVoltage,fNTypeVoltage;
       double fADCSignalLength;
 
@@ -68,7 +68,7 @@ class NMRInputManager{
       void SetExpFreq             (double v) { fExpFreq          = v; } 
       void SetSampleFreq          (double v) { fSampleFreq       = v; } 
       void SetLOFreq              (double v) { fLOFreq           = v; } 
-      void SetPTSFreq             (double v) { fPTSFreq          = v; } 
+      void SetPi2Freq             (double v) { fPi2Freq          = v; } 
       void SetADCNumSamples       (int v)    { fADCNumSamples    = v; } 
       void SetADCSignalLength     (double v) { fADCSignalLength  = v; } 
       void SetBNCVoltage          (double v) { fBNCVoltage       = v; } 
@@ -97,7 +97,7 @@ class NMRInputManager{
       double GetExpectedFrequency() const { return fExpFreq;          } 
       double GetSampleFrequency()   const { return fSampleFreq;       } 
       double GetLOFrequency()       const { return fLOFreq;           } 
-      double GetPTSFrequency()      const { return fPTSFreq;          } 
+      double GetPi2Frequency()      const { return fPi2Freq;          } 
       double GetSignalLength()      const { return fADCSignalLength;  } 
       double GetBNCVoltage()        const { return fBNCVoltage;       } 
       double GetNTypeVoltage()      const { return fNTypeVoltage;     } 

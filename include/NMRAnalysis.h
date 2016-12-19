@@ -25,8 +25,8 @@ class NMRAnalysis{
 
       int fVerbosity;
 
-      double fFreq_pts;                // frequency used to pulse the probe (PTS160 function generator)  
       double fFreq_LO;                 // frequency used to mix down the received NMR frequency (local oscillator, SRS SG382)   
+      double fFreq_pi2;                // frequency used to pulse the probe (pi/2 pulser, a second SRS SG382)   
    
       NMRFileManager *fFileManager; 
 
@@ -56,7 +56,7 @@ class NMRAnalysis{
          ZeroCrossing->SetVerbosity(v); 
       } 
 
-      void SetPTSFrequency(double f){fFreq_pts = f;} 
+      void SetPi2Frequency(double f){fFreq_pi2 = f;} 
       void SetLOFrequency(double f){fFreq_LO = f;} 
 
       void InitializeAnalysis(); 

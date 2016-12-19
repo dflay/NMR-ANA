@@ -1,6 +1,22 @@
 void CalculateB_rel(double B0,double B,double dB,double &Brel,double &dBrel); 
 void CalculateB_rel_Vec(double B0,vector<double> B,vector<double> dB,vector<double> &Brel,vector<double> &dBrel); 
+void CalculateStats(int units,double f_lo,double f_ref,vector<double> F,
+                    double &f_mean,double &f_sigma,double &f_rel_mean,double &f_rel_sigma); 
 
+//______________________________________________________________________________
+void CalculateStats(int units,double f_lo,double f_ref,vector<double> F,
+                    double &f_mean,double &f_sigma,double &f_rel_mean,double &f_rel_sigma){
+ 
+   double sf = 0; 
+   if(units==Hz)  sf = 1.0;    // Hz 
+   if(units==ppm) sf = 1E-6;   // ppm 
+   if(units==ppb) sf = 1E-9;   // ppb 
+ 
+   f_mean      = f_lo + GetMean(F);
+   f_sigma     = GetStandardDeviation(F);
+   f_rel_mean  = (f_mean - f_ref)/f_ref/sf;
+   f_rel_sigma = f_sigma/f_ref/sf;
+}
 //______________________________________________________________________________
 void CalculateB_rel(double B0,double B,double dB,double &Brel,double &dBrel){
    double ppm = 1E-6;
