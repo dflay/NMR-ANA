@@ -67,7 +67,7 @@ void NMRZeroCrossing::UpdateParameters(){
 
    double T_exp  = 1./fExpFreq;
    double N_exp  = T_exp*fSampleFreq;       // number of points for one period 
-   int step_size = (int)( (1./8.)*N_exp );  // skip 1/8 of a period 
+   int step_size = (int)( (1./16.)*N_exp );  // skip 1/8 of a period 
    int NPTS      = step_size/2;             // use step_size/2 
 
    SetStepSize(step_size); 
