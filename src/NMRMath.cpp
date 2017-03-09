@@ -438,10 +438,15 @@ namespace NMRMath{
          // method 3: least squares fit to neighboring points
          // to find fit parameters a and b in f(x) = a + bx 
          ret_val = LeastSquaresFitting(SIZE,X,Y,a,b,r);
-         if(b!=0){
-            t0 = -a/b;
+         if(ret_val!=0){
+            std::cout << "[NMRMath::GetTimeOfCrossing]: Least-squares fit FAILED!" << std::endl;
+            t0 = -1;
          }else{
-            t0 = 0;
+            if(b!=0){
+               t0 = -a/b;
+            }else{
+               t0 = 0;
+            }
          }
          // make sure t0 is bound properly 
          if(t0<X[0] || t0>X[SIZE-1]){
@@ -496,7 +501,7 @@ namespace NMRMath{
       const int N  = aPulse->GetNumPoints();
 
       int cntr         = 0;
-      int cntr_prev    = 0;
+      // int cntr_prev    = 0;
 
       double v0           = 0;
       double target       = 0;
@@ -505,9 +510,10 @@ namespace NMRMath{
 
       double v_prod=0;
       double delta_v=0; 
-      double v_current=0,v_previous=0,v_next=0;
-      double t_current=0,t_previous=0,t_next=0;
-      double v_current_err=0,v_next_err=0,v_previous_err=0;
+      double v_current=0,v_next=0;
+      double t_current=0,t_next=0;
+      double v_current_err=0,v_next_err=0; 
+      // double t_previous=0,v_previous=0,v_previous_err=0;
 
       int i=0;  // index for NMRPulse data 
       do{
@@ -591,10 +597,10 @@ namespace NMRMath{
             i += step;  // move to next bin  
             // set up for next data point 
             ClearAnaArrays(NPTSUseable,X,Y,EY);             // clears X, Y, EY  (sets to zero) 
-            cntr_prev      = cntr;
-            t_previous     = t_current;
-            v_previous     = v_current; 
-            v_previous_err = v_current_err; 
+            // cntr_prev      = cntr;
+            // t_previous     = t_current;
+            // v_previous     = v_current; 
+            // v_previous_err = v_current_err; 
          }
       }while( i<(N-1) ); 
 

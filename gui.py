@@ -197,15 +197,15 @@ class daq(Tkinter.Tk):
       # make buttons 
 
       # print config to files  
-      self.buttonConfig = Tkinter.Button(self,text=u"Apply Configuration",command=self.PrintToFile) 
-      self.buttonConfig.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW',) 
+      # self.buttonConfig = Tkinter.Button(self,text=u"Apply Configuration",command=self.PrintToFile) 
+      # self.buttonConfig.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW',) 
       # run  
       self.buttonRun = Tkinter.Button(self,text=u"Analyze",command=self.RunDAQ) 
       # self.buttonRun = Tkinter.Button(self,text=u"Calculate",command=self.CheckHardware) 
-      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=4,sticky='EW') 
+      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=5,sticky='EW') 
       # quit the program 
       self.buttonQuit = Tkinter.Button(self,text=u"Quit",command=quit) 
-      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+20,columnspan=4,sticky='EW') 
+      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+20,columnspan=5,sticky='EW') 
 
       # ----------------------------------------------------------------------------------
       # status field  
@@ -324,8 +324,10 @@ class daq(Tkinter.Tk):
        runFile.close() 
    #----------------------------------------------------------------------------
    def RunDAQ(self): 
-      run_cmd = "./nmr_ana" 
+      # print data to files 
+      self.PrintToFile() 
       # start the C code 
+      run_cmd = "./nmr_ana" 
       self.StatusVariable.set("Running calculations...") 
       os.system(run_cmd) 
       self.StatusVariable.set("Analysis complete.") 

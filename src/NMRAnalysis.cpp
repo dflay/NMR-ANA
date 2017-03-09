@@ -94,7 +94,7 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
       nc_mid      = ZeroCrossing->GetNumCyclesMidpoint(); 
       nc_lin      = ZeroCrossing->GetNumCyclesLinearInterp(); 
       nc_lsq      = ZeroCrossing->GetNumCyclesLeastSquares(); 
-      if( zc_mid== zc_lin && zc_mid==zc_lsq){
+      if( zc_mid==zc_lin && zc_mid==zc_lsq){
          // we're fine, do nothing
          zc = zc_mid; 
          nc = nc_mid; 
@@ -112,6 +112,12 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
       aPulseAnalyzed->SetFrequencyZeroCrossingLinearInterpPhaseFit(freq_lin_ph); 
       aPulseAnalyzed->SetFrequencyZeroCrossingLeastSquaresPhaseFit(freq_lsq_ph); 
    }
+
+   // clean up compiler warnings 
+   nc_lin   += 0; 
+   nc_lsq   += 0; 
+   freq_fit += 0; 
+   freq_ph  += 0; 
 
    if(fUseFit){
       // TODO: do stuff

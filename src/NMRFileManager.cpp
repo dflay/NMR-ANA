@@ -216,8 +216,9 @@ void NMRFileManager::InitOutputDirectory(){
    const char *D2 = d2; 
 
    int rc=0;
-   rc = MakeDirectory(D1); 
-   rc = MakeDirectory(D2); 
+   rc  = MakeDirectory(D1); 
+   rc  = MakeDirectory(D2); 
+   rc +=0;
 
    strcpy(fOutputBaseDir,D1); 
    strcpy(fOutputDir    ,D2);
@@ -234,7 +235,6 @@ void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunFieldStatsToFile(aRun); 
    PrintRunMetaStatsToFile(aRun); 
 }
-
 //______________________________________________________________________________
 void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 
@@ -262,7 +262,7 @@ void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
    const char *header  = 
    "# Run \t Mean [Mid] (Hz) \t Sig [Mid] \t Mean [Lin] (Hz) \t Sig [Lin] (Hz) \t Mean [Lsq] (Hz) \t Sig [Lsq] (Hz) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
-   const char *mode = "a";  // append data; create if it doesn't exist  
+   const char *mode = "w";  // write data  
 
    FILE *outfile;
    outfile = fopen(outpath,mode); 
@@ -308,7 +308,7 @@ void NMRFileManager::PrintRunFieldStatsToFile(NMRRun *aRun){
    const char *header  = 
    "# Run \t Mean [Mid] (T) \t Sig [Mid] \t Mean [Lin] (T) \t Sig [Lin] (T) \t Mean [Lsq] (T) \t Sig [Lsq] (T) \t Mean [mid ph] \t Sig [mid ph] \t Mean [lin ph] \t Sig [lin ph] \t Mean [lsq ph] \t Sig [lsq ph]"; 
 
-   const char *mode = "a";  // append data; create if it doesn't exist  
+   const char *mode = "w";  // write data  
 
    FILE *outfile;
    outfile = fopen(outpath,mode); 
@@ -341,7 +341,7 @@ void NMRFileManager::PrintRunMetaStatsToFile(NMRRun *aRun){
    sprintf(outpath,"%s/results_run-meta-stats.dat",fOutputDir);
    const char *header  = "# Run \t Mean Ampl (V) \t Sig Ampl (V) \t Mean Noise RMS (V) \t Sig Noise RMS (V)"; 
 
-   const char *mode = "a";  // append data; create if it doesn't exist  
+   const char *mode = "w";  // write data   
 
    FILE *outfile;
    outfile = fopen(outpath,mode); 
@@ -366,9 +366,10 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
    int run = aRun->GetRunNumber();
 
    int pulse=0,zc=0;
-   double ampl=0,rms_noise=0,nc=0,snr=0;
-   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
-   double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0; 
+   double ampl=0,rms_noise=0,nc=0;
+   double freq_mid=0,freq_lin=0,freq_lsq=0; 
+   double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0;
+   // double freq_fit=0,freq_ph=0;
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
@@ -376,7 +377,7 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
      
    const char *header  = "# Run \t Pulse \t Max Ampl (V) \t RMS Noise (V) \t Zc \t Nc \t Freq [Mid] (Hz) \t Freq [Lin] (Hz) \t Freq [Lsq] (Hz) \t Freq [mid ph] (Hz) \t Freq [lin ph] (Hz) \t Freq [lsq ph] (Hz)"; 
 
-   const char *mode = "a";  // append data; create if it doesn't exist  
+   const char *mode = "w";  // write data  
 
    FILE *outfile;
    outfile = fopen(outpath,mode); 
@@ -388,20 +389,20 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
       if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
       if(run==1) fprintf(outfile,"%s \n",header); 
       for(int i=0;i<N;i++){
-         pulse     = aRun->GetPulseNumber(i); 
-         ampl      = aRun->GetPulseAmplitude(i); 
-         rms_noise = aRun->GetPulseNoiseRMS(i); 
-         snr       = aRun->GetPulseSignalToNoiseRatio(i);      // we won't print this because it makes the file difficult to read (and can calculate yourself anyway) 
-         zc        = aRun->GetPulseNumZeroCrossings(i); 
-         nc        = aRun->GetPulseNumCycles(i); 
-         freq_mid  = aRun->GetPulseFrequencyZeroCrossingMidpoint(i); 
-         freq_lin  = aRun->GetPulseFrequencyZeroCrossingLinearInterp(i); 
-         freq_lsq  = aRun->GetPulseFrequencyZeroCrossingLeastSquares(i); 
+         pulse       = aRun->GetPulseNumber(i); 
+         ampl        = aRun->GetPulseAmplitude(i); 
+         rms_noise   = aRun->GetPulseNoiseRMS(i); 
+         // snr       = aRun->GetPulseSignalToNoiseRatio(i);      // we won't print this because it makes the file difficult to read (and can calculate yourself anyway) 
+         zc          = aRun->GetPulseNumZeroCrossings(i); 
+         nc          = aRun->GetPulseNumCycles(i); 
+         freq_mid    = aRun->GetPulseFrequencyZeroCrossingMidpoint(i); 
+         freq_lin    = aRun->GetPulseFrequencyZeroCrossingLinearInterp(i); 
+         freq_lsq    = aRun->GetPulseFrequencyZeroCrossingLeastSquares(i); 
          freq_mid_ph = aRun->GetPulseFrequencyZeroCrossingMidpointPhaseFit(i); 
          freq_lin_ph = aRun->GetPulseFrequencyZeroCrossingLinearInterpPhaseFit(i); 
          freq_lsq_ph = aRun->GetPulseFrequencyZeroCrossingLeastSquaresPhaseFit(i); 
-         freq_fit  = aRun->GetPulseFrequencyFit(i); 
-         freq_ph   = aRun->GetPulseFrequencyPhaseFit(i); 
+         // freq_fit    = aRun->GetPulseFrequencyFit(i); 
+         // freq_ph     = aRun->GetPulseFrequencyPhaseFit(i); 
          fprintf(outfile,"%d %5d %5.7lf %20.7lf %5d %5.3lf %20.7lf %20.7lf %20.7lf %20.7lf %20.7lf %20.7lf \n",
                  run,pulse,ampl,rms_noise,zc,nc,freq_mid,freq_lin,freq_lsq,freq_mid_ph,freq_lin_ph,freq_lsq_ph);
       }
@@ -418,8 +419,9 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
    int run = aRun->GetRunNumber();
 
    int pulse=0;
-   double b_mid=0,b_lin=0,b_lsq=0,b_fit=0,b_ph=0; 
+   double b_mid=0,b_lin=0,b_lsq=0;  
    double b_mid_ph=0,b_lin_ph=0,b_lsq_ph=0; 
+   // double b_fit=0,b_ph=0;
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
@@ -427,7 +429,7 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
      
    const char *header  = "# Run \t Pulse \t B [Mid] (T) \t B [Lin] (T) \t B [Lsq] (T) \t B [fit] (T) \t B [ph] (T)"; 
 
-   const char *mode = "a";  // append data; create if it doesn't exist  
+   const char *mode = "w";  // write data   
 
    FILE *outfile;
    outfile = fopen(outpath,mode); 
@@ -446,8 +448,8 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
          b_mid_ph = aRun->GetPulseFieldZeroCrossingMidpointPhaseFit(i); 
          b_lin_ph = aRun->GetPulseFieldZeroCrossingLinearInterpPhaseFit(i); 
          b_lsq_ph = aRun->GetPulseFieldZeroCrossingLeastSquaresPhaseFit(i); 
-         b_fit    = aRun->GetPulseFieldFit(i); 
-         b_ph     = aRun->GetPulseFieldPhaseFit(i); 
+         // b_fit    = aRun->GetPulseFieldFit(i); 
+         // b_ph     = aRun->GetPulseFieldPhaseFit(i); 
          fprintf(outfile,"%d %5d %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf \n",
                  run,pulse,b_mid,b_lin,b_lsq,b_mid_ph,b_lin_ph,b_lsq_ph);
       }
@@ -809,9 +811,9 @@ double NMRFileManager::GetVMax(NMRPulse *aPulse){
    const int N   = aPulse->GetNumPoints(); 
    double vmax   = -300; 
 
-   double t=0,v=0;
+   double v=0;
    for(int i=0;i<N;i++){
-      t = aPulse->GetTime(i);
+      // t = aPulse->GetTime(i);
       v = aPulse->GetVoltage(i);  
       if(v>vmax) vmax = v;  
    }
@@ -1185,10 +1187,11 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       // myPulse = aPulse->Clone();       // reset the pulse   
       delete myPulse; 
       myPulse = new NMRPulse(aPulse);
-      t_diff_abs   = fabs(t_diff_new); 
-      t_diff_abs_2 = fabs(t_diff_new-t_diff_old); 
-      t_diff_old   = t_diff_new;
-      offset_old   = offset_new;
+      t_diff_abs    = fabs(t_diff_new); 
+      t_diff_abs_2  = fabs(t_diff_new-t_diff_old); 
+      t_diff_old    = t_diff_new;
+      offset_old    = offset_new;
+      t_diff_abs_2 += 0; 
       ClearNZCArrays();
       counter++; 
       // fill vectors 
@@ -1345,31 +1348,35 @@ int NMRFileManager::CheckOffset(double offset_old,double offset_new,double t_dif
    int is_nan_offset_new = isnan(offset_new);
    int is_nan_slope      = isnan(slope); 
 
-   int rc = 0,rc_tot=0; 
+   int rc_tot=0; 
+
+   const int SIZE = 256; 
+   char *err_msg = (char *)malloc( sizeof(char)*(SIZE+1) ); 
+
    if(is_nan_t_diff_old){
-      rc = 1; 
+      sprintf(err_msg,"t_diff_old is NaN!"); 
       rc_tot++;
    }
    if(is_nan_t_diff_new){
-      rc = 2; 
+      sprintf(err_msg,"t_diff_new is NaN!"); 
       rc_tot++;
    }
    if(is_nan_offset_old){ 
-      rc = 3;
+      sprintf(err_msg,"offset_old is NaN!"); 
       rc_tot++; 
    } 
    if(is_nan_offset_new){
-      rc = 4; 
+      sprintf(err_msg,"offset_new is NaN!"); 
       rc_tot++;
    } 
    if(is_nan_slope){
-      rc = 5; 
+      sprintf(err_msg,"slope is NaN!"); 
       rc_tot++;
    }
 
    // int dummy=0; 
    if(rc_tot>0){
-      printf("[NMRFileManager]: WARNING: One of the offset values below is NAN! \n");
+      printf("[NMRFileManager]: WARNING: %s \n",err_msg);
       printf("                  offset_old: %.7E \n",offset_old);
       printf("                  offset_new: %.7E \n",offset_new);
       printf("                  t_diff_old: %.7E \n",t_diff_old);
@@ -1378,6 +1385,8 @@ int NMRFileManager::CheckOffset(double offset_old,double offset_new,double t_dif
       // printf("Enter any number to continue: ");
       // cin  >> dummy; 
    }
+
+   free(err_msg); 
 
    return rc_tot;  
 
