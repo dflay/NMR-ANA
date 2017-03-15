@@ -202,10 +202,10 @@ class daq(Tkinter.Tk):
       # run  
       self.buttonRun = Tkinter.Button(self,text=u"Analyze",command=self.RunDAQ) 
       # self.buttonRun = Tkinter.Button(self,text=u"Calculate",command=self.CheckHardware) 
-      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=5,sticky='EW') 
+      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=4,sticky='EW') 
       # quit the program 
       self.buttonQuit = Tkinter.Button(self,text=u"Quit",command=quit) 
-      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+20,columnspan=5,sticky='EW') 
+      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+20,columnspan=4,sticky='EW') 
 
       # ----------------------------------------------------------------------------------
       # status field  
