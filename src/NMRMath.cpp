@@ -427,14 +427,14 @@ namespace NMRMath{
       int ret_val=0; 
       double v0=0,t0=0,a=0,b=0,r=0;
 
-      if(method==1){
+      if(method==kMidpoint){
          // method 1: take midpoint between t_current and t_next 
          t0 = (t_current + t_next)/2.;
-      }else if(method==2){
+      }else if(method==kLinearInterpolation){
          // method 2: get time at V = 0, linear interpolation  
          t0 = LinearInterpolationForX(v0,t_current,v_current,t_next,v_next);
          // std::cout << "linear interpolation: t_current = " << t_current << "\t" << "t_next = " << t_next << "\t" << "t0 = " << t0 << std::endl;
-      }else if(method==3){
+      }else if(method==kLeastSquares){
          // method 3: least squares fit to neighboring points
          // to find fit parameters a and b in f(x) = a + bx 
          ret_val = LeastSquaresFitting(SIZE,X,Y,a,b,r);

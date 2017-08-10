@@ -1033,9 +1033,9 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
  
    // settings for counting zero crossings
    bool UseRange = false; 
-   double tMin   = 0; 
-   double tMax   = 1; 
-   int type      = 3;     // use least squares fit 
+   double tMin   = 0;    // in seconds 
+   double tMax   = 1;    // in seconds                         
+   int type      = NMRMath::kLeastSquares; 
 
    vector<int> NCrossing,CrossingIndex;
    vector<double> tCross,vCross;
