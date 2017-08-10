@@ -295,7 +295,7 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
       infile.close(); 
    }
 
-   delete inpath;
+   delete[] inpath;
    // delete prefix; 
 
 }
