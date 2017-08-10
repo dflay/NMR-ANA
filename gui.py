@@ -197,8 +197,8 @@ class daq(Tkinter.Tk):
       # make buttons 
 
       # print config to files  
-      self.buttonConfig = Tkinter.Button(self,text=u"Apply Configuration",command=self.PrintToFile) 
-      self.buttonConfig.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW',) 
+      # self.buttonConfig = Tkinter.Button(self,text=u"Apply Configuration",command=self.PrintToFile) 
+      # self.buttonConfig.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW',) 
       # run  
       self.buttonRun = Tkinter.Button(self,text=u"Analyze",command=self.RunDAQ) 
       # self.buttonRun = Tkinter.Button(self,text=u"Calculate",command=self.CheckHardware) 
@@ -210,7 +210,7 @@ class daq(Tkinter.Tk):
       # ----------------------------------------------------------------------------------
       # status field  
       self.StatusVariable = Tkinter.StringVar() 
-      self.StatusVariable.set(u"Fill out the fields above before clicking 'Apply Configuration' and then 'Analyze.' ") 
+      self.StatusVariable.set(u"Fill out the fields above before clicking 'Analyze.'") 
       self.Status  = Tkinter.Label(self,textvariable=self.StatusVariable,
                                    anchor="w",fg="white",bg="blue") 
       self.Status.grid(column=ColumnOffset+0,row=RowOffset+24,columnspan=10,sticky='ew') 
@@ -324,6 +324,8 @@ class daq(Tkinter.Tk):
        runFile.close() 
    #----------------------------------------------------------------------------
    def RunDAQ(self): 
+      # print parameter files 
+      self.PrintToFile() 
       run_cmd = "./nmr_ana" 
       # start the C code 
       self.StatusVariable.set("Running calculations...") 
