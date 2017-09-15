@@ -191,7 +191,7 @@ void NMRPulse::Print(){
    printf("================ NMR Pulse ================ \n");
    printf("PulseNumber      = %d      \n",fPulseNumber);
    printf("NumPoints        = %d      \n",fNumPoints  );
-   printf("TimeStamp        = %.7lf s \n",fTimeStamp  );
+   printf("TimeStamp        = %llu    \n",fTimeStamp  );
    printf("Amplitude        = %.7lf V \n",fAmpl       );
    printf("Noise RMS        = %.7lf V \n",fNoiseRMS   );
    // for(int i=0;i<fNumPoints;i++){

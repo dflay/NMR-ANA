@@ -217,7 +217,13 @@ void NMRFileManager::InitOutputDirectory(){
 
    int rc=0;
    rc = MakeDirectory(D1); 
+   if(rc!=0){
+      std::cout << "[NMRFileManager]: Cannot make directory " << D1 << std::endl;
+   }
    rc = MakeDirectory(D2); 
+   if(rc!=0){
+      std::cout << "[NMRFileManager]: Cannot make directory " << D2 << std::endl;
+   }
 
    strcpy(fOutputBaseDir,D1); 
    strcpy(fOutputDir    ,D2);
@@ -517,8 +523,18 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
 
    ImportDataRawADCBin(RunNumber,PulseNumber); 
 
-   double time_stamp = GetPulseTimeStamp(RunNumber,PulseNumber);
-   aPulse->SetTimeStamp(time_stamp);  
+   NMRDAQEvent_t myEvent; 
+   int rc = ReadEventData(RunNumber,PulseNumber,myEvent); 
+   if(rc!=0){
+      std::cout << "[NMRFileManager::Load]: Cannot read the DAQ event!" << std::endl;
+      exit(1); 
+   }
+ 
+   aPulse->SetTimeStamp(myEvent.timestamp);
+   aPulse->SetTemperature(myEvent.temperature); 
+   aPulse->SetXCoordinate(myEvent.x);   
+   aPulse->SetYCoordinate(myEvent.y);   
+   aPulse->SetZCoordinate(myEvent.z);   
 
    // convert to time (seconds) and voltage (V)
    int ADCID = InputManager->GetADCID();  
@@ -610,6 +626,41 @@ void NMRFileManager::Convert(int adcID,const char *Units){
       if(adcID==3302) fVoltage[i] = NMRMath::ConvertToVoltage3302(fADCCounts[i]);
       if(adcID==3316) fVoltage[i] = NMRMath::ConvertToVoltage3316(fADCCounts[i]);
    } 
+}
+//______________________________________________________________________________
+int NMRFileManager::ReadEventData(int run,int pulse,NMRDAQEvent_t &myEvent){
+   std::string sPulseNum,sChNum,sTime,sTemp,sx,sy,sz;
+   int aPulse=0; 
+   char inpath[30]; 
+   sprintf(inpath,"./data/run-%05d/event-data.csv",run);
+
+   ifstream infile;
+   infile.open(inpath);
+   if( infile.fail() ){
+      std::cout << "Cannot open the file: " << inpath << std::endl;
+      return 1;
+   }else{
+      while( !infile.eof() ){
+         std::getline(infile,sPulseNum,',');
+         std::getline(infile,sChNum   ,',');
+         std::getline(infile,sTime    ,',');
+         std::getline(infile,sTemp    ,',');
+         std::getline(infile,sx       ,',');
+         std::getline(infile,sy       ,',');
+         std::getline(infile,sz);
+         aPulse = std::atoi( sPulseNum.c_str() ); 
+         if(pulse==aPulse){ 
+            myEvent.pulseNum    = aPulse;
+            myEvent.chNum       = std::atoi( sChNum.c_str() );
+            myEvent.timestamp   = std::stoull(sTime.c_str());
+            myEvent.temperature = std::atof( sTemp.c_str() );
+            myEvent.x           = std::atof( sx.c_str() );
+            myEvent.y           = std::atof( sy.c_str() );
+            myEvent.z           = std::atof( sz.c_str() );
+         }
+      }
+   }
+   return 0;
 }
 //______________________________________________________________________________
 double NMRFileManager::GetPulseTimeStamp(int run,int pulse){

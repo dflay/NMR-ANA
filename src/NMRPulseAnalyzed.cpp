@@ -39,6 +39,10 @@ NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed &aPulse): NMRPulse(aPu
    fNoiseRMS         = aPulse.GetNoiseRMS();
    fNumCycles        = aPulse.GetNumCycles();
    fSNR              = aPulse.GetSignalToNoiseRatio();
+   fTemperature      = aPulse.GetTemperature(); 
+   fXCoordinate      = aPulse.GetXCoordinate(); 
+   fYCoordinate      = aPulse.GetYCoordinate(); 
+   fZCoordinate      = aPulse.GetZCoordinate(); 
    fNumPoints        = aPulse.GetNumPoints(); 
    // deep copy: base constructor does this (for times and voltages) 
    const int N3    = 3; 
@@ -74,6 +78,10 @@ NMRPulseAnalyzed::NMRPulseAnalyzed(const NMRPulseAnalyzed *aPulse): NMRPulse(aPu
    fNoiseRMS         = aPulse->GetNoiseRMS();
    fNumCycles        = aPulse->GetNumCycles();
    fSNR              = aPulse->GetSignalToNoiseRatio();
+   fTemperature      = aPulse->GetTemperature(); 
+   fXCoordinate      = aPulse->GetXCoordinate(); 
+   fYCoordinate      = aPulse->GetYCoordinate(); 
+   fZCoordinate      = aPulse->GetZCoordinate(); 
    fNumPoints        = aPulse->GetNumPoints(); 
    // deep copy: base constructor does this (for times and voltages)  
    const int N3    = 3; 
@@ -109,6 +117,10 @@ NMRPulseAnalyzed& NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed &aPulse){
    fNoiseRMS         = aPulse.GetNoiseRMS();
    fNumCycles        = aPulse.GetNumCycles();
    fSNR              = aPulse.GetSignalToNoiseRatio();
+   fTemperature      = aPulse.GetTemperature(); 
+   fXCoordinate      = aPulse.GetXCoordinate(); 
+   fYCoordinate      = aPulse.GetYCoordinate(); 
+   fZCoordinate      = aPulse.GetZCoordinate(); 
    fNumPoints        = aPulse.GetNumPoints(); 
    // deep copy (a lot of this is done in the NMRPulse class)  
    const int N3    = 3; 
@@ -145,6 +157,10 @@ NMRPulseAnalyzed* NMRPulseAnalyzed::operator=(const NMRPulseAnalyzed* aPulse){
    fNoiseRMS         = aPulse->GetNoiseRMS();
    fNumCycles        = aPulse->GetNumCycles();
    fSNR              = aPulse->GetSignalToNoiseRatio();
+   fTemperature      = aPulse->GetTemperature(); 
+   fXCoordinate      = aPulse->GetXCoordinate(); 
+   fYCoordinate      = aPulse->GetYCoordinate(); 
+   fZCoordinate      = aPulse->GetZCoordinate(); 
    fNumPoints        = aPulse->GetNumPoints(); 
    // deep copy (a lot of this is done in the NMRPulse class)  
    const int N3    = 3; 
@@ -186,7 +202,11 @@ void NMRPulseAnalyzed::ClearData(){
    fFREQ_fit         = 0; 
    fFREQ_ph          = 0; 
    fB_fit            = 0; 
-   fB_ph             = 0; 
+   fB_ph             = 0;
+   fTemperature      = 0; 
+   fXCoordinate      = 0; 
+   fYCoordinate      = 0; 
+   fZCoordinate      = 0; 
    for(int i=0;i<fNumPoints;i++){
       fTime[i]       = 0;
       fVoltage[i]    = 0;
@@ -201,13 +221,17 @@ void NMRPulseAnalyzed::ClearData(){
 void NMRPulseAnalyzed::Print(){
    printf("================ NMR Pulse ================ \n");
    printf("PulseNumber                 = %d         \n",fPulseNumber     );
-   printf("TimeStamp                   = %.7lf s    \n",fTimeStamp       );
+   printf("TimeStamp                   = %llu       \n",fTimeStamp       );
    printf("NumPoints                   = %d         \n",fNumPoints       );
    printf("NumZeroCrossings            = %d         \n",fNumZeroCrossings);
    printf("NumCycles                   = %.3lf      \n",fNumCycles       );
    printf("Ampl                        = %.7lf V    \n",fAmpl            );
    printf("NoiseRMS                    = %.7lf V    \n",fNoiseRMS        );
    printf("SNR                         = %.7lf      \n",fSNR             );
+   printf("Temperature                 = %.7lf Ohms \n",fTemperature     );
+   printf("x                           = %.7lf mm   \n",fXCoordinate     );
+   printf("y                           = %.7lf mm   \n",fYCoordinate     );
+   printf("z                           = %.7lf mm   \n",fZCoordinate     );
    printf("Freq (ZC midpoint)          = %.7lf Hz   \n",fFREQ_zc[0]      );
    printf("Freq (ZC linear)            = %.7lf Hz   \n",fFREQ_zc[1]      );
    printf("Freq (ZC least sq)          = %.7lf Hz   \n",fFREQ_zc[2]      );

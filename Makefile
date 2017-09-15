@@ -8,8 +8,8 @@ SRCDIR = src
 INCDIR = include
 
 # Compiler
-CC       = g++
-CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g  \
+CC       = g++ 
+CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g \
        -Wmissing-declarations -Wreturn-type -Wunused \
        -Wcomment -Wformat
 

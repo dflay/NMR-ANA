@@ -11,6 +11,7 @@
 #include <vector>
 #include <sys/stat.h> 
 
+#include "NMRDAQEvent.h"
 #include "NMRPulse.h"
 #include "NMRMath.h" 
 #include "NMRRun.h"
@@ -72,7 +73,7 @@ class NMRFileManager{
       void CalculateRMSNoiseVMax(double t_thr,NMRPulse *aPulse,double &rms_noise,double &vmax); 
       void GetOffsetLinear(double input_offset,NMRPulse *aPulse,double *offset); 
 
-      int CheckOffset(double,double,double,double,double); 
+      int CheckOffset(double,double,double,double,double);
 
       double GetTMax();
       double GetTDiff(int nzc,double *tCross,double &delta_t_even_nc,double &delta_t_odd_nc);
@@ -117,6 +118,8 @@ class NMRFileManager{
       int MakeDirectory(const char *path);          // make a directory based on a path   
       int DeleteFile(const char *fn);               // delete a file  
       int DeleteSymLink(const char *suffix);        // delete a symbolic link 
+      
+      int ReadEventData(int,int,NMRDAQEvent &);  
 
       // misc
       char *GetDataDir()       const {return fDataDir;}  
