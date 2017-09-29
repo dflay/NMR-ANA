@@ -143,6 +143,11 @@ int NMRFileManager::DeleteSymLink(const char *suffix){
    return rc;
 }
 //______________________________________________________________________________
+bool NMRFileManager::CheckIfExists(const char *name){
+   struct stat buffer;   
+   return (stat (name, &buffer) == 0); 
+}
+//______________________________________________________________________________
 int NMRFileManager::DeleteFile(const char *file){
 
    int rc = 0; 
@@ -1390,11 +1395,11 @@ void NMRFileManager::ApplyOffsetLinear(double *par,NMRPulse *aPulse){
 //______________________________________________________________________________
 int NMRFileManager::CheckOffset(double offset_old,double offset_new,double t_diff_old,double t_diff_new,double slope){
 
-   int is_nan_t_diff_old = isnan(t_diff_old);
-   int is_nan_t_diff_new = isnan(t_diff_new);
-   int is_nan_offset_old = isnan(offset_old);
-   int is_nan_offset_new = isnan(offset_new);
-   int is_nan_slope      = isnan(slope); 
+   int is_nan_t_diff_old = std::isnan(t_diff_old);
+   int is_nan_t_diff_new = std::isnan(t_diff_new);
+   int is_nan_offset_old = std::isnan(offset_old);
+   int is_nan_offset_new = std::isnan(offset_new);
+   int is_nan_slope      = std::isnan(slope); 
 
    int rc = 0,rc_tot=0; 
    if(is_nan_t_diff_old){

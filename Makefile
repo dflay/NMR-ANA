@@ -9,7 +9,7 @@ INCDIR = include
 
 # Compiler
 CC       = g++ 
-CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g \
+CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g -std=c++11 \
        -Wmissing-declarations -Wreturn-type -Wunused \
        -Wcomment -Wformat
 

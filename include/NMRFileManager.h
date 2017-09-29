@@ -119,6 +119,8 @@ class NMRFileManager{
       int DeleteFile(const char *fn);               // delete a file  
       int DeleteSymLink(const char *suffix);        // delete a symbolic link 
       
+      bool CheckIfExists(const char *name);         // check if file exists 
+      
       int ReadEventData(int,int,NMRDAQEvent &);  
 
       // misc
