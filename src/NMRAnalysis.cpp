@@ -65,6 +65,12 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
    double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0; 
    double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0;   // from fitting the phase of the zero crossing time  
 
+   // to stop warnings
+   nc_lin+=0; 
+   nc_lsq+=0;
+   freq_fit+=0;
+   freq_ph+=0;  
+
    // general pulse data 
    int pulse_num    = aPulse->GetPulseNumber(); 
    double ampl      = aPulse->GetAmplitude(); 

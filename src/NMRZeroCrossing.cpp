@@ -201,14 +201,16 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    }
    rc += rc_fr; 
 
-   // store results 
-   fFREQ[0] = freq_mid; 
-   fFREQ[1] = freq_lin;
-   fFREQ[2] = freq_lsq;
+   // store results
 
-   fFREQ_ph[0] = freq_mid_ph; 
-   fFREQ_ph[1] = freq_lin_ph;
-   fFREQ_ph[2] = freq_lsq_ph;
+   // check if not a number 
+   if( !NMRMath::IsNaN(freq_mid) )    fFREQ[0] = freq_mid; 
+   if( !NMRMath::IsNaN(freq_lin) )    fFREQ[1] = freq_lin; 
+   if( !NMRMath::IsNaN(freq_lsq) )    fFREQ[2] = freq_lsq; 
+
+   if( !NMRMath::IsNaN(freq_mid_ph) ) fFREQ_ph[0] = freq_mid_ph; 
+   if( !NMRMath::IsNaN(freq_lin_ph) ) fFREQ_ph[1] = freq_lin_ph;
+   if( !NMRMath::IsNaN(freq_lsq_ph) ) fFREQ_ph[2] = freq_lsq_ph;
 
    fZC[0]   = zc_mid;    
    fZC[1]   = zc_lin;    

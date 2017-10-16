@@ -2,6 +2,10 @@
 //______________________________________________________________________________
 namespace NMRMath{
    //______________________________________________________________________________
+   int IsNaN(double x){
+      return isnan(x); 
+   }
+   //______________________________________________________________________________
    double GetScale(const char *units){
       double scale=0;
       const char *second      = "s";
@@ -475,6 +479,9 @@ namespace NMRMath{
          }
       }
 
+      // to get rid of warnings 
+      ret_val += 0;
+ 
       return t0; 
 
    }
@@ -484,7 +491,6 @@ namespace NMRMath{
                           NMRPulse *aPulse,
                           double *X,double *Y,double *EY, 
                           int *NCrossing,int *CrossingIndex,double *tCross,double *vCross){
-                          // std::vector<int> &NCrossing,std::vector<int> &CrossingIndex,std::vector<double> &tCross,std::vector<double> &vCross){
 
       if(verbosity>=3) std::cout << "[NMRMath]: Counting zero crossings..." << std::endl;
 
@@ -496,7 +502,7 @@ namespace NMRMath{
       const int N  = aPulse->GetNumPoints();
 
       int cntr         = 0;
-      int cntr_prev    = 0;
+      // int cntr_prev    = 0;
 
       double v0           = 0;
       double target       = 0;
@@ -505,9 +511,9 @@ namespace NMRMath{
 
       double v_prod=0;
       double delta_v=0; 
-      double v_current=0,v_previous=0,v_next=0;
-      double t_current=0,t_previous=0,t_next=0;
-      double v_current_err=0,v_next_err=0,v_previous_err=0;
+      double v_current=0,v_next=0;
+      double t_current=0,t_next=0;
+      double v_current_err=0,v_next_err=0;
 
       int i=0;  // index for NMRPulse data 
       do{
@@ -534,11 +540,6 @@ namespace NMRMath{
                   NPTSUseable = StoreData(verbosity,i,NPTS,aPulse,X,Y,EY); 
                   // get time of crossing  
                   t0 = GetTimeOfCrossing(verbosity,method,NPTSUseable,X,Y,EY,t_current,v_current,v_current_err,t_next,v_next,v_next_err); 
-                  // fill vectors 
-                  // NCrossing.push_back(cntr);
-                  // CrossingIndex.push_back(i); 
-                  // tCross.push_back(t0);
-                  // vCross.push_back(v0);
                   // fill arrays
                   NCrossing[cntr-1]     = cntr;
                   CrossingIndex[cntr-1] = i;
@@ -553,11 +554,6 @@ namespace NMRMath{
                NPTSUseable = StoreData(verbosity,i,NPTS,aPulse,X,Y,EY); 
                // get time of crossing  
                t0 = GetTimeOfCrossing(verbosity,method,NPTSUseable,X,Y,EY,t_current,v_current,v_current_err,t_next,v_next,v_next_err); 
-               // fill vectors 
-               // NCrossing.push_back(cntr);
-               // CrossingIndex.push_back(i); 
-               // tCross.push_back(t0);
-               // vCross.push_back(v0);
                // fill arrays
                NCrossing[cntr-1]     = cntr;
                CrossingIndex[cntr-1] = i;
@@ -591,10 +587,10 @@ namespace NMRMath{
             i += step;  // move to next bin  
             // set up for next data point 
             ClearAnaArrays(NPTSUseable,X,Y,EY);             // clears X, Y, EY  (sets to zero) 
-            cntr_prev      = cntr;
-            t_previous     = t_current;
-            v_previous     = v_current; 
-            v_previous_err = v_current_err; 
+            // cntr_prev      = cntr;
+            // t_previous     = t_current;
+            // v_previous     = v_current; 
+            // v_previous_err = v_current_err; 
          }
       }while( i<(N-1) ); 
 

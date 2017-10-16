@@ -381,6 +381,11 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
    double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
    double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0; 
 
+   // kill warnings
+   snr+=0; 
+   freq_fit+=0; 
+   freq_ph+=0; 
+
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
    sprintf(outpath,"%s/results_pulse-stats.dat",fOutputDir);
@@ -431,6 +436,9 @@ void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
    int pulse=0;
    double b_mid=0,b_lin=0,b_lsq=0,b_fit=0,b_ph=0; 
    double b_mid_ph=0,b_lin_ph=0,b_lsq_ph=0; 
+
+   b_fit+=0;
+   b_ph+=0; 
 
    const int SIZE = 200;
    char *outpath = new char[SIZE]; 
@@ -866,6 +874,8 @@ double NMRFileManager::GetVMax(NMRPulse *aPulse){
    double vmax   = -300; 
 
    double t=0,v=0;
+   t+=0;
+   v+=0;
    for(int i=0;i<N;i++){
       t = aPulse->GetTime(i);
       v = aPulse->GetVoltage(i);  
@@ -1113,7 +1123,8 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    double t_even=0,t_odd=0; 
    double err   = 1E-16; 
 
-   double t_diff_abs=0,t_diff_abs_2=0; 
+   double t_diff_abs=0,t_diff_abs_2=0;  
+   t_diff_abs_2+=0; 
 
    // first calculation 
    int nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
@@ -1401,7 +1412,9 @@ int NMRFileManager::CheckOffset(double offset_old,double offset_new,double t_dif
    int is_nan_offset_new = std::isnan(offset_new);
    int is_nan_slope      = std::isnan(slope); 
 
-   int rc = 0,rc_tot=0; 
+   int rc = 0,rc_tot=0;
+   rc+=0;
+ 
    if(is_nan_t_diff_old){
       rc = 1; 
       rc_tot++;

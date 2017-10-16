@@ -17,6 +17,8 @@ namespace NMRMath{
       kLeastSquares        = 3
    };
 
+   int IsNaN(double x); 
+
    double GetScale(const char *units);
    double GetTimeInSeconds(const int counts,const double ClockFreq);
    double ConvertTimeFromSecondsToUnits(const double time_seconds,const char *units);
