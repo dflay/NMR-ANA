@@ -148,6 +148,25 @@ bool NMRFileManager::CheckIfExists(const char *name){
    return (stat (name, &buffer) == 0); 
 }
 //______________________________________________________________________________
+bool NMRFileManager::RunExists(int runNumber){
+   char path[200]; 
+   sprintf(path,"./output/run-%05d/",runNumber); 
+   bool state = CheckIfDirectoryExists(path);
+   return state; 
+}
+//______________________________________________________________________________
+int NMRFileManager::DeleteRun(int runNumber){
+   char path[200]; 
+   sprintf(path,"./output/run-%05d/",runNumber); 
+   int rc = DeleteDirectory(path); 
+   return rc; 
+}
+//______________________________________________________________________________
+bool NMRFileManager::CheckIfDirectoryExists(const char *path){
+   int rc = boost::filesystem::exists(path);
+   return rc;
+}
+//______________________________________________________________________________
 int NMRFileManager::DeleteFile(const char *file){
 
    int rc = 0; 
@@ -168,6 +187,12 @@ int NMRFileManager::DeleteFile(const char *file){
 
    delete[] full_path; 
 
+   return rc;
+}
+//______________________________________________________________________________
+int NMRFileManager::DeleteDirectory(const char *path){
+   int rc=0;
+   if( boost::filesystem::exists(path) ) rc = boost::filesystem::remove_all(path);
    return rc;
 }
 //______________________________________________________________________________

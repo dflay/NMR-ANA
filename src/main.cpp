@@ -40,10 +40,11 @@ int main(){
 
    NMRRun *aRun = new NMRRun(1);                      // initialize to 1 pulse 
    aRun->SetVerbosity(Verbosity);  
-  
+ 
    int run_num=0; 
    for(int i=0;i<NRUNS;i++){
       run_num = RunList[i]; 
+      if( FM->RunExists(run_num) ) FM->DeleteRun(run_num);  // delete old data if necessary 
       FM->InputManager->ReadRunSummary(run_num);      // get details of the run
       FM->InputManager->PrintRunSummary();            // show new run information  
       FM->InitOutputDirectory();                      // initiaize output directories  

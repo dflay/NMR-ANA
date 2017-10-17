@@ -10,6 +10,8 @@
 #include <string> 
 #include <vector>
 #include <sys/stat.h> 
+#include <dirent.h>
+#include <boost/filesystem.hpp>  
 
 #include "NMRDAQEvent.h"
 #include "NMRPulse.h"
@@ -115,12 +117,16 @@ class NMRFileManager{
       void AppendToFile(const char *fn,const char *header,int i,double a,double b,double c,double d); 
 
       // directory and file management 
-      int MakeDirectory(const char *path);          // make a directory based on a path   
-      int DeleteFile(const char *fn);               // delete a file  
-      int DeleteSymLink(const char *suffix);        // delete a symbolic link 
+      int MakeDirectory(const char *path);            // make a directory based on a path   
+      int DeleteRun(int runNumber);                   // delete a run  
+      int DeleteFile(const char *fn);                 // delete a file  
+      int DeleteDirectory(const char *path);          // delete a directory   
+      int DeleteSymLink(const char *suffix);          // delete a symbolic link 
       
-      bool CheckIfExists(const char *name);         // check if file exists 
-      
+      bool CheckIfExists(const char *name);           // check if file exists
+      bool CheckIfDirectoryExists(const char *path);  // check if directory exists 
+      bool RunExists(int runNumber);                  // check if run exists 
+ 
       int ReadEventData(int,int,NMRDAQEvent &);  
 
       // misc

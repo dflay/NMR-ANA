@@ -17,7 +17,7 @@ CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g -std=c++11 \
 LDFLAGS = -shared
 
 # Libraries
-LIBS       = -lm
+LIBS       = -lm -lboost_system -lboost_filesystem
 LIBRARY    = NMRANA
 TARGET_LIB = lib$(LIBRARY).so
  
