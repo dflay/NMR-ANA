@@ -1,6 +1,6 @@
 # ID 	 value
-t_start                 1.00E-04
-t_end                   3.00E-03
+t_start                 5.00E-04
+t_end                   5.00E-03
 verbosity               0
 offset_correction_order 2
 zero_crossing           1
