@@ -129,44 +129,56 @@ class daq(Tkinter.Tk):
       self.opt_tend_unit_val = Tkinter.OptionMenu(self,self.tend_unit_val,*self.TimeChoices) 
       self.opt_tend_unit_val.grid(column=ColumnOffset+2,row=RowOffset+11)  
       # ----------------------------------------------------------------------------------
+      # T2 time (check box)  
+      # label
+      self.T2Label_str = Tkinter.StringVar()
+      self.T2Label_str.set("Use T2 time") 
+      self.T2Label     = Tkinter.Label(self,textvariable=self.T2Label_str,anchor="w") 
+      self.T2Label.grid(column=ColumnOffset+0,row=RowOffset+12) 
+      # check box  
+      self.t2_chk_var = Tkinter.IntVar()
+      self.t2_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.t2_chk_var) 
+      self.t2_chk.grid(column=ColumnOffset+1,row=RowOffset+12)
+
+      # ----------------------------------------------------------------------------------
       # Zero crossing (check box)  
       # label
       self.ZeroCrossingLabel_str = Tkinter.StringVar()
       self.ZeroCrossingLabel_str.set("Zero Crossing") 
       self.ZeroCrossingLabel     = Tkinter.Label(self,textvariable=self.ZeroCrossingLabel_str,anchor="w") 
-      self.ZeroCrossingLabel.grid(column=ColumnOffset+0,row=RowOffset+12) 
+      self.ZeroCrossingLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
       # check box  
       self.zc_chk_var = Tkinter.IntVar()
       self.zc_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.zc_chk_var) 
-      self.zc_chk.grid(column=ColumnOffset+1,row=RowOffset+12)
+      self.zc_chk.grid(column=ColumnOffset+1,row=RowOffset+13)
       # # ----------------------------------------------------------------------------------
       # Time Fit (check box)  
       # label
       self.TimeFitLabel_str = Tkinter.StringVar()
       self.TimeFitLabel_str.set("Time Fit") 
       self.TimeFitLabel     = Tkinter.Label(self,textvariable=self.TimeFitLabel_str,anchor="w") 
-      self.TimeFitLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
+      self.TimeFitLabel.grid(column=ColumnOffset+0,row=RowOffset+14) 
       # check box  
       self.time_fit_chk_var = Tkinter.IntVar()
       self.time_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.time_fit_chk_var) 
-      self.time_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+13)
+      self.time_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+14)
       # # ----------------------------------------------------------------------------------
       # Phase Fit (check box)  
       # label
       self.PhaseFitLabel_str = Tkinter.StringVar()
       self.PhaseFitLabel_str.set("Phase Fit") 
       self.PhaseFitLabel     = Tkinter.Label(self,textvariable=self.PhaseFitLabel_str,anchor="w") 
-      self.PhaseFitLabel.grid(column=ColumnOffset+0,row=RowOffset+14) 
+      self.PhaseFitLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
       # check box  
       self.phase_fit_chk_var = Tkinter.IntVar()
       self.phase_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.phase_fit_chk_var) 
-      self.phase_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+14)
+      self.phase_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+15)
       # ----------------------------------------------------------------------------------
       # header label
       self.UtilOptLabel_str = Tkinter.StringVar()
       self.UtilOptLabel_str.set("UTILITY OPTIONS") 
       self.UtilOptLabel     = Tkinter.Label(self,textvariable=self.UtilOptLabel_str,anchor="w",font="Helvetica 12 bold") 
-      self.UtilOptLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
+      self.UtilOptLabel.grid(column=ColumnOffset+0,row=RowOffset+16) 
  
       # ----------------------------------------------------------------------------------
       # Offset correction   
@@ -174,24 +186,24 @@ class daq(Tkinter.Tk):
       self.OffsetLabel_str = Tkinter.StringVar()
       self.OffsetLabel_str.set("Offset Correction Order") 
       self.OffsetLabel     = Tkinter.Label(self,textvariable=self.OffsetLabel_str,anchor="w") 
-      self.OffsetLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
+      self.OffsetLabel.grid(column=ColumnOffset+0,row=RowOffset+17) 
       # pull down menu 
       self.offset_val = Tkinter.StringVar() 
       self.offset_val.set('0')
       self.opt_offset_val = Tkinter.OptionMenu(self,self.offset_val,*self.OffsetChoices) 
-      self.opt_offset_val.grid(column=ColumnOffset+1,row=RowOffset+18)  
+      self.opt_offset_val.grid(column=ColumnOffset+1,row=RowOffset+17)  
       # ----------------------------------------------------------------------------------
       # Verbosity   
       # label
       self.VerbosityLabel_str = Tkinter.StringVar()
       self.VerbosityLabel_str.set("Verbosity") 
       self.VerbosityLabel     = Tkinter.Label(self,textvariable=self.VerbosityLabel_str,anchor="w") 
-      self.VerbosityLabel.grid(column=ColumnOffset+0,row=RowOffset+19) 
+      self.VerbosityLabel.grid(column=ColumnOffset+0,row=RowOffset+18) 
       # pull down menu 
       self.verb_val = Tkinter.StringVar() 
       self.verb_val.set('0')
       self.opt_verb_val = Tkinter.OptionMenu(self,self.verb_val,*self.VerbChoices) 
-      self.opt_verb_val.grid(column=ColumnOffset+1,row=RowOffset+19)  
+      self.opt_verb_val.grid(column=ColumnOffset+1,row=RowOffset+18)  
 
       # ----------------------------------------------------------------------------------
       # make buttons 
@@ -202,10 +214,10 @@ class daq(Tkinter.Tk):
       # run  
       self.buttonRun = Tkinter.Button(self,text=u"Analyze",command=self.RunDAQ) 
       # self.buttonRun = Tkinter.Button(self,text=u"Calculate",command=self.CheckHardware) 
-      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=4,sticky='EW') 
+      self.buttonRun.grid(column=ColumnOffset+6,row=RowOffset+18,columnspan=4,sticky='EW') 
       # quit the program 
       self.buttonQuit = Tkinter.Button(self,text=u"Quit",command=quit) 
-      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+20,columnspan=4,sticky='EW') 
+      self.buttonQuit.grid(column=ColumnOffset+6,row=RowOffset+19,columnspan=4,sticky='EW') 
 
       # ----------------------------------------------------------------------------------
       # status field  
@@ -239,23 +251,6 @@ class daq(Tkinter.Tk):
        NINETYNINE   = "99"
        eof_str      = "%-20s    %-20s" %(EOF,NINETYNINE)
        # grab values 
-       # date
-       # month        = "" 
-       # mon_val      = self.mon_str.get()
-       # if mon_val == "Jan": month = "1" 
-       # if mon_val == "Feb": month = "2" 
-       # if mon_val == "Mar": month = "3" 
-       # if mon_val == "Apr": month = "4" 
-       # if mon_val == "May": month = "5" 
-       # if mon_val == "Jun": month = "6" 
-       # if mon_val == "Jul": month = "7" 
-       # if mon_val == "Aug": month = "8" 
-       # if mon_val == "Sep": month = "9" 
-       # if mon_val == "Oct": month = "10" 
-       # if mon_val == "Nov": month = "11" 
-       # if mon_val == "Dec": month = "12" 
-       # day          = self.day_str.get()
-       # year         = self.year_str.get()
        # run range
        # convert to a regular string, don't use StringVar in the class StringParser
        run_str      = str( self.RunEntry.get() )   
@@ -287,19 +282,17 @@ class daq(Tkinter.Tk):
        zc_status        = self.zc_chk_var.get()        # zero crossing 
        time_fit_status  = self.time_fit_chk_var.get()  # time fit 
        phase_fit_status = self.phase_fit_chk_var.get() # phase fit 
+       t2_status        = self.t2_chk_var.get()        # T2 time  
        # build strings for parameter file 
-       # line1            = "month                   %s"   %(month)
-       # line2            = "day                     %s"   %(day)
-       # line3            = "year                    %s"   %(year)
        line4            = "t_start                 %.2E" %(t_start_dbl)
        line5            = "t_end                   %.2E" %(t_end_dbl)
        line6            = "verbosity               %s"   %(verb)
        line7            = "offset_correction_order %s"   %(offset)
-       line8            = "zero_crossing           %d"   %(zc_status)
-       line9            = "time_fit                %d"   %(time_fit_status)
-       line10           = "phase_fit               %d"   %(phase_fit_status)
-       # paramList        = [header,line1,line2,line3,line4,line5,line6,line7,line8,line9,line10,eof_str] 
-       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,eof_str] 
+       line8            = "t2_time                 %d"   %(t2_status)
+       line9            = "zero_crossing           %d"   %(zc_status)
+       line10           = "time_fit                %d"   %(time_fit_status)
+       line11           = "phase_fit               %d"   %(phase_fit_status)
+       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,line11,eof_str] 
        # get file names ready  
        param_fn         = "parameters.dat"
        run_fn           = "runlist.dat"

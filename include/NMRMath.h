@@ -41,6 +41,7 @@ namespace NMRMath{
    double GetStandardDeviationOfTheMean(std::vector<double> v);
    double GetRMS(int N,double v[]);
    double GetRMS(std::vector<double> v);
+   double GetT2Time(NMRPulse *aPulse); 
    double LinearInterpolationForY(double x,double x0,double y0,double x1,double y1);
    double LinearInterpolationForX(double y,double x0,double y0,double x1,double y1);
    int LeastSquaresFitting(int N,double x[],double y[],double &a,double &b,double &r);
@@ -51,7 +52,7 @@ namespace NMRMath{
                             double t_current,double v_current,double v_current_err,
                             double t_next   ,double v_next   ,double v_next_err);
    int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
-                           bool UseTimeRange,double tMin,double tMax,
+                           bool UseT2Time,bool UseTimeRange,double tMin,double tMax,
                            NMRPulse *aPulse,
                            double *X,double *Y,double *EY,
                            int *NCrossing,int *CrossingIndex,double *tCross,double *vCross); 

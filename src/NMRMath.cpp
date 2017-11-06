@@ -486,8 +486,33 @@ namespace NMRMath{
 
    }
    //______________________________________________________________________________
+   double GetT2Time(NMRPulse *aPulse){
+      // find the T2 time of the signal
+      // find max amplitude 
+      double vmax=-300,v=0; 
+      const int N = aPulse->GetNumPoints(); 
+      for(int i=0;i<N;i++){
+         v = aPulse->GetVoltage(i); 
+         if(vmax<v) vmax = v;
+      }
+      // find T2 time 
+      double t2_time=0;
+      double e_const = exp(1);
+      double v_lo   = vmax/e_const*(1. - 0.1);  
+      double v_hi   = vmax/e_const*(1. + 0.1);  
+      // std::cout << "VLO = " << v_lo << " VHI = " << v_hi << std::endl; 
+      for(int i=0;i<N;i++){
+         v = aPulse->GetVoltage(i); 
+         if( fabs(v)>v_lo && fabs(v)<v_hi ){
+            t2_time = aPulse->GetTime(i);
+         } 
+      }
+      // std::cout << "T2 TIME IS " << t2_time << std::endl; 
+      return t2_time;
+   }
+   //______________________________________________________________________________
    int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
-                          bool UseTimeRange,double tMin,double tMax,
+                          bool UseT2Time,bool UseTimeRange,double tMin,double tMax,
                           NMRPulse *aPulse,
                           double *X,double *Y,double *EY, 
                           int *NCrossing,int *CrossingIndex,double *tCross,double *vCross){
@@ -509,6 +534,16 @@ namespace NMRMath{
       double t0           = 0;
       // double elapsed_time = 0;  
 
+      // compute and use the T2 time if necessary. 
+      // NOTE: this will replace the input endtime if the T2 boolean is true. 
+      double T2_time     = GetT2Time(aPulse);
+      if(UseT2Time){
+         tMin = 500E-6;   // start at 500 us 
+         tMax = T2_time;
+         UseTimeRange = true; 
+         if(verbosity>3) std::cout << "[NMRMath::CountZeroCrossings]: Using the T2 time for frequency extraction.  T2 = " << tMax/1E-3 << " ms" << std::endl;
+      } 
+       
       double v_prod=0;
       double delta_v=0; 
       double v_current=0,v_next=0;

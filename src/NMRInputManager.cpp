@@ -41,6 +41,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fUseTimeFit       = a.GetTimeFitStatus(); 
    fUsePhaseFit      = a.GetPhaseFitStatus(); 
    fUseIntegerCycles = a.GetIntegerCycleStatus(); 
+   fUseT2Time        = a.GetT2TimeStatus(); 
    fADCID            = a.GetADCID(); 
    fADCChannelNumber = a.GetADCChannelNumber(); 
    fMonth            = a.GetMonth(); 
@@ -69,6 +70,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fUseTimeFit       = a->GetTimeFitStatus(); 
    fUsePhaseFit      = a->GetPhaseFitStatus(); 
    fUseIntegerCycles = a->GetIntegerCycleStatus(); 
+   fUseT2Time        = a->GetT2TimeStatus(); 
    fADCID            = a->GetADCID(); 
    fADCChannelNumber = a->GetADCChannelNumber(); 
    fMonth            = a->GetMonth(); 
@@ -96,6 +98,7 @@ void NMRInputManager::Update(const NMRInputManager &a){
    fUseTimeFit       = a.GetTimeFitStatus(); 
    fUsePhaseFit      = a.GetPhaseFitStatus(); 
    fUseIntegerCycles = a.GetIntegerCycleStatus(); 
+   fUseT2Time        = a.GetT2TimeStatus(); 
    fADCID            = a.GetADCID(); 
    fADCChannelNumber = a.GetADCChannelNumber(); 
    fMonth            = a.GetMonth(); 
@@ -123,6 +126,7 @@ void NMRInputManager::Update(const NMRInputManager *a){
    fUseTimeFit       = a->GetTimeFitStatus(); 
    fUsePhaseFit      = a->GetPhaseFitStatus(); 
    fUseIntegerCycles = a->GetIntegerCycleStatus(); 
+   fUseT2Time        = a->GetT2TimeStatus(); 
    fADCID            = a->GetADCID(); 
    fADCChannelNumber = a->GetADCChannelNumber(); 
    fMonth            = a->GetMonth(); 
@@ -163,6 +167,7 @@ void NMRInputManager::GetInputParameters(const char *inpath){
    const char *time_fit_status      = "time_fit"; 
    const char *phase_fit_status     = "phase_fit"; 
    const char *integer_cycle_status = "integer_cycles"; 
+   const char *t2_time_status       = "t2_time"; 
    const char *eof                  = "end_of_file";  
  
    std::ifstream infile;
@@ -202,7 +207,10 @@ void NMRInputManager::GetInputParameters(const char *inpath){
                   ival = (int)ivalue;
                   if(ival==1) fUseIntegerCycles = true;  
                } 
-
+               if( NMRUtility::AreEquivStrings(itag,t2_time_status)   ){
+                  ival = (int)ivalue;
+                  if(ival==1) fUseT2Time = true;  
+               } 
             }else{
                break;
             }
@@ -302,15 +310,16 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
 //______________________________________________________________________________
 void NMRInputManager::Print(){
    std::cout << "============= Input Parameters =============" << std::endl;
-   printf("Month                = %d     \n",fMonth                );  
-   printf("Day                  = %d     \n",fDay                  );  
-   printf("Year                 = %d     \n",fYear                 );  
+   // printf("Month                = %d     \n",fMonth                );  
+   // printf("Day                  = %d     \n",fDay                  );  
+   // printf("Year                 = %d     \n",fYear                 );  
    printf("Start Time (ZC)      = %.3E s \n",fStartTimeZC          );
    printf("End Time (ZC)        = %.3E s \n",fEndTimeZC            );      
    printf("Verbosity            = %d     \n",fVerbosity            );     
    printf("Offset Order         = %d     \n",fOffsetOrder          );
    printf("Zero Crossing Status = %d     \n",(int)fUseZeroCrossing );
    printf("Time Fit Status      = %d     \n",(int)fUseTimeFit      );
+   printf("T2 Time Status       = %d     \n",(int)fUseT2Time       );
    printf("Phase Fit Status     = %d     \n",(int)fUsePhaseFit     );
    printf("Integer Cycle Status = %d     \n",(int)fUseIntegerCycles);
 }
@@ -327,8 +336,8 @@ void NMRInputManager::PrintRunSummary(){
    printf("LO NType Voltage     = %.3E V  \n",fNTypeVoltage         );
    printf("ADC ID               = %d      \n",fADCID                );       
    printf("ADC Channel Number   = %d      \n",fADCChannelNumber     );       
-   printf("Number of Samples    = %d      \n",fADCNumSamples        );
-   printf("Signal Length        = %.3E s  \n",fADCSignalLength      );
+   // printf("Number of Samples    = %d      \n",fADCNumSamples        );
+   // printf("Signal Length        = %.3E s  \n",fADCSignalLength      );
 }
 //______________________________________________________________________________
 void NMRInputManager::PrintRunList(){

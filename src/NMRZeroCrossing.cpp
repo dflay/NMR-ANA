@@ -6,6 +6,7 @@ NMRZeroCrossing::NMRZeroCrossing(){
    fUseLinearInterp  = false;
    fUseLeastSq       = false;
    fUseIntegerCycles = false; 
+   fUseT2Time        = false; 
    fNPTS             = 1; 
    fNPTSUseable      = 0; 
    fStep             = 0; 
@@ -227,7 +228,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::CountZeroCrossings(int method,NMRPulse *aPulse){
-   fNZC = NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseTimeRange,fTMin,fTMax,
+   fNZC = NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseT2Time,fUseTimeRange,fTMin,fTMax,
                                       aPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
 }
 //______________________________________________________________________________

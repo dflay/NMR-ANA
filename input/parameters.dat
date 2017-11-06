@@ -1,8 +1,9 @@
 # ID 	 value
 t_start                 5.00E-04
-t_end                   5.00E-03
+t_end                   8.00E-03
 verbosity               0
 offset_correction_order 2
+t2_time                 1
 zero_crossing           1
 time_fit                0
 phase_fit               0

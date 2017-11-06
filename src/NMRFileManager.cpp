@@ -1123,10 +1123,11 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    }
  
    // settings for counting zero crossings
-   bool UseRange = false; 
-   double tMin   = 0;    // in seconds 
-   double tMax   = 1;    // in seconds                         
-   int type      = NMRMath::kLeastSquares; 
+   bool UseT2Time = false;
+   bool UseRange  = false; 
+   double tMin    = 0;    // in seconds 
+   double tMax    = 1;    // in seconds                         
+   int type       = NMRMath::kLeastSquares; 
 
    vector<int> NCrossing,CrossingIndex;
    vector<double> tCross,vCross;
@@ -1152,7 +1153,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    t_diff_abs_2+=0; 
 
    // first calculation 
-   int nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+   int nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                          myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
    double t_diff_old = GetTDiff(nzc,fTcross,t_even,t_odd); 
    ClearNZCArrays(); 
@@ -1182,7 +1183,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
 
    ApplyOffset(offset_new,myPulse);
  
-   nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+   nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                      myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
    double t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 
    ClearNZCArrays();
@@ -1257,7 +1258,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       rc = CheckOffset(offset_old,offset_new,t_diff_old,t_diff_new,slope); 
       if(rc>0) break; 
       ApplyOffset(offset_new,myPulse); 
-      nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseRange,tMin,tMax,
+      nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                         myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
       t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 
       slope      = (t_diff_new - t_diff_old)/(offset_new - offset_old);
