@@ -566,6 +566,8 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    if(rc!=0){
       std::cout << "[NMRFileManager::Load]: Cannot read the DAQ event!" << std::endl;
       exit(1); 
+   }else{
+     std::cout << "[NMRFileManager::Load]: Processing event " << PulseNumber << " at " << myEvent.timestamp << " " << std::endl; 
    }
  
    aPulse->SetTimeStamp(myEvent.timestamp);
