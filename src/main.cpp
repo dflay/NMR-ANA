@@ -57,6 +57,7 @@ int main(){
       for(int j=1;j<=NPulses;j++){
          aPulse->SetPulseNumber(j);                   // minimal initialization of the pulse 
          FM->Load(run_num,j,aPulse);                  // load data 
+	 // FM->PrintSignalToFile(run_num,j,aPulse);     // diagnostic testing  
          myAna->CalculateFrequency(aPulse,aPulseAna); // compute frequencies, add to analyzed pulse   
          myAna->CalculateMagneticField(aPulseAna);    // compute magnetic field values    
          if(Verbosity>4) aPulseAna->Print(); 

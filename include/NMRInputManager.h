@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream> 
+
 #include "NMRUtility.h"
 
 class NMRInputManager{

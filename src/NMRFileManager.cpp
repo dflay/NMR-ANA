@@ -263,6 +263,25 @@ void NMRFileManager::InitOutputDirectory(){
 
 }
 //______________________________________________________________________________
+int NMRFileManager::PrintSignalToFile(int run,int pulseNumber,NMRPulse *aPulse){
+  const int N = aPulse->GetNumPoints();
+  char outpath[500],outStr[500];
+  sprintf(outpath,"./csv/nmr-daq-run-%05d_trace-%02d.csv",run,pulseNumber);
+  std::ofstream outfile(outpath);
+  if( outfile.fail() ){
+    std::cout << "[NMRFileManager::PrintSignalToFile]: Cannot open the file: " << outpath << std::endl;
+    return 1;
+  }else{
+    for(int i=0;i<N;i++){
+      sprintf(outStr,"%.3lf",aPulse->GetVoltage(i));
+      outfile << outStr << std::endl;
+    }
+    outfile.close();
+    std::cout << "[NMRFileManager::PrintSignalToFile]: The data has been written to the file: " << outpath << std::endl;
+  }
+  return 0;
+}
+//______________________________________________________________________________
 void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunToFile(aRun); 
    PrintRunToFileField(aRun); 
@@ -563,11 +582,13 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
 
    NMRDAQEvent_t myEvent; 
    int rc = ReadEventData(RunNumber,PulseNumber,myEvent); 
+   std::string timeStamp = NMRUtility::GetStringTimeStampFromUTC( myEvent.timestamp/1E+9 ); 
+
    if(rc!=0){
-      std::cout << "[NMRFileManager::Load]: Cannot read the DAQ event!" << std::endl;
-      exit(1); 
+     std::cout << "[NMRFileManager::Load]: Cannot read the DAQ event!" << std::endl;
+     exit(1); 
    }else{
-     std::cout << "[NMRFileManager::Load]: Processing event " << PulseNumber << " at " << myEvent.timestamp << " " << std::endl; 
+     std::cout << "[NMRFileManager::Load]: Processing event " << PulseNumber << " at " << timeStamp << std::endl; 
    }
  
    aPulse->SetTimeStamp(myEvent.timestamp);

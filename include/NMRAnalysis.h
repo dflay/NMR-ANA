@@ -5,6 +5,7 @@
 
 #include <cstdlib> 
 #include <iostream> 
+
 #include "NMRMath.h"
 #include "NMRRun.h"
 #include "NMRPulse.h"

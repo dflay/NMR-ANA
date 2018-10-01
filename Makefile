@@ -9,7 +9,7 @@ INCDIR = include
 
 # Compiler
 CC       = g++ 
-CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g -std=c++11 \
+CPPFLAGS = -Wall -I$(INCDIR) -I$(BOOST_INC) -O3 -fPIC -g -std=c++11 \
        -Wmissing-declarations -Wreturn-type -Wunused \
        -Wcomment -Wformat
 
@@ -17,7 +17,7 @@ CPPFLAGS = -Wall -I$(INCDIR) -O2 -fPIC -g -std=c++11 \
 LDFLAGS = -shared
 
 # Libraries
-LIBS       = -lm -lboost_system -lboost_filesystem
+LIBS       = -lm -lboost_system -lboost_filesystem 
 LIBRARY    = NMRANA
 TARGET_LIB = lib$(LIBRARY).so
  
@@ -46,7 +46,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
 # build the main program 
 $(PROJECT): 
-	$(CC) $(CPPFLAGS) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L. -l$(LIBRARY)
+	$(CC) $(CPPFLAGS) -o $(PROJECT) $(SRCDIR)/main.cpp $(LIBS) -L. -L$(BOOST_LIB) -l$(LIBRARY)
 
 .PHONY: clean
 clean:

@@ -13,6 +13,10 @@
 #include <dirent.h>
 #include <boost/filesystem.hpp>  
 
+// #define BOOST_NO_CXX11_SCOPED_ENUMS
+// #include <boost/filesystem.hpp>
+// #undef BOOST_NO_CXX11_SCOPED_ENUMS
+
 #include "NMRDAQEvent.h"
 #include "NMRPulse.h"
 #include "NMRMath.h" 
@@ -56,7 +60,8 @@ class NMRFileManager{
       void ApplyOffset(double offset,NMRPulse *aPulse);                                 // apply voltage offset to data 
       void ApplyOffsetLinear(double *offset,NMRPulse *aPulse);                          // apply voltage offset to data 
       void ImportDataRawADCBin(int run,int pulse);
-      void Convert(int adcID,const char *Units); 
+      void Convert(int adcID,const char *Units);
+      
       void PrintRunToFile(NMRRun *aRun); 
       void PrintRunToFileField(NMRRun *aRun); 
       void PrintRunFreqStatsToFile(NMRRun *aRun); 
@@ -117,6 +122,7 @@ class NMRFileManager{
       void AppendToFile(const char *fn,const char *header,int i,double a,double b,double c,double d); 
 
       // directory and file management 
+      int PrintSignalToFile(int run,int pulse,NMRPulse *aPulse);
       int MakeDirectory(const char *path);            // make a directory based on a path   
       int DeleteRun(int runNumber);                   // delete a run  
       int DeleteFile(const char *fn);                 // delete a file  

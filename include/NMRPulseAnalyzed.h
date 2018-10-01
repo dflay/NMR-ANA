@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstdio>  
 #include <iostream> 
+
 #include "NMRPulse.h"
 
 class NMRPulseAnalyzed: public NMRPulse{
