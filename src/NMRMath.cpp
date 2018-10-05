@@ -498,9 +498,9 @@ namespace NMRMath{
       // find T2 time 
       double t2_time=0;
       double e_const = exp(1);
-      double v_lo   = vmax/e_const*(1. - 0.1);  
-      double v_hi   = vmax/e_const*(1. + 0.1);  
-      // std::cout << "VLO = " << v_lo << " VHI = " << v_hi << std::endl; 
+      double v_lo    = vmax/e_const*(1. - 0.1);  
+      double v_hi    = vmax/e_const*(1. + 0.1);  
+      // std::cout << "VMAX = " << vmax << " VLO = " << v_lo << " VHI = " << v_hi << std::endl; 
       for(int i=0;i<N;i++){
          v = aPulse->GetVoltage(i); 
          if( fabs(v)>v_lo && fabs(v)<v_hi ){
@@ -542,6 +542,7 @@ namespace NMRMath{
          tMax = T2_time;
          UseTimeRange = true; 
          if(verbosity>3) std::cout << "[NMRMath::CountZeroCrossings]: Using the T2 time for frequency extraction.  T2 = " << tMax/1E-3 << " ms" << std::endl;
+	 // std::cout << "[NMRMath::CountZeroCrossings]: T2 = " << tMax/1E-3 << " ms" << std::endl;
       } 
        
       double v_prod=0;

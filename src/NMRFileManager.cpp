@@ -266,7 +266,7 @@ void NMRFileManager::InitOutputDirectory(){
 int NMRFileManager::PrintSignalToFile(int run,int pulseNumber,NMRPulse *aPulse){
   const int N = aPulse->GetNumPoints();
   char outpath[500],outStr[500];
-  sprintf(outpath,"./csv/nmr-daq-run-%05d_trace-%02d.csv",run,pulseNumber);
+  sprintf(outpath,"./csv/nmr-daq_run-%05d_trace-%02d.csv",run,pulseNumber);
   std::ofstream outfile(outpath);
   if( outfile.fail() ){
     std::cout << "[NMRFileManager::PrintSignalToFile]: Cannot open the file: " << outpath << std::endl;
@@ -649,8 +649,12 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    double tnoise = 1E-3; 
    double RMSNoise=0,VMax=-300; 
 
+   // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
+
    int OffsetOrder = InputManager->GetOffsetOrder(); 
    DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax); 
+   
+   // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
 
    // set RMSNoise as the error bar on the data 
    NN = aPulse->GetNumPoints();
