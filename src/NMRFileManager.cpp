@@ -108,7 +108,7 @@ void NMRFileManager::ClearNZCArrays(){
 void NMRFileManager::GetInputParameters(const char *inpath){
    InputManager->GetInputParameters(inpath);
    // InputManager->Print(); 
-   fVerbosity = InputManager->GetVerbosity(); 
+   fVerbosity = InputManager->GetVerbosity();
 }
 //______________________________________________________________________________
 void NMRFileManager::Update(const NMRFileManager *fm){
@@ -603,7 +603,9 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    Convert(ADCID,units);  
 
    double tmin=0; 
-   double tmax = GetTMax(); 
+   double tmax = GetTMax();
+
+   fTStart = InputManager->GetStartTimeZC(); 
 
    // set the start time: if we're using a start time that's non-zero, set tmin accordingly 
    if(fTStart!=0){
@@ -644,6 +646,9 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
       }
    }
 
+   // std::cout << "******* tmin = "        << tmin               << std::endl;
+   // std::cout << "******* First time is " << aPulse->GetTime(0) << std::endl;
+
    // apply the voltage offset correction 
 
    double tnoise = 1E-3; 
@@ -652,7 +657,8 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
 
    int OffsetOrder = InputManager->GetOffsetOrder(); 
-   DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax); 
+   DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax);
+   // std::cout << "******** DONE WITH OFFSET CORRECTION" << std::endl;
    
    // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
 
@@ -813,8 +819,8 @@ void NMRFileManager::ImportDataRawADCBin(int run,int pulse){
    if(fVerbosity>=3) std::cout << "[NMRFileManager]: File size:          " << size/MB << " MB" << std::endl;
    if(fVerbosity>=3) std::cout << "[NMRFileManager]: Number of samples:  " << NPTS    << std::endl;
    for(int i=0;i<NPTS;i++){
-      fSample[i]    = i; 
-      fADCCounts[i] = arr[i]; 
+       fSample[i]    = i; 
+       fADCCounts[i] = arr[i]; 
    }
    
    delete[] memblock; 
@@ -929,9 +935,9 @@ double NMRFileManager::GetVMax(NMRPulse *aPulse){
    t+=0;
    v+=0;
    for(int i=0;i<N;i++){
-      t = aPulse->GetTime(i);
-      v = aPulse->GetVoltage(i);  
-      if(v>vmax) vmax = v;  
+     t = aPulse->GetTime(i);
+     v = aPulse->GetVoltage(i);  
+     if(v>vmax) vmax = v; 
    }
 
    if(fVerbosity>=3) std::cout << "[NMRFileManager]: Done." << std::endl;

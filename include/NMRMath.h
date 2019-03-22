@@ -41,7 +41,7 @@ namespace NMRMath{
    double GetStandardDeviationOfTheMean(std::vector<double> v);
    double GetRMS(int N,double v[]);
    double GetRMS(std::vector<double> v);
-   double GetT2Time(NMRPulse *aPulse); 
+   double GetT2Time_old(double tStart,NMRPulse *aPulse); 
    double LinearInterpolationForY(double x,double x0,double y0,double x1,double y1);
    double LinearInterpolationForX(double y,double x0,double y0,double x1,double y1);
    int LeastSquaresFitting(int N,double x[],double y[],double &a,double &b,double &r);
@@ -55,7 +55,12 @@ namespace NMRMath{
                            bool UseT2Time,bool UseTimeRange,double tMin,double tMax,
                            NMRPulse *aPulse,
                            double *X,double *Y,double *EY,
-                           int *NCrossing,int *CrossingIndex,double *tCross,double *vCross); 
+                           int *NCrossing,int *CrossingIndex,double *tCross,double *vCross);
+
+    double GetT2Time(int startIndex,NMRPulse *aPulse);
+    int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V); 
+    int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
+	          std::vector<double> &X,std::vector<double> &Y);
    
 }
 

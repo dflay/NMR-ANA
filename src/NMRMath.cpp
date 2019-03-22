@@ -486,29 +486,153 @@ namespace NMRMath{
 
    }
    //______________________________________________________________________________
-   double GetT2Time(NMRPulse *aPulse){
+   double GetT2Time(int startIndex,NMRPulse *aPulse){
+
+     std::vector<double> tm,vm;
+     int rc = FindLocalMaxima(startIndex,aPulse,tm,vm);   // first find local maxima 
+     if(rc!=0) return -1; 
+
+     double v=0,vmax=-300;
+     const int ND = aPulse->GetNumPoints();
+     for(int i=startIndex;i<ND;i++){
+       v = aPulse->GetVoltage(i); 
+       if(vmax<v) vmax = v;
+     }
+
+     double t2_time=0;
+     double e_const = exp(1);
+     double v_lo    = 0.95*vmax/e_const;
+     double v_hi    = 1.05*vmax/e_const;
+
+     // std::cout << "[GetT2Time]: Target voltage is " << vmax/e_const << std::endl;
+     // std::cout << "             lo = " << v_lo << " hi = " << v_hi << std::endl;
+
+     const int N = tm.size();
+     std::vector<double> tt,vv;
+     for(int i=0;i<N;i++){
+       if( fabs(vm[i])>v_lo && fabs(vm[i])<v_hi ){
+	 tt.push_back(tm[i]);
+	 vv.push_back(vm[i]);
+       }
+     }
+
+     const int M = tt.size();
+     // std::cout << M << " possible T2 times " << std::endl;
+     // for(int i=0;i<M;i++) std::cout << Form("%.5lf, %.5lf",tt[i],vv[i]) << std::endl;
+
+     if(M==0) return -1;
+
+     bool isBreak=false;
+
+     double vdiff=0,vdiff_pct=0,tdiff=0;
+     double v_prev = vv[0];
+     double t_prev = tt[0];
+     for(int i=1;i<M;i++){
+       vdiff     = fabs(v_prev-vv[i]);
+       vdiff_pct = vdiff/fabs(v_prev+vv[i]);
+       tdiff     = fabs(t_prev-tt[i]);
+       if(vdiff_pct>0.50 || tdiff>1E-3){   // greater than 50% change in voltage or larger than 1 ms step, probably junk
+	 t2_time = tt[i-1];  // take previous time! 
+	 isBreak = true;
+	 break;
+       }
+       v_prev = vv[i];
+       t_prev = tt[i];
+     }
+
+     // we went through all data, and haven't found a weird step that
+     // warrants using the last reasonable time 
+     if(!isBreak){
+       // std::cout << "All candiates looked reasonable -- taking last one" << std::endl;
+       t2_time = tt[M-1];
+     }
+
+     // std::cout << "The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
+
+     return t2_time;
+   }
+   //______________________________________________________________________________
+   double GetT2Time_old(double tStart,NMRPulse *aPulse){
       // find the T2 time of the signal
       // find max amplitude 
-      double vmax=-300,v=0; 
+      double time=0,vmax=-300,v=0; 
       const int N = aPulse->GetNumPoints(); 
       for(int i=0;i<N;i++){
-         v = aPulse->GetVoltage(i); 
-         if(vmax<v) vmax = v;
+	time = aPulse->GetTime(i); 
+	if(time>=tStart){             // avoid spurious samples in beginning 
+	  v = aPulse->GetVoltage(i); 
+	  if(vmax<v) vmax = v;
+	}
       }
       // find T2 time 
       double t2_time=0;
       double e_const = exp(1);
       double v_lo    = vmax/e_const*(1. - 0.1);  
-      double v_hi    = vmax/e_const*(1. + 0.1);  
-      // std::cout << "VMAX = " << vmax << " VLO = " << v_lo << " VHI = " << v_hi << std::endl; 
+      double v_hi    = vmax/e_const*(1. + 0.1); 
+      // std::vector<double> tt; // store T2 time candidates
+      // std::cout << "***** VMAX = " << vmax << " VLO = " << v_lo << " VHI = " << v_hi << std::endl; 
       for(int i=0;i<N;i++){
          v = aPulse->GetVoltage(i); 
          if( fabs(v)>v_lo && fabs(v)<v_hi ){
+	    // tt.push_back( aPulse->GetTime(i) ); 
             t2_time = aPulse->GetTime(i);
          } 
       }
-      // std::cout << "T2 TIME IS " << t2_time << std::endl; 
+      // std::cout << "***** T2 TIME IS " << t2_time << std::endl; 
+      // std::cout << "T2 candidates: " << std::endl;
+      // for(int i=0;i<tt.size();i++) std::cout << tt[i] << std::endl; 
       return t2_time;
+   }
+   //______________________________________________________________________________
+   int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V){
+     // find all local maxima from a set of data
+     const int N = aPulse->GetNumPoints();
+     double v=0,vp=0,vn=0,t=0;
+     std::vector<double> tt,vv;
+     for(int i=startIndex;i<N;i++){
+       t  = aPulse->GetTime(i); 
+       v  = aPulse->GetVoltage(i);
+       vp = aPulse->GetVoltage(i-1);
+       vn = aPulse->GetVoltage(i+1);
+       if(v>0){
+	 // chop off all negative values to start 
+	 if(v>vp && v>vn){
+	   // is the value greater than preivous AND greater than the next entry?
+	   // looks like a maximum, keep it 
+	   tt.push_back(t);
+	   vv.push_back(v);
+	 }
+       }
+     }
+     int stepSize = 10E+6*2.5E-6; // 10 MHz * 2.5 us 
+     int rc = RebinData(stepSize,tt,vv,T,V);
+     return rc;
+   }
+   //______________________________________________________________________________
+   int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
+                 std::vector<double> &X,std::vector<double> &Y){
+     int cntr=0;
+     double mx=0,my=0;
+     const int N = x.size();
+     std::vector<double> xx,yy;
+     for(int i=0;i<N;i++){
+       // gather data
+       xx.push_back(x[i]);
+       yy.push_back(y[i]);
+       cntr++;
+       if(cntr==stepSize){
+	 // if we hit the stepSize limit, average over data  
+	 mx = GetMean(xx);
+	 my = GetMean(yy);
+	 // store and clear for next samples 
+	 X.push_back(mx);
+	 Y.push_back(my);
+	 xx.clear();
+	 yy.clear();
+	 cntr=0;
+       }
+     }
+     return 0;
    }
    //______________________________________________________________________________
    int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
@@ -527,19 +651,19 @@ namespace NMRMath{
       const int N  = aPulse->GetNumPoints();
 
       int cntr         = 0;
-      // int cntr_prev    = 0;
+      // int cntr_prev   = 0;
 
-      double v0           = 0;
-      double target       = 0;
-      double t0           = 0;
+      double v0        = 0;
+      double target    = 0;
+      double t0        = 0;
       // double elapsed_time = 0;  
 
       // compute and use the T2 time if necessary. 
       // NOTE: this will replace the input endtime if the T2 boolean is true. 
-      double T2_time     = GetT2Time(aPulse);
+      int startIndex = (int)(10E+6*500E-6);  // for T2 time  
       if(UseT2Time){
          tMin = 500E-6;   // start at 500 us 
-         tMax = T2_time;
+         tMax = GetT2Time(startIndex,aPulse);
          UseTimeRange = true; 
          if(verbosity>3) std::cout << "[NMRMath::CountZeroCrossings]: Using the T2 time for frequency extraction.  T2 = " << tMax/1E-3 << " ms" << std::endl;
 	 // std::cout << "[NMRMath::CountZeroCrossings]: T2 = " << tMax/1E-3 << " ms" << std::endl;
