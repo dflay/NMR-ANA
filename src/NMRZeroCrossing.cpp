@@ -303,8 +303,26 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
 }
 //______________________________________________________________________________
 double NMRZeroCrossing::GetFrequencyFromPhaseFit(){
-   double freq=0,intercept=0,r=0;
-   NMRMath::LeastSquaresFitting(fNZC,fTcross,fNumCycles,intercept,freq,r); 
+   // linear least squares 
+   // double freq=0,intercept=0,r=0;
+   // NMRMath::LeastSquaresFitting(fNZC,fTcross,fNumCycles,intercept,freq,r);
+
+   // nonlinear least squares
+   const int npar = 5; 
+   std::vector<double> par,parErr;
+   for(int i=0;i<npar;i++){
+     par.push_back(1); 
+     parErr.push_back(0); 
+   }
+   const int NPTS = fNZC;
+   std::vector<double> x,y,dy;
+   for(int i=0;i<NPTS;i++){
+     x.push_back( fTcross[i] );
+     y.push_back( fNumCycles[i] );  
+     dy.push_back(0);               // FIXME: Accurate error estimate?  
+   }
+   NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly7,NMRMath::poly7_df,par,parErr,npar,0); 
+   double freq = par[1]; // the frequency is the p1 term 
    return freq;
 }
 

@@ -5,6 +5,12 @@
 #include <cmath> 
 #include <iostream>
 #include <vector> 
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_multifit_nlinear.h>
 
 #include "NMRUtility.h"
 #include "NMRPulse.h" 
@@ -16,6 +22,12 @@ namespace NMRMath{
       kLinearInterpolation = 2,
       kLeastSquares        = 3
    };
+
+   typedef struct data {
+     size_t n;
+     double *x;
+     double *y;
+   } data_t;
 
    int IsNaN(double x); 
 
@@ -61,6 +73,15 @@ namespace NMRMath{
     int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V); 
     int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
 	          std::vector<double> &X,std::vector<double> &Y);
+
+    int NonLinearLeastSquaresFitting(std::vector<double> x,std::vector<double> y,std::vector<double> dy,
+	       int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
+	       std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity); 
+
+    int poly7(const gsl_vector * x, void *data,gsl_vector * f);
+    int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J);
+
+    void callbackFunction(const size_t iter, void *params,const gsl_multifit_nlinear_workspace *w);
    
 }
 

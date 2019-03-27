@@ -635,6 +635,192 @@ namespace NMRMath{
      return 0;
    }
    //______________________________________________________________________________
+   int NonLinearLeastSquaresFitting(std::vector<double> x,std::vector<double> y,std::vector<double> dy,
+       int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
+       std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity){
+     // fit the data set (x,y) with uncertainties dy to the function F with jacobian DF  
+     // par will have initial values to start 
+
+     const int NPTS = x.size();
+
+     double chisq,chisq0;
+
+     const double xtol = 1e-8;
+     const double gtol = 1e-8;
+     const double ftol = 0.0;
+
+     gsl_rng *r;  // random number generator 
+     gsl_rng_env_setup();
+     r = gsl_rng_alloc(gsl_rng_default);
+
+     // data set
+     char msg[200];
+     double xa[NPTS],ya[NPTS],weights[NPTS];
+
+     if(verbosity>1) std::cout << "Input data: " << std::endl;
+     for(int i=0;i<NPTS;i++){
+       xa[i] = x[i];
+       ya[i] = y[i];
+       if(dy[i]!=0){ 
+	 weights[i] = 1./( dy[i]*dy[i] );
+       }else{
+	 weights[i] = 1.;
+       }
+       sprintf(msg,"i = %03d, x = %.5E, y = %.3lf",i,xa[i],ya[i]);
+       if(verbosity>1) std::cout << msg << std::endl;
+     }
+     data_t d = {(size_t)NPTS,xa,ya};
+
+     double parInit[NPAR]; // starting values
+     for(int i=0;i<NPAR;i++) parInit[i] = par[i];
+     gsl_vector_view xx  = gsl_vector_view_array(parInit,(size_t)NPAR);
+     gsl_vector_view wts = gsl_vector_view_array(weights,(size_t)NPTS);
+
+     // define the function to be minimized 
+     gsl_multifit_nlinear_fdf fitFunc;
+     gsl_multifit_nlinear_parameters fitFunc_params = gsl_multifit_nlinear_default_parameters();
+     fitFunc.f      = F;
+     fitFunc.df     = DF;          // set to NULL for finite-difference Jacobian 
+     fitFunc.fvv    = NULL;         // not using geodesic acceleration 
+     fitFunc.n      = (size_t)NPTS; // number of data points 
+     fitFunc.p      = (size_t)NPAR; // number of parameters
+     fitFunc.params = &d;           // data object (NPTS, array of data).
+
+     // allocate workspace with default parameters 
+     gsl_multifit_nlinear_workspace *w;
+     const gsl_multifit_nlinear_type *T = gsl_multifit_nlinear_trust;
+     w = gsl_multifit_nlinear_alloc(T,&fitFunc_params,NPTS,NPAR);
+
+     // initialize solver with starting point and weights 
+     gsl_multifit_nlinear_winit(&xx.vector,&wts.vector,&fitFunc,w);
+
+     // compute initial cost function 
+     gsl_vector *f;
+     f = gsl_multifit_nlinear_residual(w);
+     gsl_blas_ddot(f,f,&chisq0);
+
+     // solve the system with a maximum of 20 iterations
+     int info=-1;
+     int status = gsl_multifit_nlinear_driver(20,xtol,gtol,ftol,callbackFunction,NULL,&info,w);
+
+     // compute covariance of best fit parameters 
+     gsl_matrix *J;
+     gsl_matrix *covar = gsl_matrix_alloc(NPAR,NPAR);
+     J = gsl_multifit_nlinear_jac(w);
+     gsl_multifit_nlinear_covar (J,0.0,covar);
+
+     // compute final cost 
+     gsl_blas_ddot(f,f,&chisq);
+
+     std::string stopReason = "small step size";
+     if(info!=1) stopReason = "small gradient";
+
+     double dof = (double)(NPTS-NPAR);
+     double c   = GSL_MAX_DBL( 1,sqrt(chisq/dof) );
+     for(int i=0;i<NPAR;i++){
+       par[i]    = gsl_vector_get(w->x,i);
+       parErr[i] = c*sqrt( gsl_matrix_get(covar,i,i) );
+     }
+
+     if(verbosity>0){
+       std::cout << "------------------ FIT SUMMARY ------------------" << std::endl;
+       sprintf(msg,"Summary from method %s/%s",gsl_multifit_nlinear_name(w),gsl_multifit_nlinear_trs_name(w));
+       std::cout << msg << std::endl;
+       sprintf(msg,"Number of iterations: %zu",gsl_multifit_nlinear_niter(w) );
+       std::cout << msg << std::endl;
+       sprintf(msg,"Function evaluations: %zu",fitFunc.nevalf);
+       std::cout << msg << std::endl;
+       sprintf(msg,"Jacobian evaluations: %zu",fitFunc.nevaldf);
+       std::cout << msg << std::endl;
+       sprintf(msg,"Reason for stopping:  %s" ,stopReason.c_str());
+       std::cout << msg << std::endl;
+       sprintf(msg,"initial |f(x)|:       %.3lf",sqrt(chisq0) );
+       std::cout << msg << std::endl;
+       sprintf(msg,"final |f(x)|:         %.3lf",sqrt(chisq)  );
+       std::cout << msg << std::endl;
+       sprintf(msg,"status:               %s",gsl_strerror(status));
+       std::cout << msg << std::endl;
+       std::cout << "------------------ FIT RESULTS ------------------" << std::endl;
+       sprintf(msg,"chisq/ndf = %.3lf",chisq/dof);
+       std::cout << msg << std::endl;
+       for(int i=0;i<NPAR;i++){
+	 sprintf(msg,"par[%d] = %.5lf +/- %.5lf",i,par[i],parErr[i]);
+	 std::cout << msg << std::endl;
+       }
+     }
+
+     gsl_multifit_nlinear_free(w);
+     gsl_matrix_free(covar);
+     gsl_rng_free(r);
+
+     return 0;
+   }
+   //______________________________________________________________________________
+   void callbackFunction(const size_t iter,void *params,const gsl_multifit_nlinear_workspace *w){
+     // function the user calls 
+     gsl_vector *f = gsl_multifit_nlinear_residual(w);
+     gsl_vector *x = gsl_multifit_nlinear_position(w);
+
+     // compute reciprocal condition number of J(x) 
+     double rcond;
+     gsl_multifit_nlinear_rcond(&rcond,w);
+     double cond = 1./rcond; 
+     
+     double abs_f = gsl_blas_dnrm2(f); 
+
+     const int NPAR = 5; 
+     double par[NPAR];
+     for(int i=0;i<NPAR;i++) par[i] = gsl_vector_get(x,i);
+
+     char msg[200];
+     sprintf(msg,"iter %2zu: par[0] = %.5f, par[1] = %.5f, par[2] = %.5f, par[3] = %.5f, par[4] = %.5f, cond(J) = %.5lf, |f(x)| = %.5lf",
+	    iter,par[0],par[1],par[2],par[3],par[4],cond,abs_f);
+     // std::cerr << msg << std::endl;
+   }
+   //______________________________________________________________________________
+   int poly7(const gsl_vector *x,void *data,gsl_vector *f){
+     // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     double *ya = ( (data_t *)data )->y;
+     // fit parameters 
+     const int npar = 5;
+     double par[npar];
+     for(int i=0;i<npar;i++){
+       par[i] = gsl_vector_get(x,i);
+     }
+     // compute chi^2 function 
+     double iy=0;
+     for(size_t i=0;i<n;i++){
+       iy = par[0] + par[1]*xa[i] + par[2]*pow(xa[i],3.) + par[3]*pow(xa[i],5.) + par[4]*pow(xa[i],7.);
+       gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J){
+     // Jacobian for fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     // compute jacobian for each data point  
+     double arg_i0=0,arg_i1=0,arg_i2=0,arg_i3=0,arg_i4=0;
+     for(size_t i=0;i<n;i++){
+       arg_i0 = 1.0;
+       arg_i1 = pow(xa[i],1.);
+       arg_i2 = pow(xa[i],3.);
+       arg_i3 = pow(xa[i],5.);
+       arg_i4 = pow(xa[i],7.);
+       gsl_matrix_set(J,i,0,arg_i0);
+       gsl_matrix_set(J,i,1,arg_i1);
+       gsl_matrix_set(J,i,2,arg_i2);
+       gsl_matrix_set(J,i,3,arg_i3);
+       gsl_matrix_set(J,i,4,arg_i4);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
    int CountZeroCrossings(int verbosity,int method,int NPTS,int step,
                           bool UseT2Time,bool UseTimeRange,double tMin,double tMax,
                           NMRPulse *aPulse,
