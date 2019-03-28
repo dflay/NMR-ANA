@@ -23,6 +23,7 @@ namespace NMRMath{
       kLeastSquares        = 3
    };
 
+   // data struct for nonlinear least squares fitting
    typedef struct data {
      size_t n;
      double *x;
