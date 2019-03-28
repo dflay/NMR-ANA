@@ -17,7 +17,7 @@ class NMRInputManager{
       int fADCID,fADCChannelNumber;
       int fMonth,fDay,fYear;
       int fVerbosity,fOffsetOrder;
-      int fRunNumber;
+      int fRunNumber,fPulseNumber;
       int fNumRuns,fNumPulses;
       int fADCNumSamples;
 
@@ -63,7 +63,8 @@ class NMRInputManager{
       void SetYear                (int v)    { fYear             = v; } 
       void SetVerbosity           (int v)    { fVerbosity        = v; } 
       void SetOffsetOrder         (int v)    { fOffsetOrder      = v; } 
-      void SetRunNumber           (int v)    { fRunNumber        = v; } 
+      void SetRunNumber           (int v)    { fRunNumber        = v; }
+      void SetPulseNumber         (int v)    { fPulseNumber      = v; } 
       void SetNumPulses           (int v)    { fNumPulses        = v; } 
       void SetStartTimeZC         (double v) { fStartTimeZC      = v; } 
       void SetEndTimeZC           (double v) { fEndTimeZC        = v; } 
@@ -87,6 +88,7 @@ class NMRInputManager{
       int GetYear()                 const { return fYear;             } 
       int GetNumPulses()            const { return fNumPulses;        } 
       int GetRunNumber()            const { return fRunNumber;        } 
+      int GetPulseNumber()          const { return fPulseNumber;      } 
       int GetADCID()                const { return fADCID;            } 
       int GetADCChannelNumber()     const { return fADCChannelNumber; } 
       int GetVerbosity()            const { return fVerbosity;        } 

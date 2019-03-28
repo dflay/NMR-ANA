@@ -223,6 +223,17 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 
    Reset(); 
 
+   // save diagnostics 
+   // std::vector<double> outData; 
+   // int run = fFileManager->InputManager->GetRunNumber();
+   // double stopTime = fFileManager->InputManager->GetEndTimeZC(); 
+   // outData.push_back(run);
+   // outData.push_back(PulseNumber);
+   // outData.push_back(stopTime);
+   // outData.push_back(freq_lsq_ph); 
+   // fFileManager->AppendToFile("freq-data.csv",outData); 
+   // outData.clear(); 
+
    return rc; 
 
 }

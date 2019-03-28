@@ -120,6 +120,7 @@ class NMRFileManager{
       // functions to print data to files  
       void PrintResultsToFile(NMRRun *aRun); 
       void AppendToFile(const char *fn,const char *header,int i,double a,double b,double c,double d); 
+      int AppendToFile(const char *outpath,std::vector<double> x); 
 
       // directory and file management 
       int PrintSignalToFile(int run,int pulse,NMRPulse *aPulse);

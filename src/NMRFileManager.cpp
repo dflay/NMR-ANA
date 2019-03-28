@@ -578,6 +578,8 @@ void NMRFileManager::AppendToFile(const char *path,const char *header,int i,doub
 //______________________________________________________________________________
 void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
 
+   InputManager->SetPulseNumber(PulseNumber); 
+
    ImportDataRawADCBin(RunNumber,PulseNumber); 
 
    NMRDAQEvent_t myEvent; 
@@ -1156,10 +1158,10 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    }
  
    // settings for counting zero crossings
-   bool UseT2Time = false;
-   bool UseRange  = false; 
-   double tMin    = 0;    // in seconds 
-   double tMax    = 1;    // in seconds                         
+   bool UseT2Time = InputManager->GetT2TimeStatus();
+   bool UseRange  = true; 
+   double tMin    = InputManager->GetStartTimeZC(); // in seconds 
+   double tMax    = InputManager->GetEndTimeZC();   // in seconds                         
    int type       = NMRMath::kLeastSquares; 
 
    vector<int> NCrossing,CrossingIndex;
@@ -1285,6 +1287,10 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    // clear arrays before starting
    ClearNZCArrays();
 
+   // int runNum   = InputManager->GetRunNumber();
+   // int pulseNum = InputManager->GetPulseNumber();
+   // std::vector<double> outData; 
+
    do{ 
       offset_new = offset_old - t_diff_old/slope;
       // check the new offset  
@@ -1293,7 +1299,15 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       ApplyOffset(offset_new,myPulse); 
       nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                         myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
-      t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 
+      t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd);
+      // print data to file 
+      // outData.push_back(runNum);
+      // outData.push_back(pulseNum);
+      // outData.push_back(counter); 
+      // outData.push_back(offset_new); 
+      // outData.push_back(t_diff_new);
+      // AppendToFile("baseline-test_voff-tdiff.csv",outData);
+      // outData.clear(); // set up for next iteration 
       slope      = (t_diff_new - t_diff_old)/(offset_new - offset_old);
       root_diff  = fabs(offset_new - offset_old); 
       if(fVerbosity>4){ 
@@ -1340,6 +1354,13 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    }
 
    if(fVerbosity>=3) std::cout << "[NMRFileManager::GetOffsetZC]: Done." << std::endl;
+
+   // outData.push_back(runNum);
+   // outData.push_back(pulseNum);
+   // outData.push_back(tMax); 
+   // outData.push_back(offset_new);
+   // AppendToFile("baseline-test_voff-tmax.csv",outData);
+   // outData.clear(); 
 
    delete myPulse; 
    ClearNZCArrays();
@@ -1576,4 +1597,23 @@ double NMRFileManager::GetTMax(){
       if(fTime[i]>TMax) TMax = fTime[i];
    }
    return TMax; 
+}
+//______________________________________________________________________________
+int NMRFileManager::AppendToFile(const char *outpath,std::vector<double> x){
+  // for diagnostic testing
+  char outStr[200]; 
+  const int N = x.size();
+  std::ofstream outfile;
+  outfile.open(outpath,std::ios::app);
+  if( outfile.fail() ){
+    std::cout << "[NMRFileManager::AppendToFile]: Cannot open the file: " << outpath << std::endl;
+    return 1;
+  }else{
+    sprintf(outStr,"%.10E",x[0]);
+    for(int i=1;i<N-1;i++) sprintf(outStr,"%s,%.10E",outStr,x[i]);
+    sprintf(outStr,"%s,%.10E",outStr,x[N-1]);
+    outfile << outStr << std::endl;
+    outfile.close();
+  }
+  return 0; 
 }
