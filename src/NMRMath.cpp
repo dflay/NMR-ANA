@@ -699,9 +699,9 @@ namespace NMRMath{
      f = gsl_multifit_nlinear_residual(w);
      gsl_blas_ddot(f,f,&chisq0);
 
-     // solve the system with a maximum of 20 iterations
+     // solve the system with a maximum of 200 iterations
      int info=-1;
-     int status = gsl_multifit_nlinear_driver(20,xtol,gtol,ftol,callbackFunction,NULL,&info,w);
+     int status = gsl_multifit_nlinear_driver(200,xtol,gtol,ftol,callbackFunction,NULL,&info,w);
 
      // compute covariance of best fit parameters 
      gsl_matrix *J;
