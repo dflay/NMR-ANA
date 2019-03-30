@@ -82,6 +82,8 @@ namespace NMRMath{
     int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J);
 
     void callbackFunction(const size_t iter, void *params,const gsl_multifit_nlinear_workspace *w);
+
+    int AdjustTimeWindow(NMRPulse *aPulse,double &tStart,double &tStop); 
    
 }
 

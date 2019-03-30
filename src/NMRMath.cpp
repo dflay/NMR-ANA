@@ -486,6 +486,51 @@ namespace NMRMath{
 
    }
    //______________________________________________________________________________
+   int AdjustTimeWindow(NMRPulse *aPulse,double &tStart,double &tStop){
+     // adjust the start and stop times based on zero crossings 
+     double prod=0,t0=0;
+     double v_curr=0,v_prev=aPulse->GetVoltage(0);
+     double t_curr=0,t_prev=aPulse->GetTime(0);
+     const int N = aPulse->GetNumPoints();
+     std::vector<double> tc;
+     // rudimentary zero crossing to find all crossings 
+     for(int i=1;i<N;i++){
+       t_curr = aPulse->GetTime(i);
+       v_curr = aPulse->GetVoltage(i);
+       prod   = v_curr*v_prev;
+       if(prod>0){
+	 // no crossing 
+       }else{
+	 // found a crossing.  do linear interpolation to find the time 
+	 t0 = LinearInterpolationForX(0.,t_prev,v_prev,t_curr,v_curr);
+	 tc.push_back(t0);
+       }
+       // set up for next event 
+       t_prev = t_curr;
+       v_prev = v_curr;
+     }
+
+     // now adjust our start and stop times 
+     const int M = tc.size();
+     if(M==0) return 1;
+
+     // window cuts around our start and stop times
+     double delta=50E-6; 
+     double start[2] = {tStart-delta,tStart+delta}; 
+     double stop[2]  = {tStop-delta ,tStop+delta}; 
+
+     // define start and stop times based on zero crossings 
+     for(int i=0;i<M;i++){
+       if( (tc[i]>start[0])&&(tc[i]<start[1]) ){
+	 tStart = tc[i];
+       }
+       if( (tc[i]>stop[0])&&(tc[i]<stop[1]) ){
+	 tStop  = tc[i];
+       }
+     }
+     return 0;
+   }
+   //______________________________________________________________________________
    double GetT2Time(int startIndex,NMRPulse *aPulse){
 
      std::vector<double> tm,vm;
@@ -547,7 +592,7 @@ namespace NMRMath{
        t2_time = tt[M-1];
      }
 
-     // std::cout << "The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
+     std::cout << "[NMRMath::GetT2Time]: The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
 
      return t2_time;
    }
@@ -675,6 +720,13 @@ namespace NMRMath{
      for(int i=0;i<NPAR;i++) parInit[i] = par[i];
      gsl_vector_view xx  = gsl_vector_view_array(parInit,(size_t)NPAR);
      gsl_vector_view wts = gsl_vector_view_array(weights,(size_t)NPTS);
+
+     if(NPTS<NPAR){
+       std::cout << "[NMRMath::NonLinearLeastSquaresFitting]: ERROR: NPTS < NPAR!" << std::endl;
+       std::cout << "NPTS = " << NPTS << std::endl;
+       std::cout << "NPAR = " << NPAR << std::endl;
+       return 1;
+     }
 
      // define the function to be minimized 
      gsl_multifit_nlinear_fdf fitFunc;
@@ -943,6 +995,7 @@ namespace NMRMath{
       if(verbosity>=3) std::cout << "[NMRMath::CountZeroCrossings]: Done." << std::endl;
       ClearAnaArrays(NPTSUseable,X,Y,EY);                   // clears fX, fY, fEY  (sets to zero) 
 
+      std::cout << "[NMRMath::CountZeroCrossings]: NumCrossings = " << cntr << std::endl; 
       return cntr;   // return number of zero crossings  
    }
 

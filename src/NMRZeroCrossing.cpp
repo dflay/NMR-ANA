@@ -228,7 +228,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::CountZeroCrossings(int method,NMRPulse *aPulse){
-   // std::cout << "NMRZeroCrossing: tmin = " << fTMin << " tmax = " << fTMax << " T2 time enable: " << fUseT2Time << std::endl; 
+   std::cout << "NMRZeroCrossing: tmin = " << fTMin << " tmax = " << fTMax << " T2 time enable: " << fUseT2Time << std::endl; 
    fNZC = NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseT2Time,fUseTimeRange,fTMin,fTMax,
                                       aPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
 }
@@ -321,8 +321,10 @@ double NMRZeroCrossing::GetFrequencyFromPhaseFit(){
      y.push_back( fNumCycles[i] );  
      dy.push_back(0);               // FIXME: Accurate error estimate?  
    }
-   NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly7,NMRMath::poly7_df,par,parErr,npar,0); 
-   double freq = par[1]; // the frequency is the p1 term 
+   double freq=0; // the frequency is the p1 term 
+   int rc= NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly7,NMRMath::poly7_df,par,parErr,npar,0);
+   if(rc!=0) freq = -1; 
+   freq = par[1]; // the frequency is the p1 term 
    return freq;
 }
 

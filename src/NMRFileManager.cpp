@@ -976,6 +976,7 @@ void NMRFileManager::DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NM
       offset1 = GetOffset(t_thr,aPulse); 
       ApplyOffset(offset1,aPulse); 
       if(fVerbosity>=2) std::cout << "[NMRFileManager]: Offset1 = " << offset1 << std::endl;
+      std::cout << "OFFSET 1 = " << offset1 << std::endl;
    }
 
    // get RMS noise here. 
@@ -984,7 +985,7 @@ void NMRFileManager::DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NM
    // set data in test pulse object: use chunk of data desired in ZC analysis 
    double TStartZC = InputManager->GetStartTimeZC(); 
    double TEndZC   = InputManager->GetEndTimeZC(); 
- 
+
    int j=0;
    double time=0,voltage=0,vErr=0;
    for(int i=0;i<N;i++){
@@ -1156,10 +1157,10 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    }
  
    // settings for counting zero crossings
-   bool UseT2Time = false;
-   bool UseRange  = false; 
-   double tMin    = 0;    // in seconds 
-   double tMax    = 1;    // in seconds                         
+   bool UseT2Time = InputManager->GetT2TimeStatus();
+   bool UseRange  = true; 
+   double tMin    = InputManager->GetStartTimeZC();    // in seconds 
+   double tMax    = InputManager->GetEndTimeZC();      // in seconds                         
    int type       = NMRMath::kLeastSquares; 
 
    vector<int> NCrossing,CrossingIndex;
