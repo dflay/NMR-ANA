@@ -14,7 +14,8 @@ class NMRPulse{
       int fNumPoints; 
       int fPulseNumber;
       double fAmpl,fNoiseRMS,fSNR;
-      double fTemperature,fXCoordinate,fYCoordinate,fZCoordinate;  
+      double fTemperature,fXCoordinate,fYCoordinate,fZCoordinate; 
+      double fT2Time;
       double *fTime,*fVoltage,*fVoltageErr;
       unsigned long long fTimeStamp;
 
@@ -46,10 +47,13 @@ class NMRPulse{
       void SetAmplitude(double a)                            {fAmpl        = a;     }
       void SetNoiseRMS(double n)                             {fNoiseRMS    = n;     }
       void SetSignalToNoiseRatio(double snr)                 {fSNR         = snr;   }
-      void SetVerbosity(int v)                               {fVerbosity   = v;     } 
+      void SetVerbosity(int v)                               {fVerbosity   = v;     }
+      void SetT2Time(double v)                               {fT2Time      = v;     } 
 
       int GetNumPoints()                               const {return fNumPoints;    } 
-      int GetPulseNumber()                             const {return fPulseNumber;  }  
+      int GetPulseNumber()                             const {return fPulseNumber;  } 
+
+      double GetT2Time()                               const {return fT2Time;       } 
 
       double GetTemperature()                          const {return fTemperature;  } 
       double GetXCoordinate()                          const {return fXCoordinate;  } 

@@ -539,6 +539,9 @@ namespace NMRMath{
 
      double v=0,vmax=-300;
      const int ND = aPulse->GetNumPoints();
+
+     // std::cout << "**** start = " << startIndex << " end = " << ND << std::endl;
+
      for(int i=startIndex;i<ND;i++){
        v = aPulse->GetVoltage(i); 
        if(vmax<v) vmax = v;
@@ -592,7 +595,7 @@ namespace NMRMath{
        t2_time = tt[M-1];
      }
 
-     std::cout << "[NMRMath::GetT2Time]: The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
+     // std::cout << "[NMRMath::GetT2Time]: The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
 
      return t2_time;
    }
@@ -896,12 +899,15 @@ namespace NMRMath{
       double t0        = 0;
       // double elapsed_time = 0;  
 
+      double tMax_orig = tMax; 
+
       // compute and use the T2 time if necessary. 
       // NOTE: this will replace the input endtime if the T2 boolean is true. 
-      int startIndex = (int)(10E+6*500E-6);  // for T2 time  
+      // int startIndex = (int)(10E+6*500E-6);  // for T2 time  
       if(UseT2Time){
          tMin = 500E-6;   // start at 500 us 
-         tMax = GetT2Time(startIndex,aPulse);
+         // tMax = GetT2Time(startIndex,aPulse);
+	 tMax = aPulse->GetT2Time(); 
          UseTimeRange = true; 
          if(verbosity>3) std::cout << "[NMRMath::CountZeroCrossings]: Using the T2 time for frequency extraction.  T2 = " << tMax/1E-3 << " ms" << std::endl;
 	 // std::cout << "[NMRMath::CountZeroCrossings]: T2 = " << tMax/1E-3 << " ms" << std::endl;
@@ -912,6 +918,12 @@ namespace NMRMath{
       double v_current=0,v_next=0;
       double t_current=0,t_next=0;
       double v_current_err=0,v_next_err=0;
+
+      if(tMax<0){
+	tMax = tMax_orig; 
+	std::cout << "[NMRMath::CountZeroCrossings]: WARNING: stop time window is UNPHYSICAL!";
+	std::cout << "  Defaulting to original stop time = " << tMax/1E-3 << " ms" << std::endl;
+      }
 
       int i=0;  // index for NMRPulse data 
       do{
@@ -995,7 +1007,7 @@ namespace NMRMath{
       if(verbosity>=3) std::cout << "[NMRMath::CountZeroCrossings]: Done." << std::endl;
       ClearAnaArrays(NPTSUseable,X,Y,EY);                   // clears fX, fY, fEY  (sets to zero) 
 
-      std::cout << "[NMRMath::CountZeroCrossings]: NumCrossings = " << cntr << std::endl; 
+      // std::cout << "[NMRMath::CountZeroCrossings]: NumCrossings = " << cntr << std::endl; 
       return cntr;   // return number of zero crossings  
    }
 

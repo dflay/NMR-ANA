@@ -6,6 +6,7 @@ NMRPulse::NMRPulse(int PulseNumber,int NPTS){
    fTimeStamp        = 0.;  
    fAmpl             = 0.; 
    fNoiseRMS         = 0.; 
+   fT2Time           = 0.; 
    fVerbosity        = 0; 
    const int N       = NPTS;
    fTime             = new double[N]; 
@@ -20,7 +21,8 @@ NMRPulse::NMRPulse(const NMRPulse &aPulse){
    fPulseNumber      = aPulse.GetPulseNumber();
    fNumPoints        = aPulse.GetNumPoints(); 
    fTimeStamp        = aPulse.GetTimeStamp(); 
-   fAmpl             = aPulse.GetAmplitude(); 
+   fAmpl             = aPulse.GetAmplitude();
+   fT2Time           = aPulse.GetT2Time(); 
    fNoiseRMS         = aPulse.GetNoiseRMS(); 
    // deep copy 
    const int N       = fNumPoints;
@@ -43,6 +45,7 @@ NMRPulse::NMRPulse(const NMRPulse *aPulse){
    fNumPoints        = aPulse->GetNumPoints(); 
    fTimeStamp        = aPulse->GetTimeStamp(); 
    fAmpl             = aPulse->GetAmplitude(); 
+   fT2Time           = aPulse->GetT2Time(); 
    fNoiseRMS         = aPulse->GetNoiseRMS(); 
    // deep copy 
    const int N       = fNumPoints; 
@@ -77,6 +80,7 @@ NMRPulse& NMRPulse::operator=(const NMRPulse &aPulse){
    fNumPoints        = aPulse.GetNumPoints(); 
    fTimeStamp        = aPulse.GetTimeStamp(); 
    fAmpl             = aPulse.GetAmplitude(); 
+   fT2Time           = aPulse.GetT2Time(); 
    fNoiseRMS         = aPulse.GetNoiseRMS(); 
    // deep copy 
    const int N       = fNumPoints;
@@ -111,6 +115,7 @@ NMRPulse* NMRPulse::operator=(const NMRPulse* aPulse){
    fNumPoints     = aPulse->GetNumPoints(); 
    fTimeStamp     = aPulse->GetTimeStamp(); 
    fAmpl          = aPulse->GetAmplitude(); 
+   fT2Time        = aPulse->GetT2Time(); 
    fNoiseRMS      = aPulse->GetNoiseRMS(); 
    // deep copy 
    const int N    = fNumPoints;
@@ -194,6 +199,7 @@ void NMRPulse::Print(){
    printf("TimeStamp        = %llu    \n",fTimeStamp  );
    printf("Amplitude        = %.7lf V \n",fAmpl       );
    printf("Noise RMS        = %.7lf V \n",fNoiseRMS   );
+   printf("T2 time          = %.3lf ms\n",fT2Time/1E-3); 
    // for(int i=0;i<fNumPoints;i++){
    //    printf("time = %.7f s \t voltage = %.7f V \t voltage err = %.7f V \n",fTime[i],fVoltage[i],fVoltageErr[i]); 
    // }

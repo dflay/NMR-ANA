@@ -686,6 +686,10 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    // set up for next pulse
    ClearDataArrays(); 
 
+   double t2Time = NMRMath::GetT2Time(0,aPulse);  // index zero = 500 ms  
+   InputManager->SetT2Time(t2Time); 
+   aPulse->SetT2Time(t2Time); 
+
    if(fVerbosity>=2) std::cout << "[NMRFileManager]: Load complete. " << std::endl;
 
 }
@@ -976,7 +980,6 @@ void NMRFileManager::DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NM
       offset1 = GetOffset(t_thr,aPulse); 
       ApplyOffset(offset1,aPulse); 
       if(fVerbosity>=2) std::cout << "[NMRFileManager]: Offset1 = " << offset1 << std::endl;
-      std::cout << "OFFSET 1 = " << offset1 << std::endl;
    }
 
    // get RMS noise here. 

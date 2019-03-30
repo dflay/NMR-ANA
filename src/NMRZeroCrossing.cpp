@@ -228,7 +228,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 }
 //______________________________________________________________________________
 void NMRZeroCrossing::CountZeroCrossings(int method,NMRPulse *aPulse){
-   std::cout << "NMRZeroCrossing: tmin = " << fTMin << " tmax = " << fTMax << " T2 time enable: " << fUseT2Time << std::endl; 
+   // std::cout << "NMRZeroCrossing: tmin = " << fTMin << " tmax = " << fTMax << " T2 time enable: " << fUseT2Time << std::endl; 
    fNZC = NMRMath::CountZeroCrossings(fVerbosity,method,fNPTS,fStep,fUseT2Time,fUseTimeRange,fTMin,fTMax,
                                       aPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
 }

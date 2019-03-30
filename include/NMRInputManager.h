@@ -21,7 +21,7 @@ class NMRInputManager{
       int fNumRuns,fNumPulses;
       int fADCNumSamples;
 
-      double fStartTimeZC,fEndTimeZC;
+      double fStartTimeZC,fEndTimeZC,fT2Time;
       double fExpFreq,fSampleFreq,fLOFreq,fPi2Freq; 
       double fBNCVoltage,fNTypeVoltage;
       double fADCSignalLength;
@@ -67,6 +67,7 @@ class NMRInputManager{
       void SetNumPulses           (int v)    { fNumPulses        = v; } 
       void SetStartTimeZC         (double v) { fStartTimeZC      = v; } 
       void SetEndTimeZC           (double v) { fEndTimeZC        = v; } 
+      void SetT2Time              (double v) { fT2Time           = v; } 
       void SetExpFreq             (double v) { fExpFreq          = v; } 
       void SetSampleFreq          (double v) { fSampleFreq       = v; } 
       void SetLOFreq              (double v) { fLOFreq           = v; } 
@@ -97,6 +98,7 @@ class NMRInputManager{
 
       double GetStartTimeZC()       const { return fStartTimeZC;      } 
       double GetEndTimeZC()         const { return fEndTimeZC;        } 
+      double GetT2Time()            const { return fT2Time;           } 
       double GetExpectedFrequency() const { return fExpFreq;          } 
       double GetSampleFrequency()   const { return fSampleFreq;       } 
       double GetLOFrequency()       const { return fLOFreq;           } 

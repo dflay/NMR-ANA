@@ -16,10 +16,11 @@ NMRInputManager::NMRInputManager(){
    fNumPulses        = 0;
    fStartTimeZC      = 0;
    fEndTimeZC        = 0;
+   fT2Time           = 0; 
    fExpFreq          = 0;
    fSampleFreq       = 0;
    fLOFreq           = 0; 
-   fPi2Freq          = 0; 
+   fPi2Freq          = 0;
    fADCNumSamples    = 0;
    fADCSignalLength  = 0;
    fBNCVoltage       = 0;
@@ -53,6 +54,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fNumPulses        = a.GetNumPulses(); 
    fStartTimeZC      = a.GetStartTimeZC(); 
    fEndTimeZC        = a.GetEndTimeZC(); 
+   fT2Time           = a.GetT2Time(); 
    fExpFreq          = a.GetExpectedFrequency(); 
    fSampleFreq       = a.GetSampleFrequency(); 
    fLOFreq           = a.GetLOFrequency();
@@ -82,6 +84,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fNumPulses        = a->GetNumPulses(); 
    fStartTimeZC      = a->GetStartTimeZC(); 
    fEndTimeZC        = a->GetEndTimeZC(); 
+   fT2Time           = a->GetT2Time(); 
    fExpFreq          = a->GetExpectedFrequency(); 
    fSampleFreq       = a->GetSampleFrequency(); 
    fLOFreq           = a->GetLOFrequency();
@@ -110,6 +113,7 @@ void NMRInputManager::Update(const NMRInputManager &a){
    fNumPulses        = a.GetNumPulses(); 
    fStartTimeZC      = a.GetStartTimeZC(); 
    fEndTimeZC        = a.GetEndTimeZC(); 
+   fT2Time           = a.GetT2Time(); 
    fExpFreq          = a.GetExpectedFrequency(); 
    fSampleFreq       = a.GetSampleFrequency(); 
    fLOFreq           = a.GetLOFrequency();
@@ -138,6 +142,7 @@ void NMRInputManager::Update(const NMRInputManager *a){
    fNumPulses        = a->GetNumPulses(); 
    fStartTimeZC      = a->GetStartTimeZC(); 
    fEndTimeZC        = a->GetEndTimeZC(); 
+   fT2Time           = a->GetT2Time(); 
    fExpFreq          = a->GetExpectedFrequency(); 
    fSampleFreq       = a->GetSampleFrequency(); 
    fLOFreq           = a->GetLOFrequency();
