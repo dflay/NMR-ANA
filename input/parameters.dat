@@ -1,6 +1,6 @@
 # ID 	 value
 t_start                 5.00E-04
-t_end                   4.00E-03
+t_end                   2.50E-03
 verbosity               0
 offset_correction_order 2
 t2_time                 1

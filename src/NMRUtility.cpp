@@ -23,4 +23,13 @@ namespace NMRUtility{
     }
     return ret_val;
   }
+  //______________________________________________________________________________
+  int PrintMessage(const char *funcName,const char *msg,const int lineNo){
+    if(lineNo>=0){
+      std::cout << "[" << funcName << "]: line " << lineNo << ": " << msg << std::endl;
+    }else{
+      std::cout << "[" << funcName << "]: " << msg << std::endl;
+    }
+    return 0;
+  }
 }

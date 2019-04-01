@@ -552,10 +552,14 @@ namespace NMRMath{
      double v_lo    = 0.95*vmax/e_const;
      double v_hi    = 1.05*vmax/e_const;
 
-     // std::cout << "[GetT2Time]: Target voltage is " << vmax/e_const << std::endl;
-     // std::cout << "             lo = " << v_lo << " hi = " << v_hi << std::endl;
-
      const int N = tm.size();
+     if(N==0){
+       std::cout << "[NMRMath::GetT2Time]: ERROR! No data for T2 time algorithm!  Returning -1" << std::endl;
+       std::cout << "[NMRMath::GetT2Time]: Target voltage for T2 time is " << vmax/e_const << std::endl;
+       std::cout << "                      window: lo = " << v_lo << " hi = " << v_hi << std::endl;
+       return -1;
+     }
+
      std::vector<double> tt,vv;
      for(int i=0;i<N;i++){
        if( fabs(vm[i])>v_lo && fabs(vm[i])<v_hi ){
@@ -565,10 +569,12 @@ namespace NMRMath{
      }
 
      const int M = tt.size();
-     // std::cout << M << " possible T2 times " << std::endl;
-     // for(int i=0;i<M;i++) std::cout << Form("%.5lf, %.5lf",tt[i],vv[i]) << std::endl;
-
-     if(M==0) return -1;
+     if(M==0){
+       std::cout << "[NMRMath::GetT2Time]: ERROR! No candidates for T2 times!  Returning -1" << std::endl;
+       std::cout << "[NMRMath::GetT2Time]: Target voltage for T2 time is " << vmax/e_const << std::endl;
+       std::cout << "                      window: lo = " << v_lo << " hi = " << v_hi << std::endl;
+       return -1;
+     }
 
      bool isBreak=false;
 
@@ -595,7 +601,9 @@ namespace NMRMath{
        t2_time = tt[M-1];
      }
 
-     // std::cout << "[NMRMath::GetT2Time]: The T2 time is: " << t2_time/1E-3 << " ms" << std::endl;
+     char msg[200];
+     sprintf(msg,"The T2 time is: %.3lf ms",t2_time/1E-3);
+     NMRUtility::PrintMessage("NMRMath::GetT2Time",msg); 
 
      return t2_time;
    }
@@ -652,7 +660,7 @@ namespace NMRMath{
 	 }
        }
      }
-     int stepSize = 10E+6*2.5E-6; // 10 MHz * 2.5 us 
+     int stepSize = 10E+6*1.0E-6; // 10 MHz * 1.0 us 
      int rc = RebinData(stepSize,tt,vv,T,V);
      return rc;
    }

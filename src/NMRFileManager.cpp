@@ -647,7 +647,7 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    }
 
    // std::cout << "******* tmin = "        << tmin               << std::endl;
-   // std::cout << "******* First time is " << aPulse->GetTime(0) << std::endl;
+   // std::cout << "[NMRFileManager::Load]: First time is " << aPulse->GetTime(0) << std::endl;
 
    // apply the voltage offset correction 
 
