@@ -26,6 +26,7 @@ class daq(Tkinter.Tk):
       # variables and lists  
       TickBox            = ""
       self.TimeChoices   = ['units','s','ms','us']
+      self.FitChoices    = ['fit','pol-1','pol-3','pol-5','pol-7','pol-9']
       self.DebugChoices  = ['off','on']
       self.ADCChoices    = ['3302','3316']
       self.ADCChChoices  = ['1','2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8',
@@ -143,36 +144,48 @@ class daq(Tkinter.Tk):
       # ----------------------------------------------------------------------------------
       # Zero crossing (check box)  
       # label
-      self.ZeroCrossingLabel_str = Tkinter.StringVar()
-      self.ZeroCrossingLabel_str.set("Zero Crossing") 
-      self.ZeroCrossingLabel     = Tkinter.Label(self,textvariable=self.ZeroCrossingLabel_str,anchor="w") 
-      self.ZeroCrossingLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
+      # self.ZeroCrossingLabel_str = Tkinter.StringVar()
+      # self.ZeroCrossingLabel_str.set("Zero Crossing") 
+      # self.ZeroCrossingLabel     = Tkinter.Label(self,textvariable=self.ZeroCrossingLabel_str,anchor="w") 
+      # self.ZeroCrossingLabel.grid(column=ColumnOffset+0,row=RowOffset+13) 
       # check box  
-      self.zc_chk_var = Tkinter.IntVar()
-      self.zc_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.zc_chk_var) 
-      self.zc_chk.grid(column=ColumnOffset+1,row=RowOffset+13)
+      # self.zc_chk_var = Tkinter.IntVar()
+      # self.zc_chk_var = 1
+      # self.zc_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.zc_chk_var) 
+      # self.zc_chk.grid(column=ColumnOffset+1,row=RowOffset+13)
       # # ----------------------------------------------------------------------------------
+      # Phase fit function (pull-down menu)  
+      # label
+      self.phaseFitLabel_str = Tkinter.StringVar()
+      self.phaseFitLabel_str.set("Phase Fit Function") 
+      self.phaseFitLabel     = Tkinter.Label(self,textvariable=self.phaseFitLabel_str,anchor="w") 
+      self.phaseFitLabel.grid(column=ColumnOffset+0,row=RowOffset+14) 
+      # pull down menu 
+      self.fit_func_val = Tkinter.StringVar() 
+      self.fit_func_val.set('fit')
+      self.opt_fit_func_val = Tkinter.OptionMenu(self,self.fit_func_val,*self.FitChoices) 
+      self.opt_fit_func_val.grid(column=ColumnOffset+1,row=RowOffset+14)  
       # Time Fit (check box)  
       # label
-      self.TimeFitLabel_str = Tkinter.StringVar()
-      self.TimeFitLabel_str.set("Time Fit") 
-      self.TimeFitLabel     = Tkinter.Label(self,textvariable=self.TimeFitLabel_str,anchor="w") 
-      self.TimeFitLabel.grid(column=ColumnOffset+0,row=RowOffset+14) 
+      # self.TimeFitLabel_str = Tkinter.StringVar()
+      # self.TimeFitLabel_str.set("Time Fit") 
+      # self.TimeFitLabel     = Tkinter.Label(self,textvariable=self.TimeFitLabel_str,anchor="w") 
+      # self.TimeFitLabel.grid(column=ColumnOffset+0,row=RowOffset+14) 
       # check box  
-      self.time_fit_chk_var = Tkinter.IntVar()
-      self.time_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.time_fit_chk_var) 
-      self.time_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+14)
+      # self.time_fit_chk_var = Tkinter.IntVar()
+      # self.time_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.time_fit_chk_var) 
+      # self.time_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+14)
       # # ----------------------------------------------------------------------------------
       # Phase Fit (check box)  
       # label
-      self.PhaseFitLabel_str = Tkinter.StringVar()
-      self.PhaseFitLabel_str.set("Phase Fit") 
-      self.PhaseFitLabel     = Tkinter.Label(self,textvariable=self.PhaseFitLabel_str,anchor="w") 
-      self.PhaseFitLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
+      # self.PhaseFitLabel_str = Tkinter.StringVar()
+      # self.PhaseFitLabel_str.set("Phase Fit") 
+      # self.PhaseFitLabel     = Tkinter.Label(self,textvariable=self.PhaseFitLabel_str,anchor="w") 
+      # self.PhaseFitLabel.grid(column=ColumnOffset+0,row=RowOffset+15) 
       # check box  
-      self.phase_fit_chk_var = Tkinter.IntVar()
-      self.phase_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.phase_fit_chk_var) 
-      self.phase_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+15)
+      # self.phase_fit_chk_var = Tkinter.IntVar()
+      # self.phase_fit_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.phase_fit_chk_var) 
+      # self.phase_fit_chk.grid(column=ColumnOffset+1,row=RowOffset+15)
       # ----------------------------------------------------------------------------------
       # header label
       self.UtilOptLabel_str = Tkinter.StringVar()
@@ -279,10 +292,26 @@ class daq(Tkinter.Tk):
        verb    = self.verb_val.get()                   # verbosity 
        offset  = self.offset_val.get()                 # offset correction order  
        # analysis options  
-       zc_status        = self.zc_chk_var.get()        # zero crossing 
-       time_fit_status  = self.time_fit_chk_var.get()  # time fit 
-       phase_fit_status = self.phase_fit_chk_var.get() # phase fit 
-       t2_status        = self.t2_chk_var.get()        # T2 time  
+       zc_status        = 1 # self.zc_chk_var.get()        # zero crossing 
+       time_fit_status  = 0 # self.time_fit_chk_var.get()  # time fit 
+       phase_fit_status = 0 # self.phase_fit_chk_var.get() # phase fit 
+       phase_fit_func   = self.fit_func_val.get()
+       phase_fit_index  = 0 
+       # convert string to an index for analysis 
+       if phase_fit_func=="fit": 
+	 phase_fit_index = 0
+       elif phase_fit_func=="pol-1":
+	 phase_fit_index = 1 
+       elif phase_fit_func=="pol-3":
+	 phase_fit_index = 3
+       elif phase_fit_func=="pol-5":
+	 phase_fit_index = 5 
+       elif phase_fit_func=="pol-7":
+	 phase_fit_index = 7
+       elif phase_fit_func=="pol-9":
+	 phase_fit_index = 9
+       # T2 time 
+       t2_status        = self.t2_chk_var.get()    
        # build strings for parameter file 
        line4            = "t_start                 %.2E" %(t_start_dbl)
        line5            = "t_end                   %.2E" %(t_end_dbl)
@@ -292,7 +321,8 @@ class daq(Tkinter.Tk):
        line9            = "zero_crossing           %d"   %(zc_status)
        line10           = "time_fit                %d"   %(time_fit_status)
        line11           = "phase_fit               %d"   %(phase_fit_status)
-       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,line11,eof_str] 
+       line12           = "phase_fit_func          %d"   %(phase_fit_index)
+       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,line11,line12,eof_str] 
        # get file names ready  
        param_fn         = "parameters.dat"
        run_fn           = "runlist.dat"

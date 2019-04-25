@@ -74,12 +74,20 @@ namespace NMRMath{
     int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
 	          std::vector<double> &X,std::vector<double> &Y);
 
-    int NonLinearLeastSquaresFitting(std::vector<double> x,std::vector<double> y,std::vector<double> dy,
+    int NonLinearLeastSquaresFitting(std::vector<double> xd,std::vector<double> yd,std::vector<double> dyd,
 	       int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
 	       std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity); 
 
-    int poly7(const gsl_vector * x, void *data,gsl_vector * f);
+    int poly1(const gsl_vector *p, void *data,gsl_vector * f);
+    int poly1_df(const gsl_vector *x,void *data,gsl_matrix *J);
+    int poly3(const gsl_vector *p, void *data,gsl_vector * f);
+    int poly3_df(const gsl_vector *x,void *data,gsl_matrix *J);
+    int poly5(const gsl_vector *p, void *data,gsl_vector * f);
+    int poly5_df(const gsl_vector *x,void *data,gsl_matrix *J);
+    int poly7(const gsl_vector *p, void *data,gsl_vector * f);
     int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J);
+    int poly9(const gsl_vector *p, void *data,gsl_vector * f);
+    int poly9_df(const gsl_vector *x,void *data,gsl_matrix *J);
 
     void callbackFunction(const size_t iter, void *params,const gsl_multifit_nlinear_workspace *w);
 

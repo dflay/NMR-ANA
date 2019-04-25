@@ -26,6 +26,7 @@ NMRInputManager::NMRInputManager(){
    fBNCVoltage       = 0;
    fNTypeVoltage     = 0;
    fNumRuns          = 0;
+   fPhaseFitFunc     = 0; 
    const int N       = 1E+3; 
    fRunList          = new int[N]; 
    for(int i=0;i<N;i++) fRunList[i] = 0; 
@@ -38,6 +39,7 @@ NMRInputManager::~NMRInputManager(){
 NMRInputManager::NMRInputManager(const NMRInputManager &a){
    // copy constructor 
    // shallow copy (don't need deep copy, no pointers in class) 
+   fPhaseFitFunc     = a.GetPhaseFitFunction(); 
    fUseZeroCrossing  = a.GetZeroCrossingStatus(); 
    fUseTimeFit       = a.GetTimeFitStatus(); 
    fUsePhaseFit      = a.GetPhaseFitStatus(); 
@@ -68,6 +70,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
 NMRInputManager::NMRInputManager(const NMRInputManager *a){
    // copy constructor 
    // shallow copy (don't need deep copy, no pointers in class) 
+   fPhaseFitFunc     = a->GetPhaseFitFunction(); 
    fUseZeroCrossing  = a->GetZeroCrossingStatus(); 
    fUseTimeFit       = a->GetTimeFitStatus(); 
    fUsePhaseFit      = a->GetPhaseFitStatus(); 
@@ -97,6 +100,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
 //______________________________________________________________________________
 void NMRInputManager::Update(const NMRInputManager &a){
    // shallow copy (don't need deep copy, no pointers in class), the "hard" way  
+   fPhaseFitFunc     = a.GetPhaseFitFunction(); 
    fUseZeroCrossing  = a.GetZeroCrossingStatus(); 
    fUseTimeFit       = a.GetTimeFitStatus(); 
    fUsePhaseFit      = a.GetPhaseFitStatus(); 
@@ -126,6 +130,7 @@ void NMRInputManager::Update(const NMRInputManager &a){
 //______________________________________________________________________________
 void NMRInputManager::Update(const NMRInputManager *a){
    // shallow copy (don't need deep copy, no pointers in class), the "hard" way  
+   fPhaseFitFunc     = a->GetPhaseFitFunction(); 
    fUseZeroCrossing  = a->GetZeroCrossingStatus(); 
    fUseTimeFit       = a->GetTimeFitStatus(); 
    fUsePhaseFit      = a->GetPhaseFitStatus(); 
@@ -171,6 +176,7 @@ void NMRInputManager::GetInputParameters(const char *inpath){
    const char *zc_status            = "zero_crossing"; 
    const char *time_fit_status      = "time_fit"; 
    const char *phase_fit_status     = "phase_fit"; 
+   const char *phase_fit_func       = "phase_fit_func"; 
    const char *integer_cycle_status = "integer_cycles"; 
    const char *t2_time_status       = "t2_time"; 
    const char *eof                  = "end_of_file";  
@@ -215,7 +221,10 @@ void NMRInputManager::GetInputParameters(const char *inpath){
                if( NMRUtility::AreEquivStrings(itag,t2_time_status)   ){
                   ival = (int)ivalue;
                   if(ival==1) fUseT2Time = true;  
-               } 
+               }
+	       if( NMRUtility::AreEquivStrings(itag,phase_fit_func) ){
+		 fPhaseFitFunc = (int)ivalue;
+	       }
             }else{
                break;
             }
@@ -223,6 +232,11 @@ void NMRInputManager::GetInputParameters(const char *inpath){
          k++;
       }
       infile.close(); 
+   }
+
+   if(fPhaseFitFunc!=1 && fPhaseFitFunc!=3 && fPhaseFitFunc!=5 && fPhaseFitFunc!=7 && fPhaseFitFunc!= 9){
+     std::cout << "[NMRInputManager::GetInputParameters]: Invalid fit function = " << fPhaseFitFunc << std::endl;
+     exit(1); 
    }
 
 }
@@ -327,6 +341,7 @@ void NMRInputManager::Print(){
    printf("T2 Time Status       = %d     \n",(int)fUseT2Time       );
    printf("Phase Fit Status     = %d     \n",(int)fUsePhaseFit     );
    printf("Integer Cycle Status = %d     \n",(int)fUseIntegerCycles);
+   printf("Phase Fit Function   = pol-%d \n",fPhaseFitFunc         ); 
 }
 //______________________________________________________________________________
 void NMRInputManager::PrintRunSummary(){

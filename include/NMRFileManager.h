@@ -122,6 +122,7 @@ class NMRFileManager{
       void AppendToFile(const char *fn,const char *header,int i,double a,double b,double c,double d); 
 
       // directory and file management 
+      int PrintVectorsToFile(const char *fileName,std::vector<double> x,std::vector<double> y);
       int PrintSignalToFile(int run,int pulse,NMRPulse *aPulse);
       int MakeDirectory(const char *path);            // make a directory based on a path   
       int DeleteRun(int runNumber);                   // delete a run  

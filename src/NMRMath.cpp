@@ -691,13 +691,13 @@ namespace NMRMath{
      return 0;
    }
    //______________________________________________________________________________
-   int NonLinearLeastSquaresFitting(std::vector<double> x,std::vector<double> y,std::vector<double> dy,
+   int NonLinearLeastSquaresFitting(std::vector<double> xd,std::vector<double> yd,std::vector<double> dyd,
        int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
        std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity){
      // fit the data set (x,y) with uncertainties dy to the function F with jacobian DF  
      // par will have initial values to start 
 
-     const int NPTS = x.size();
+     const int NPTS = xd.size();
 
      double chisq,chisq0;
 
@@ -715,10 +715,10 @@ namespace NMRMath{
 
      if(verbosity>1) std::cout << "Input data: " << std::endl;
      for(int i=0;i<NPTS;i++){
-       xa[i] = x[i];
-       ya[i] = y[i];
-       if(dy[i]!=0){ 
-	 weights[i] = 1./( dy[i]*dy[i] );
+       xa[i] = xd[i];
+       ya[i] = yd[i];
+       if(dyd[i]!=0){ 
+	 weights[i] = 1./( dyd[i]*dyd[i] );
        }else{
 	 weights[i] = 1.;
        }
@@ -743,7 +743,7 @@ namespace NMRMath{
      gsl_multifit_nlinear_fdf fitFunc;
      gsl_multifit_nlinear_parameters fitFunc_params = gsl_multifit_nlinear_default_parameters();
      fitFunc.f      = F;
-     fitFunc.df     = DF;          // set to NULL for finite-difference Jacobian 
+     fitFunc.df     = DF;           // set to NULL for finite-difference Jacobian 
      fitFunc.fvv    = NULL;         // not using geodesic acceleration 
      fitFunc.n      = (size_t)NPTS; // number of data points 
      fitFunc.p      = (size_t)NPAR; // number of parameters
@@ -764,7 +764,7 @@ namespace NMRMath{
 
      // solve the system with a maximum of 200 iterations
      int info=-1;
-     int status = gsl_multifit_nlinear_driver(200,xtol,gtol,ftol,callbackFunction,NULL,&info,w);
+     int status = gsl_multifit_nlinear_driver(1000,xtol,gtol,ftol,callbackFunction,NULL,&info,w);
 
      // compute covariance of best fit parameters 
      gsl_matrix *J;
@@ -803,8 +803,10 @@ namespace NMRMath{
        std::cout << msg << std::endl;
        sprintf(msg,"status:               %s",gsl_strerror(status));
        std::cout << msg << std::endl;
-       std::cout << "------------------ FIT RESULTS ------------------" << std::endl;
-       sprintf(msg,"chisq/ndf = %.3lf",chisq/dof);
+       std::cout << "Fit results " << std::endl;
+       sprintf(msg,"chisq = %.8lf",chisq);
+       std::cout << msg << std::endl;
+       sprintf(msg,"ndf = %.0lf",dof);
        std::cout << msg << std::endl;
        for(int i=0;i<NPAR;i++){
 	 sprintf(msg,"par[%d] = %.5lf +/- %.5lf",i,par[i],parErr[i]);
@@ -822,26 +824,87 @@ namespace NMRMath{
    void callbackFunction(const size_t iter,void *params,const gsl_multifit_nlinear_workspace *w){
      // function the user calls 
      gsl_vector *f = gsl_multifit_nlinear_residual(w);
-     gsl_vector *x = gsl_multifit_nlinear_position(w);
+     // gsl_vector *p = gsl_multifit_nlinear_position(w);
 
      // compute reciprocal condition number of J(x) 
      double rcond;
      gsl_multifit_nlinear_rcond(&rcond,w);
      double cond = 1./rcond; 
-     
      double abs_f = gsl_blas_dnrm2(f); 
 
-     const int NPAR = 5; 
-     double par[NPAR];
-     for(int i=0;i<NPAR;i++) par[i] = gsl_vector_get(x,i);
+     // const int NPAR = 5; 
+     // double par[NPAR];
+     // for(int i=0;i<NPAR;i++) par[i] = gsl_vector_get(p,i);
 
      char msg[200];
-     sprintf(msg,"iter %2zu: par[0] = %.5f, par[1] = %.5f, par[2] = %.5f, par[3] = %.5f, par[4] = %.5f, cond(J) = %.5lf, |f(x)| = %.5lf",
-	    iter,par[0],par[1],par[2],par[3],par[4],cond,abs_f);
+     sprintf(msg,"iter %2zu: cond(J) = %.5lf, |f(x)| = %.5lf",iter,cond,abs_f);
      // std::cerr << msg << std::endl;
    }
    //______________________________________________________________________________
-   int poly7(const gsl_vector *x,void *data,gsl_vector *f){
+   int poly1(const gsl_vector *p,void *data,gsl_vector *f){
+     // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     double *ya = ( (data_t *)data )->y;
+     // fit parameters 
+     const int npar = 2;
+     double par[npar];
+     for(int i=0;i<npar;i++){
+       par[i] = gsl_vector_get(p,i);
+     }
+     // compute chi^2 function 
+     double iy=0;
+     for(size_t i=0;i<n;i++){
+       iy = par[0] + par[1]*xa[i];
+       gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly3(const gsl_vector *p,void *data,gsl_vector *f){
+     // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     double *ya = ( (data_t *)data )->y;
+     // fit parameters 
+     const int npar = 3;
+     double par[npar];
+     for(int i=0;i<npar;i++){
+       par[i] = gsl_vector_get(p,i);
+     }
+     // compute chi^2 function 
+     double iy=0;
+     for(size_t i=0;i<n;i++){
+       iy = par[0] + par[1]*xa[i] + par[2]*pow(xa[i],3.);
+       gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly5(const gsl_vector *p,void *data,gsl_vector *f){
+     // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     double *ya = ( (data_t *)data )->y;
+     // fit parameters 
+     const int npar = 4;
+     double par[npar];
+     for(int i=0;i<npar;i++){
+       par[i] = gsl_vector_get(p,i);
+     }
+     // compute chi^2 function 
+     double iy=0;
+     for(size_t i=0;i<n;i++){
+       iy = par[0] + par[1]*xa[i] + par[2]*pow(xa[i],3.) + par[3]*pow(xa[i],5.);
+       gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly7(const gsl_vector *p,void *data,gsl_vector *f){
      // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
      // data set 
      size_t n   = ( (data_t *)data )->n;
@@ -851,13 +914,88 @@ namespace NMRMath{
      const int npar = 5;
      double par[npar];
      for(int i=0;i<npar;i++){
-       par[i] = gsl_vector_get(x,i);
+       par[i] = gsl_vector_get(p,i);
      }
      // compute chi^2 function 
      double iy=0;
      for(size_t i=0;i<n;i++){
        iy = par[0] + par[1]*xa[i] + par[2]*pow(xa[i],3.) + par[3]*pow(xa[i],5.) + par[4]*pow(xa[i],7.);
        gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly9(const gsl_vector *p,void *data,gsl_vector *f){
+     // fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     double *ya = ( (data_t *)data )->y;
+     // fit parameters 
+     const int npar = 6;
+     double par[npar];
+     for(int i=0;i<npar;i++){
+       par[i] = gsl_vector_get(p,i);
+     }
+     // compute chi^2 function 
+     double iy=0;
+     for(size_t i=0;i<n;i++){
+       iy = par[0] + par[1]*xa[i] + par[2]*pow(xa[i],3.) + par[3]*pow(xa[i],5.) + par[4]*pow(xa[i],7.) + par[5]*pow(xa[i],9.);
+       gsl_vector_set(f,i,iy-ya[i]);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly1_df(const gsl_vector *x,void *data,gsl_matrix *J){
+     // Jacobian for fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     // compute jacobian for each data point  
+     double arg_i0=0,arg_i1=0;
+     for(size_t i=0;i<n;i++){
+       arg_i0 = 1.0;
+       arg_i1 = pow(xa[i],1.);
+       gsl_matrix_set(J,i,0,arg_i0);
+       gsl_matrix_set(J,i,1,arg_i1);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly3_df(const gsl_vector *x,void *data,gsl_matrix *J){
+     // Jacobian for fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     // compute jacobian for each data point  
+     double arg_i0=0,arg_i1=0,arg_i2=0;
+     for(size_t i=0;i<n;i++){
+       arg_i0 = 1.0;
+       arg_i1 = pow(xa[i],1.);
+       arg_i2 = pow(xa[i],3.);
+       gsl_matrix_set(J,i,0,arg_i0);
+       gsl_matrix_set(J,i,1,arg_i1);
+       gsl_matrix_set(J,i,2,arg_i2);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly5_df(const gsl_vector *x,void *data,gsl_matrix *J){
+     // Jacobian for fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     // compute jacobian for each data point  
+     double arg_i0=0,arg_i1=0,arg_i2=0,arg_i3=0;
+     for(size_t i=0;i<n;i++){
+       arg_i0 = 1.0;
+       arg_i1 = pow(xa[i],1.);
+       arg_i2 = pow(xa[i],3.);
+       arg_i3 = pow(xa[i],5.);
+       gsl_matrix_set(J,i,0,arg_i0);
+       gsl_matrix_set(J,i,1,arg_i1);
+       gsl_matrix_set(J,i,2,arg_i2);
+       gsl_matrix_set(J,i,3,arg_i3);
      }
      return GSL_SUCCESS;
    }
@@ -880,6 +1018,30 @@ namespace NMRMath{
        gsl_matrix_set(J,i,2,arg_i2);
        gsl_matrix_set(J,i,3,arg_i3);
        gsl_matrix_set(J,i,4,arg_i4);
+     }
+     return GSL_SUCCESS;
+   }
+   //______________________________________________________________________________
+   int poly9_df(const gsl_vector *x,void *data,gsl_matrix *J){
+     // Jacobian for fit function f(x) = p0 + p1*x + p2*x^3 + p3*x^5 + p4*x^7
+     // data set 
+     size_t n   = ( (data_t *)data )->n;
+     double *xa = ( (data_t *)data )->x;
+     // compute jacobian for each data point  
+     double arg_i0=0,arg_i1=0,arg_i2=0,arg_i3=0,arg_i4=0,arg_i5=0;
+     for(size_t i=0;i<n;i++){
+       arg_i0 = 1.0;
+       arg_i1 = pow(xa[i],1.);
+       arg_i2 = pow(xa[i],3.);
+       arg_i3 = pow(xa[i],5.);
+       arg_i4 = pow(xa[i],7.);
+       arg_i4 = pow(xa[i],9.);
+       gsl_matrix_set(J,i,0,arg_i0);
+       gsl_matrix_set(J,i,1,arg_i1);
+       gsl_matrix_set(J,i,2,arg_i2);
+       gsl_matrix_set(J,i,3,arg_i3);
+       gsl_matrix_set(J,i,4,arg_i4);
+       gsl_matrix_set(J,i,5,arg_i5);
      }
      return GSL_SUCCESS;
    }

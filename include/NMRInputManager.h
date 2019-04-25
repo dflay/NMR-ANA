@@ -20,6 +20,7 @@ class NMRInputManager{
       int fRunNumber;
       int fNumRuns,fNumPulses;
       int fADCNumSamples;
+      int fPhaseFitFunc;
 
       double fStartTimeZC,fEndTimeZC,fT2Time;
       double fExpFreq,fSampleFreq,fLOFreq,fPi2Freq; 
@@ -50,7 +51,8 @@ class NMRInputManager{
 
       void Update(const NMRInputManager &a); 
       void Update(const NMRInputManager *a); 
-  
+ 
+      void SetPhaseFitFunction    (int v)    { fPhaseFitFunc     = v; }
       void SetZeroCrossingStatus  (bool v)   { fUseZeroCrossing  = v; } 
       void SetTimeFitStatus       (bool v)   { fUseTimeFit       = v; } 
       void SetPhaseFitStatus      (bool v)   { fUsePhaseFit      = v; } 
@@ -82,7 +84,8 @@ class NMRInputManager{
       bool GetPhaseFitStatus()      const { return fUsePhaseFit;      } 
       bool GetIntegerCycleStatus()  const { return fUseIntegerCycles; }
       bool GetT2TimeStatus()        const { return fUseT2Time;        }  
- 
+
+      int GetPhaseFitFunction()     const { return fPhaseFitFunc;     } 
       int GetMonth()                const { return fMonth;            } 
       int GetDay()                  const { return fDay;              } 
       int GetYear()                 const { return fYear;             } 

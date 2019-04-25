@@ -59,7 +59,7 @@ class NMRZeroCrossing{
 
       int CalculateFrequencies(int &TrueNumCrossings,double &FreqFullRange);
      
-      double GetFrequencyFromPhaseFit(); 
+      double GetFrequencyFromPhaseFit(const int fitFunc,const int PulseNumber,const char *tag); 
 
    public:
       NMRZeroCrossing();

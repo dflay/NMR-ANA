@@ -167,6 +167,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
 
    InitAnaArrays(); 
 
+   int fitFunc     = fFileManager->InputManager->GetPhaseFitFunction(); 
    int PulseNumber = aPulse->GetPulseNumber(); 
    int rc_fr=0,rc=0; 
    int zc_mid=0,zc_lin=0,zc_lsq=0;
@@ -177,7 +178,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    if(fUseMidpoint){
       CountZeroCrossings(1,aPulse);
       rc_fr       = CalculateFrequencies(zc_mid,freq_mid);
-      freq_mid_ph = GetFrequencyFromPhaseFit(); 
+      freq_mid_ph = GetFrequencyFromPhaseFit(fitFunc,PulseNumber,"mid"); 
       nc_mid      = ( (double)zc_mid - 1.)/2.; 
       PrintVectorData(1,PulseNumber); 
       Reset(); 
@@ -186,7 +187,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    if(fUseLinearInterp){
       CountZeroCrossings(2,aPulse);
       rc_fr       = CalculateFrequencies(zc_lin,freq_lin);
-      freq_lin_ph = GetFrequencyFromPhaseFit(); 
+      freq_lin_ph = GetFrequencyFromPhaseFit(fitFunc,PulseNumber,"lin"); 
       nc_lin      = ( (double)zc_lin - 1.)/2.; 
       PrintVectorData(2,PulseNumber); 
       Reset(); 
@@ -195,7 +196,7 @@ int NMRZeroCrossing::Calculate(NMRPulse *aPulse){
    if(fUseLeastSq){
       CountZeroCrossings(3,aPulse);
       rc_fr       = CalculateFrequencies(zc_lsq,freq_lsq);
-      freq_lsq_ph = GetFrequencyFromPhaseFit(); 
+      freq_lsq_ph = GetFrequencyFromPhaseFit(fitFunc,PulseNumber,"lsq"); 
       nc_lsq      = ( (double)zc_lsq - 1.)/2.; 
       PrintVectorData(3,PulseNumber); 
       Reset(); 
@@ -302,16 +303,28 @@ int NMRZeroCrossing::CalculateFrequencies(int &TrueNumCrossings,double &FreqFull
 
 }
 //______________________________________________________________________________
-double NMRZeroCrossing::GetFrequencyFromPhaseFit(){
+double NMRZeroCrossing::GetFrequencyFromPhaseFit(const int fitType,const int PulseNumber,const char *tag){
    // linear least squares 
    // double freq=0,intercept=0,r=0;
    // NMRMath::LeastSquaresFitting(fNZC,fTcross,fNumCycles,intercept,freq,r);
 
    // nonlinear least squares
-   const int npar = 5; 
+   int np=0;
+   if(fitType==1) np = 2; 
+   if(fitType==3) np = 3; 
+   if(fitType==5) np = 4; 
+   if(fitType==7) np = 5; 
+   if(fitType==9) np = 6; 
+
+   const int NPAR = np; 
+
    std::vector<double> par,parErr;
-   for(int i=0;i<npar;i++){
-     par.push_back(1); 
+   for(int i=0;i<NPAR;i++){
+     if(i==1){
+       par.push_back(10E+3);
+     }else{
+       par.push_back(0.);
+     }
      parErr.push_back(0); 
    }
    const int NPTS = fNZC;
@@ -322,9 +335,20 @@ double NMRZeroCrossing::GetFrequencyFromPhaseFit(){
      dy.push_back(0);               // FIXME: Accurate error estimate?  
    }
    double freq=0; // the frequency is the p1 term 
-   int rc= NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly7,NMRMath::poly7_df,par,parErr,npar,0);
+   int rc=0,verbosity=0;
+   if(fitType==1) rc = NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly1,NMRMath::poly1_df,par,parErr,NPAR,verbosity);
+   if(fitType==3) rc = NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly3,NMRMath::poly3_df,par,parErr,NPAR,verbosity);
+   if(fitType==5) rc = NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly5,NMRMath::poly5_df,par,parErr,NPAR,verbosity);
+   if(fitType==7) rc = NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly7,NMRMath::poly7_df,par,parErr,NPAR,verbosity);
+   if(fitType==9) rc = NMRMath::NonLinearLeastSquaresFitting(x,y,dy,NMRMath::poly9,NMRMath::poly9_df,par,parErr,NPAR,verbosity);
    if(rc!=0) freq = -1; 
    freq = par[1]; // the frequency is the p1 term 
+
+   // print to file 
+   char fileName[200];
+   sprintf(fileName,"%d_phase-fit-parameters_%s.csv",PulseNumber,tag); 
+   rc = fFileManager->PrintVectorsToFile(fileName,par,parErr);  
+
    return freq;
 }
 

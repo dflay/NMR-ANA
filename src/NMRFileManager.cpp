@@ -289,7 +289,26 @@ void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunFieldStatsToFile(aRun); 
    PrintRunMetaStatsToFile(aRun); 
 }
+//______________________________________________________________________________
+int NMRFileManager::PrintVectorsToFile(const char *fileName,std::vector<double> x,std::vector<double> y){
+  const int N = x.size(); 
+  char outpath[800],outStr[200];
+  sprintf(outpath,"%s/%s",fOutputDir,fileName);
 
+  std::ofstream outfile; 
+  outfile.open(outpath);
+  if( outfile.fail() ){
+    std::cout << "[NMRFileManager::PrintVectorsToFile]: Cannot open the file: " << outpath << std::endl;
+    return 1;
+  }else{
+    for(int i=0;i<N;i++){
+      sprintf(outStr,"%.10E,%.10E",x[i],y[i]);
+      outfile << outStr << std::endl;
+    }
+    outfile.close();
+  }
+  return 0;
+}
 //______________________________________________________________________________
 void NMRFileManager::PrintRunFreqStatsToFile(NMRRun *aRun){
 
