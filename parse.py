@@ -43,6 +43,11 @@ class RunListReader:
    def __init__(self):
       self.List = [] 
    #_______________________________________________________________________ 
+   def ReadFile_1col(self,fileName,field):
+      csvFile = csv.DictReader( open(fileName) )
+      for row in csvFile: 
+	 self.List.append(row[field]) 
+   #_______________________________________________________________________ 
    def ReadFile(self,fileName,field1,field2):
       csvFile = csv.DictReader( open(fileName) )
       for row in csvFile: 

@@ -7,5 +7,5 @@ zero_crossing           1
 t2_time                 1 
 time_fit                0 
 phase_fit               0 
-phase_fit_func          7 
+phase_fit_func          9 
 end_of_file             99 

@@ -121,8 +121,8 @@ void NMRRun::PrintStatistics() const{
    printf("Freq (ZC, midpoint phase): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[0],fFreqSigZC_ph[0]);
    printf("Freq (ZC, linear phase):   mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[1],fFreqSigZC_ph[1]);
    printf("Freq (ZC, least sq phase): mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC_ph[2],fFreqSigZC_ph[2]);
-   printf("Freq (fit):                mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
-   printf("Freq (phase fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
+   // printf("Freq (fit):                mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanFit,fFreqSigFit);
+   // printf("Freq (phase fit):          mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanPhaseFit,fFreqSigPhaseFit);
    // printf("B (ZC, midpoint):          mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[0],fBSigZC[0]);
    // printf("B (ZC, linear):            mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[1],fBSigZC[1]);
    // printf("B (ZC, least sq):          mean = %12.15lf std. dev. = %.15lf \n",fBMeanZC[2],fBSigZC[2]);
