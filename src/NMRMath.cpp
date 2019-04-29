@@ -608,6 +608,67 @@ namespace NMRMath{
      return t2_time;
    }
    //______________________________________________________________________________
+   double GetT2Time_v3(int start,NMRPulse *aPulse){
+     // find the T2 time of the signal
+     char msg[200]; 
+     // find max amplitude
+     double vmax=-300,v=0,t=0;
+     const int N = aPulse->GetNumPoints();
+     for(int i=start;i<N;i++){
+       v = aPulse->GetVoltage(i); 
+       if(vmax<v) vmax = v;
+     }
+     // find T2 ampl 
+     double e_const = exp(1);
+     double v_tgt   = vmax/e_const;
+     double v_lo    = v_tgt - 1E-3;
+     double v_hi    = v_tgt + 1E-3;
+     sprintf(msg,"Target voltage (in mV) is %.3lf < v_tgt = %.3lf < %.3lf",v_lo/1E-3,v_tgt/1E-3,v_hi/1E-3); 
+     // NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 
+
+     // now filter to get times and amplitudes close to the target 
+     std::vector<double> tt,vv;
+     for(int i=0;i<N;i++){
+       t = aPulse->GetTime(i); 
+       v = aPulse->GetVoltage(i); 
+       if(v>0){
+	 if( v>v_lo && v<v_hi ){
+	   tt.push_back(t);
+	   vv.push_back(v);
+	 }
+       }
+     }
+
+     const int NN = tt.size();
+     if(NN==0){
+       std::cout << "[GetT2Time_v3]: No T2 time candidates!" << std::endl;
+       return -1;
+     }else{
+       // std::cout << "[GetT2Time_v3]: Found " << NN << " T2 time candidates" << std::endl;
+       // for(int i=0;i<NN;i++) std::cout << Form("t = %.7lf ms, v = %.3lf mV",tt[i]/1E-3,vv[i]/1E-3) << std::endl;
+     }
+
+     // binary search to find the time we want 
+     int lo=0,hi=0;
+     NMRAlgorithm::BinarySearch(tt,v_tgt,lo,hi);
+     double t2_time=0;
+     double vdiff = fabs(vv[hi]-vv[lo]);
+     if( vdiff<0.5E-3 ){
+       // very small change in voltage; just take average of times  
+       t2_time = 0.5*(tt[lo]+tt[hi]);
+     }else{
+       t2_time = LinearInterpolationForX(v_tgt,tt[lo],vv[lo],tt[hi],vv[hi]); // linear interpolation on the bounds  
+     }
+     // std::cout << Form("t[%d] = %.3lf ms, v[%d] = %.3lf mV",lo,tt[lo]/1E-3,lo,vv[lo]/1E-3) << std::endl;
+     // std::cout << Form("t[%d] = %.3lf ms, v[%d] = %.3lf mV",hi,tt[hi]/1E-3,hi,vv[hi]/1E-3) << std::endl;
+     
+     sprintf(msg,"The T2 time is: %.3lf ms",t2_time/1E-3);
+     NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 
+
+     return t2_time;
+
+   }
+   //______________________________________________________________________________
    double GetT2Time_old(double tStart,NMRPulse *aPulse){
       // find the T2 time of the signal
       // find max amplitude 

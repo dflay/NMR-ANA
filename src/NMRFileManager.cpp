@@ -705,7 +705,7 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    // set up for next pulse
    ClearDataArrays(); 
 
-   double t2Time = NMRMath::GetT2Time(0,aPulse);  // index zero = 500 ms  
+   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
    InputManager->SetT2Time(t2Time); 
    aPulse->SetT2Time(t2Time); 
 

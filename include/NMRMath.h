@@ -12,6 +12,7 @@
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_multifit_nlinear.h>
 
+#include "NMRAlgorithm.h"
 #include "NMRUtility.h"
 #include "NMRPulse.h" 
 
@@ -53,7 +54,6 @@ namespace NMRMath{
    double GetStandardDeviationOfTheMean(std::vector<double> v);
    double GetRMS(int N,double v[]);
    double GetRMS(std::vector<double> v);
-   double GetT2Time_old(double tStart,NMRPulse *aPulse); 
    double LinearInterpolationForY(double x,double x0,double y0,double x1,double y1);
    double LinearInterpolationForX(double y,double x0,double y0,double x1,double y1);
    int LeastSquaresFitting(int N,double x[],double y[],double &a,double &b,double &r);
@@ -69,30 +69,33 @@ namespace NMRMath{
                            double *X,double *Y,double *EY,
                            int *NCrossing,int *CrossingIndex,double *tCross,double *vCross);
 
-    double GetT2Time(int startIndex,NMRPulse *aPulse);
-    int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V); 
-    int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
-	          std::vector<double> &X,std::vector<double> &Y);
+   double GetT2Time_old(double tStart,NMRPulse *aPulse); 
+   double GetT2Time(int startIndex,NMRPulse *aPulse);
+   double GetT2Time_v3(int startIndex,NMRPulse *aPulse);
 
-    int NonLinearLeastSquaresFitting(std::vector<double> xd,std::vector<double> yd,std::vector<double> dyd,
-	       int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
-	       std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity); 
+   int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V); 
+   int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
+       std::vector<double> &X,std::vector<double> &Y);
 
-    int poly1(const gsl_vector *p, void *data,gsl_vector * f);
-    int poly1_df(const gsl_vector *x,void *data,gsl_matrix *J);
-    int poly3(const gsl_vector *p, void *data,gsl_vector * f);
-    int poly3_df(const gsl_vector *x,void *data,gsl_matrix *J);
-    int poly5(const gsl_vector *p, void *data,gsl_vector * f);
-    int poly5_df(const gsl_vector *x,void *data,gsl_matrix *J);
-    int poly7(const gsl_vector *p, void *data,gsl_vector * f);
-    int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J);
-    int poly9(const gsl_vector *p, void *data,gsl_vector * f);
-    int poly9_df(const gsl_vector *x,void *data,gsl_matrix *J);
+   int NonLinearLeastSquaresFitting(std::vector<double> xd,std::vector<double> yd,std::vector<double> dyd,
+       int (*F)(const gsl_vector *x,void *data,gsl_vector *f),int (*DF)(const gsl_vector *x,void *data,gsl_matrix *J),
+       std::vector<double> &par,std::vector<double> &parErr,const int NPAR,const int verbosity); 
 
-    void callbackFunction(const size_t iter, void *params,const gsl_multifit_nlinear_workspace *w);
+   int poly1(const gsl_vector *p, void *data,gsl_vector * f);
+   int poly1_df(const gsl_vector *x,void *data,gsl_matrix *J);
+   int poly3(const gsl_vector *p, void *data,gsl_vector * f);
+   int poly3_df(const gsl_vector *x,void *data,gsl_matrix *J);
+   int poly5(const gsl_vector *p, void *data,gsl_vector * f);
+   int poly5_df(const gsl_vector *x,void *data,gsl_matrix *J);
+   int poly7(const gsl_vector *p, void *data,gsl_vector * f);
+   int poly7_df(const gsl_vector *x,void *data,gsl_matrix *J);
+   int poly9(const gsl_vector *p, void *data,gsl_vector * f);
+   int poly9_df(const gsl_vector *x,void *data,gsl_matrix *J);
 
-    int AdjustTimeWindow(NMRPulse *aPulse,double &tStart,double &tStop); 
-   
+   void callbackFunction(const size_t iter, void *params,const gsl_multifit_nlinear_workspace *w);
+
+   int AdjustTimeWindow(NMRPulse *aPulse,double &tStart,double &tStop); 
+
 }
 
 #endif 
