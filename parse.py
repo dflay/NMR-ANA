@@ -52,5 +52,13 @@ class RunListReader:
       csvFile = csv.DictReader( open(fileName) )
       for row in csvFile: 
 	 self.List.append(row[field1]+"-"+row[field2]) 
+#_______________________________________________________________________ 
+class FileReader: 
+   def __init__(self): 
+      self.List = [] 
    #_______________________________________________________________________ 
+   def ReadCSV(self,fileName,field): 
+      csvFile = csv.DictReader( open(fileName) ) 
+      for row in csvFile: 
+         self.List.append(row[field]) 
 

@@ -592,7 +592,32 @@ void NMRFileManager::AppendToFile(const char *path,const char *header,int i,doub
    }
 
    delete[] outpath; 
+}
+//______________________________________________________________________________
+void NMRFileManager::AppendToFile(const char *path,const char *header,int i,double a,double b,double c){
 
+   const int SIZE = 200;
+   char *outpath = new char[SIZE]; 
+   sprintf(outpath,"%s/%s",fOutputDir,path);
+
+   const char *mode = "a";  // append data; create if it doesn't exist  
+
+   FILE *outfile;
+   outfile = fopen(outpath,mode); 
+
+   if( outfile==NULL ){
+      std::cout << "[NMRFileManager]: Cannot open the file: " << outpath << std::endl;
+      std::cout << "                  No data will be printed to file." << std::endl;
+   }else{
+      if(i==1){
+         if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
+         fprintf(outfile,"%s\n",header); 
+      }
+      fprintf(outfile,"%d,%.5lf,%.5lf,%.5E\n",i,a,b,c);
+      fclose(outfile);
+   }
+
+   delete[] outpath; 
 }
 //______________________________________________________________________________
 void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
@@ -675,9 +700,12 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
 
    // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
 
-   int OffsetOrder = InputManager->GetOffsetOrder(); 
+   int OffsetOrder = InputManager->GetOffsetOrder();
    DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax);
-   // std::cout << "******** DONE WITH OFFSET CORRECTION" << std::endl;
+   
+   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
+   InputManager->SetT2Time(t2Time); 
+   aPulse->SetT2Time(t2Time); 
    
    // PrintSignalToFile(InputManager->GetRunNumber(),aPulse->GetPulseNumber(),aPulse);
 
@@ -704,10 +732,6 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
 
    // set up for next pulse
    ClearDataArrays(); 
-
-   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
-   InputManager->SetT2Time(t2Time); 
-   aPulse->SetT2Time(t2Time); 
 
    if(fVerbosity>=2) std::cout << "[NMRFileManager]: Load complete. " << std::endl;
 
@@ -1041,6 +1065,17 @@ void NMRFileManager::DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NM
       ApplyOffset(offset2,aPulse); 
       if(fVerbosity>=2) std::cout << "[NMRFileManager]: Offset2 = " << offset2 << std::endl;
    }
+   
+   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
+
+   char testFile[200],header[200];
+   sprintf(testFile,"characteristics.csv");
+   sprintf(header,"#trace,tStop,bl-cor,T2Time");
+   // double start = TStartZC; 
+   double end   = TEndZC; 
+   if( InputManager->GetT2TimeStatus() ) end = t2Time; 
+
+   AppendToFile(testFile,header,aPulse->GetPulseNumber(),end,offset2,t2Time);
 
    if(order>=3){
       fOffsetFail = false;
@@ -1158,16 +1193,16 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    // find the offset using zero crossings to determine if time between crossings is constant,
    // as is expected for pure sine waves
 
-   // NMRPulse *myPulse = aPulse->Clone();          // FIXME: this is where the memory leak is occuring! 
-   NMRPulse *myPulse = new NMRPulse(aPulse);        // FIXME: this is where the memory leak is occuring! 
+   // NMRPulse *myPulse = aPulse->Clone();       // FIXME: this is where the memory leak is occuring! 
+   NMRPulse *myPulse = new NMRPulse(aPulse);         
    // NMRPulse *myPulse = aPulse;                // object initialization; copy constructor called; doesn't really work...
 
    double ExpFreq    = InputManager->GetExpectedFrequency(); 
    double SampleFreq = InputManager->GetSampleFrequency(); 
 
    double T_exp  = 1./ExpFreq;
-   double N_exp  = T_exp*SampleFreq;       // number of points for one period 
-   int step      = (int)( (1./8.)*N_exp );  // skip 1/8 of a period 
+   double N_exp  = T_exp*SampleFreq;        // number of points for one period 
+   int step      = (int)( (1./16.)*N_exp ); // skip 1/16 of a period 
    int NPTS      = step/2;                  // use step/2 
 
    if(fVerbosity>=3) std::cout << "[NMRFileManager::GetOffsetZC]: Finding additional offset..." << std::endl;
@@ -1238,6 +1273,7 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    }
 
    ApplyOffset(offset_new,myPulse);
+   // printf("iteration %d: offset = %.5E \n",0,offset_new); 
  
    nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                      myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
@@ -1304,6 +1340,8 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
    // update values 
    offset_old = offset_new; 
    t_diff_old = t_diff_new; 
+   
+   // printf("iteration %d: offset = %.5E \n",1,offset_new); 
 
    // clear arrays before starting
    ClearNZCArrays();
@@ -1313,7 +1351,8 @@ double NMRFileManager::GetOffsetZC(double input_offset,NMRPulse *aPulse){
       // check the new offset  
       rc = CheckOffset(offset_old,offset_new,t_diff_old,t_diff_new,slope); 
       if(rc>0) break; 
-      ApplyOffset(offset_new,myPulse); 
+      ApplyOffset(offset_new,myPulse);
+      // printf("iteration %d: offset = %.5E \n",counter,offset_new); 
       nzc = NMRMath::CountZeroCrossings(fVerbosity,type,NPTS,step,UseT2Time,UseRange,tMin,tMax,
                                         myPulse,fX,fY,fEY,fNCrossing,fCrossingIndex,fTcross,fVcross);
       t_diff_new = GetTDiff(nzc,fTcross,t_even,t_odd); 

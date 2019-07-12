@@ -650,7 +650,7 @@ namespace NMRMath{
 
      // binary search to find the time we want 
      int lo=0,hi=0;
-     NMRAlgorithm::BinarySearch(tt,v_tgt,lo,hi);
+     NMRAlgorithm::BinarySearch(vv,v_tgt,lo,hi);
      double t2_time=0;
      double vdiff = fabs(vv[hi]-vv[lo]);
      if( vdiff<0.5E-3 ){
@@ -661,6 +661,70 @@ namespace NMRMath{
      }
      // std::cout << Form("t[%d] = %.3lf ms, v[%d] = %.3lf mV",lo,tt[lo]/1E-3,lo,vv[lo]/1E-3) << std::endl;
      // std::cout << Form("t[%d] = %.3lf ms, v[%d] = %.3lf mV",hi,tt[hi]/1E-3,hi,vv[hi]/1E-3) << std::endl;
+     
+     sprintf(msg,"The T2 time is: %.3lf ms",t2_time/1E-3);
+     NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 
+
+     return t2_time;
+
+   }
+   //______________________________________________________________________________
+   double GetT2Time_v3a(int start,NMRPulse *aPulse){
+     // improved version of the GetT2Time_v3 method 
+     // find the T2 time of the signal
+     char msg[200]; 
+     // find max amplitude
+     double vmax=-300,v=0,t=0;
+     const int N = aPulse->GetNumPoints();
+     for(int i=start;i<N;i++){
+       v = aPulse->GetVoltage(i); 
+       if(vmax<v) vmax = v;
+     }
+     // find T2 ampl 
+     double e_const = exp(1);
+     double v_tgt   = vmax/e_const;
+     double v_lo    = v_tgt - 1E-3;
+     double v_hi    = v_tgt + 1E-3;
+     sprintf(msg,"Target voltage (in mV) is %.3lf < v_tgt = %.3lf < %.3lf",v_lo/1E-3,v_tgt/1E-3,v_hi/1E-3); 
+     // NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 
+
+     // now filter to get times and amplitudes close to the target 
+     std::vector<double> TT,VV;
+     for(int i=0;i<N;i++){
+       t = aPulse->GetTime(i); 
+       v = aPulse->GetVoltage(i); 
+       if(v>0){
+	 if( v>v_lo && v<v_hi ){
+	   TT.push_back(t);
+	   VV.push_back(v);
+	 }
+       }
+     }
+
+     int NN = TT.size();
+     // now determine if the candidates are within 1 ms of their neighbors
+     double arg=0;
+     double t_last = TT[0];
+     std::vector<double> tt,vv;
+     NN = TT.size();
+     for(int i=1;i<NN;i++){
+       arg = TT[i] - t_last;
+       if(fabs(arg)<1E-3){
+	 tt.push_back(TT[i]);
+	 vv.push_back(VV[i]);
+       }
+       t_last = TT[i];
+     }
+
+     NN = tt.size(); 
+     if(NN==0){
+       std::cout << "[GetT2Time_v3]: No T2 time candidates!" << std::endl;
+       return -1;
+     }else{
+       // std::cout << "[GetT2Time_v3]: Found " << NN << " T2 time candidates" << std::endl;
+       // for(int i=0;i<NN;i++) std::cout << Form("t = %.7lf ms, v = %.3lf mV",tt[i]/1E-3,vv[i]/1E-3) << std::endl;
+     }
+     double t2_time = tt[NN-1];
      
      sprintf(msg,"The T2 time is: %.3lf ms",t2_time/1E-3);
      NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 

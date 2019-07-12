@@ -72,6 +72,7 @@ namespace NMRMath{
    double GetT2Time_old(double tStart,NMRPulse *aPulse); 
    double GetT2Time(int startIndex,NMRPulse *aPulse);
    double GetT2Time_v3(int startIndex,NMRPulse *aPulse);
+   double GetT2Time_v3a(int startIndex,NMRPulse *aPulse);  // this method is best! 
 
    int FindLocalMaxima(int startIndex,NMRPulse *aPulse,std::vector<double> &T,std::vector<double> &V); 
    int RebinData(int stepSize,std::vector<double> x,std::vector<double> y,
