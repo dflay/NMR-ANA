@@ -13,6 +13,7 @@ class NMRPulse{
       int fVerbosity; 
       int fNumPoints; 
       int fPulseNumber;
+      int fChannelNumber; 
       double fAmpl,fNoiseRMS,fSNR;
       double fTemperature,fXCoordinate,fYCoordinate,fZCoordinate; 
       double fT2Time;
@@ -37,37 +38,37 @@ class NMRPulse{
       void ClearVectorData();
       void SetNumPoints(int p);   
       void SetData(int N,double t[],double v[],double ev[]); 
-      void SetDataPoint(int i,double t,double v,double ev); 
-      void SetPulseNumber(int p)                             {fPulseNumber = p;     } 
-      void SetTimeStamp(unsigned long long t)                {fTimeStamp   = t;     } 
-      void SetTemperature(double temp)                       {fTemperature = temp;  } 
-      void SetXCoordinate(double x)                          {fXCoordinate = x;     } 
-      void SetYCoordinate(double y)                          {fYCoordinate = y;     } 
-      void SetZCoordinate(double z)                          {fZCoordinate = z;     } 
-      void SetAmplitude(double a)                            {fAmpl        = a;     }
-      void SetNoiseRMS(double n)                             {fNoiseRMS    = n;     }
-      void SetSignalToNoiseRatio(double snr)                 {fSNR         = snr;   }
-      void SetVerbosity(int v)                               {fVerbosity   = v;     }
-      void SetT2Time(double v)                               {fT2Time      = v;     } 
+      void SetDataPoint(int i,double t,double v,double ev);
+      void SetChannelNumber(int c)                           { fChannelNumber = c;    }
+      void SetPulseNumber(int p)                             { fPulseNumber   = p;    } 
+      void SetTimeStamp(unsigned long long t)                { fTimeStamp     = t;    } 
+      void SetTemperature(double temp)                       { fTemperature   = temp; } 
+      void SetXCoordinate(double x)                          { fXCoordinate   = x;    } 
+      void SetYCoordinate(double y)                          { fYCoordinate   = y;    } 
+      void SetZCoordinate(double z)                          { fZCoordinate   = z;    } 
+      void SetAmplitude(double a)                            { fAmpl          = a;    }
+      void SetNoiseRMS(double n)                             { fNoiseRMS      = n;    }
+      void SetSignalToNoiseRatio(double snr)                 { fSNR           = snr;  }
+      void SetVerbosity(int v)                               { fVerbosity     = v;    }
+      void SetT2Time(double v)                               { fT2Time        = v;    } 
 
-      int GetNumPoints()                               const {return fNumPoints;    } 
-      int GetPulseNumber()                             const {return fPulseNumber;  } 
+      int GetNumPoints()                               const { return fNumPoints;     } 
+      int GetPulseNumber()                             const { return fPulseNumber;   } 
+      int GetChannelNumber()                           const { return fChannelNumber; } 
 
-      double GetT2Time()                               const {return fT2Time;       } 
-
-      double GetTemperature()                          const {return fTemperature;  } 
-      double GetXCoordinate()                          const {return fXCoordinate;  } 
-      double GetYCoordinate()                          const {return fYCoordinate;  } 
-      double GetZCoordinate()                          const {return fZCoordinate;  } 
-
-      double GetAmplitude()                            const {return fAmpl;         }
-      double GetNoiseRMS()                             const {return fNoiseRMS;     }
-      double GetSignalToNoiseRatio()                   const {return fSNR;          }
-      double GetTime(int i)                            const {return fTime[i];      } 
-      double GetVoltage(int i)                         const {return fVoltage[i];   } 
-      double GetVoltageErr(int i)                      const {return fVoltageErr[i];} 
+      double GetT2Time()                               const { return fT2Time;        }
+      double GetTemperature()                          const { return fTemperature;   } 
+      double GetXCoordinate()                          const { return fXCoordinate;   } 
+      double GetYCoordinate()                          const { return fYCoordinate;   } 
+      double GetZCoordinate()                          const { return fZCoordinate;   } 
+      double GetAmplitude()                            const { return fAmpl;          }
+      double GetNoiseRMS()                             const { return fNoiseRMS;      }
+      double GetSignalToNoiseRatio()                   const { return fSNR;           }
+      double GetTime(int i)                            const { return fTime[i];       } 
+      double GetVoltage(int i)                         const { return fVoltage[i];    } 
+      double GetVoltageErr(int i)                      const { return fVoltageErr[i]; } 
       
-      unsigned long long GetTimeStamp()                const {return fTimeStamp;    } 
+      unsigned long long GetTimeStamp()                const { return fTimeStamp;     } 
 
 }; 
 

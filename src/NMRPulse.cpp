@@ -6,8 +6,10 @@ NMRPulse::NMRPulse(int PulseNumber,int NPTS){
    fTimeStamp        = 0.;  
    fAmpl             = 0.; 
    fNoiseRMS         = 0.; 
+   fTemperature      = 0.;
    fT2Time           = 0.; 
-   fVerbosity        = 0; 
+   fVerbosity        = 0;
+   fChannelNumber    = 0; 
    const int N       = NPTS;
    fTime             = new double[N]; 
    fVoltage          = new double[N]; 
@@ -23,7 +25,9 @@ NMRPulse::NMRPulse(const NMRPulse &aPulse){
    fTimeStamp        = aPulse.GetTimeStamp(); 
    fAmpl             = aPulse.GetAmplitude();
    fT2Time           = aPulse.GetT2Time(); 
-   fNoiseRMS         = aPulse.GetNoiseRMS(); 
+   fNoiseRMS         = aPulse.GetNoiseRMS();
+   fTemperature      = aPulse.GetTemperature(); 
+   fChannelNumber    = aPulse.GetChannelNumber(); 
    // deep copy 
    const int N       = fNumPoints;
    if(N>0){
@@ -47,6 +51,8 @@ NMRPulse::NMRPulse(const NMRPulse *aPulse){
    fAmpl             = aPulse->GetAmplitude(); 
    fT2Time           = aPulse->GetT2Time(); 
    fNoiseRMS         = aPulse->GetNoiseRMS(); 
+   fTemperature      = aPulse->GetTemperature(); 
+   fChannelNumber    = aPulse->GetChannelNumber(); 
    // deep copy 
    const int N       = fNumPoints; 
    if(N>0){   
@@ -82,6 +88,8 @@ NMRPulse& NMRPulse::operator=(const NMRPulse &aPulse){
    fAmpl             = aPulse.GetAmplitude(); 
    fT2Time           = aPulse.GetT2Time(); 
    fNoiseRMS         = aPulse.GetNoiseRMS(); 
+   fTemperature      = aPulse.GetTemperature(); 
+   fChannelNumber    = aPulse.GetChannelNumber(); 
    // deep copy 
    const int N       = fNumPoints;
    if(N>0){  
@@ -117,6 +125,8 @@ NMRPulse* NMRPulse::operator=(const NMRPulse* aPulse){
    fAmpl          = aPulse->GetAmplitude(); 
    fT2Time        = aPulse->GetT2Time(); 
    fNoiseRMS      = aPulse->GetNoiseRMS(); 
+   fTemperature   = aPulse->GetTemperature(); 
+   fChannelNumber = aPulse->GetChannelNumber(); 
    // deep copy 
    const int N    = fNumPoints;
    if(N>0){   
@@ -194,12 +204,14 @@ void NMRPulse::SetDataPoint(int i,double t,double v,double ev){
 //______________________________________________________________________________
 void NMRPulse::Print(){
    printf("================ NMR Pulse ================ \n");
-   printf("PulseNumber      = %d      \n",fPulseNumber);
-   printf("NumPoints        = %d      \n",fNumPoints  );
-   printf("TimeStamp        = %llu    \n",fTimeStamp  );
-   printf("Amplitude        = %.7lf V \n",fAmpl       );
-   printf("Noise RMS        = %.7lf V \n",fNoiseRMS   );
-   printf("T2 time          = %.3lf ms\n",fT2Time/1E-3); 
+   printf("PulseNumber      = %d      \n"  ,fPulseNumber);
+   printf("ChannelNumber    = %d      \n"  ,fChannelNumber);
+   printf("NumPoints        = %d      \n"  ,fNumPoints  );
+   printf("TimeStamp        = %llu    \n"  ,fTimeStamp  );
+   printf("Amplitude        = %.3lf V \n"  ,fAmpl       );
+   printf("Noise RMS        = %.3lf mV \n" ,fNoiseRMS/1E-3);
+   printf("T2 time          = %.3lf ms\n"  ,fT2Time/1E-3); 
+   printf("Temperature      = %.3lf Ohms\n",fTemperature); 
    // for(int i=0;i<fNumPoints;i++){
    //    printf("time = %.7f s \t voltage = %.7f V \t voltage err = %.7f V \n",fTime[i],fVoltage[i],fVoltageErr[i]); 
    // }

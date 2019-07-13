@@ -669,7 +669,7 @@ namespace NMRMath{
 
    }
    //______________________________________________________________________________
-   double GetT2Time_v3a(int start,NMRPulse *aPulse){
+   double GetT2Time_v3a(int start,NMRPulse *aPulse,int verbosity){
      // improved version of the GetT2Time_v3 method 
      // find the T2 time of the signal
      char msg[200]; 
@@ -727,7 +727,7 @@ namespace NMRMath{
      double t2_time = tt[NN-1];
      
      sprintf(msg,"The T2 time is: %.3lf ms",t2_time/1E-3);
-     NMRUtility::PrintMessage("NMRMath::GetT2Time_v3",msg); 
+     if(verbosity>0) NMRUtility::PrintMessage("NMRMath::GetT2Time_v3a",msg); 
 
      return t2_time;
 

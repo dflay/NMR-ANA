@@ -74,17 +74,23 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
    freq_ph+=0;  
 
    // general pulse data 
-   int pulse_num    = aPulse->GetPulseNumber(); 
+   int pulse_num    = aPulse->GetPulseNumber();
+   int ch_num       = aPulse->GetChannelNumber();
    double ampl      = aPulse->GetAmplitude(); 
    double noise_rms = aPulse->GetNoiseRMS();
    double snr       = ampl/noise_rms; 
-   double ts        = aPulse->GetTimeStamp(); 
+   double ts        = aPulse->GetTimeStamp();
+   double t2_time   = aPulse->GetT2Time();
+   double temp      = aPulse->GetTemperature();
 
    aPulseAnalyzed->SetPulseNumber(pulse_num);
+   aPulseAnalyzed->SetChannelNumber(ch_num); 
    aPulseAnalyzed->SetAmplitude(ampl); 
    aPulseAnalyzed->SetNoiseRMS(noise_rms); 
    aPulseAnalyzed->SetSignalToNoiseRatio(snr); 
-   aPulseAnalyzed->SetTimeStamp(ts); 
+   aPulseAnalyzed->SetTimeStamp(ts);
+   aPulseAnalyzed->SetT2Time(t2_time); 
+   aPulseAnalyzed->SetTemperature(temp); 
 
    // frequency analyses 
 

@@ -63,6 +63,7 @@ class NMRFileManager{
       void Convert(int adcID,const char *Units);
       
       void PrintRunToFile(NMRRun *aRun); 
+      void PrintRunToFile_csv(NMRRun *aRun); 
       void PrintRunToFileField(NMRRun *aRun); 
       void PrintRunFreqStatsToFile(NMRRun *aRun); 
       void PrintRunFieldStatsToFile(NMRRun *aRun); 

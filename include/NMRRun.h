@@ -84,7 +84,8 @@ class NMRRun{
       
       // data from a specific pulse  
       int GetPulseNumZeroCrossings(int i)                             const {return fPulse[i]->GetNumZeroCrossings();                          }                     
-      int GetPulseNumber(int i)                                       const {return fPulse[i]->GetPulseNumber();                               } 
+      int GetPulseNumber(int i)                                       const {return fPulse[i]->GetPulseNumber();                               }
+      int GetPulseChannelNumber(int i)                                const {return fPulse[i]->GetChannelNumber();                             } 
  
       double GetPulseFrequencyZeroCrossingMidpoint(int i)             const {return fPulse[i]->GetFrequencyZeroCrossingMidpoint();             }   
       double GetPulseFrequencyZeroCrossingLinearInterp(int i)         const {return fPulse[i]->GetFrequencyZeroCrossingLinearInterp();         }   
@@ -105,7 +106,11 @@ class NMRRun{
       double GetPulseAmplitude(int i)                                 const {return fPulse[i]->GetAmplitude();                                 }   
       double GetPulseNoiseRMS(int i)                                  const {return fPulse[i]->GetNoiseRMS();                                  }   
       double GetPulseSignalToNoiseRatio(int i)                        const {return fPulse[i]->GetSignalToNoiseRatio();                        }   
-      double GetPulseNumCycles(int i)                                 const {return fPulse[i]->GetNumCycles();                                 }   
+      double GetPulseNumCycles(int i)                                 const {return fPulse[i]->GetNumCycles();                                 }  
+      double GetPulseT2Time(int i)                                    const {return fPulse[i]->GetT2Time();                                    }
+      double GetPulseTemperature(int i)                               const {return fPulse[i]->GetTemperature();                               } 
+
+      unsigned long long GetPulseTimeStamp(int i)                     const {return fPulse[i]->GetTimeStamp();                                 }
 
       // data for a set of pulses (run) 
       int GetRunNumber()                                              const {return fRunNumber;} 

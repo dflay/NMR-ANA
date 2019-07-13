@@ -284,6 +284,7 @@ int NMRFileManager::PrintSignalToFile(int run,int pulseNumber,NMRPulse *aPulse){
 //______________________________________________________________________________
 void NMRFileManager::PrintResultsToFile(NMRRun *aRun){
    PrintRunToFile(aRun); 
+   PrintRunToFile_csv(aRun); 
    PrintRunToFileField(aRun); 
    PrintRunFreqStatsToFile(aRun); 
    PrintRunFieldStatsToFile(aRun); 
@@ -491,6 +492,68 @@ void NMRFileManager::PrintRunToFile(NMRRun *aRun){
 
 }
 //______________________________________________________________________________
+void NMRFileManager::PrintRunToFile_csv(NMRRun *aRun){
+   // contains all data we need for downstream calib analysis 
+   int N   = aRun->GetNumPulses(); 
+   int run = aRun->GetRunNumber();
+
+   int pulse=0,zc=0,ch=0;
+   double ampl=0,rms_noise=0,nc=0,snr=0;
+   double freq_mid=0,freq_lin=0,freq_lsq=0,freq_fit=0,freq_ph=0;
+   double freq_mid_ph=0,freq_lin_ph=0,freq_lsq_ph=0;
+   double t2_time=0,temp=0;
+   unsigned long long time;
+
+   // kill warnings
+   snr+=0; 
+   freq_fit+=0; 
+   freq_ph+=0; 
+
+   const int SIZE = 200;
+   char *outpath = new char[SIZE]; 
+   sprintf(outpath,"%s/results.csv",fOutputDir);
+     
+   const char *header  = "#trace,time(nsec),zc,nc,ampl(V),noise(V),t2-time(sec),temp(ohms),freq-mid(Hz),freq-lin(Hz),freq-lsq(Hz),freq-mid-ph(Hz),freq-lin-ph(Hz),freq-lsq-ph(Hz)"; 
+
+   const char *mode = "a";  // append data; create if it doesn't exist  
+
+   FILE *outfile;
+   outfile = fopen(outpath,mode); 
+
+   if( outfile==NULL ){
+      std::cout << "[NMRFileManager]: Cannot open the file: " << outpath << std::endl;
+      std::cout << "                  No data will be printed to file." << std::endl;
+   }else{
+      if(fVerbosity>=1) std::cout << "[NMRFileManager]: Printing data to the file: " << outpath << std::endl;
+      if(run==1) fprintf(outfile,"%s \n",header); 
+      for(int i=0;i<N;i++){
+         pulse       = aRun->GetPulseNumber(i);
+	 ch          = aRun->GetPulseChannelNumber(i); 
+	 time        = aRun->GetPulseTimeStamp(i); 
+	 t2_time     = aRun->GetPulseT2Time(i);
+	 temp        = aRun->GetPulseTemperature(i); 
+         ampl        = aRun->GetPulseAmplitude(i); 
+         rms_noise   = aRun->GetPulseNoiseRMS(i); 
+         snr         = aRun->GetPulseSignalToNoiseRatio(i);      // we won't print this because it makes the file difficult to read (and can calculate yourself anyway) 
+         zc          = aRun->GetPulseNumZeroCrossings(i); 
+         nc          = aRun->GetPulseNumCycles(i); 
+         freq_mid    = aRun->GetPulseFrequencyZeroCrossingMidpoint(i); 
+         freq_lin    = aRun->GetPulseFrequencyZeroCrossingLinearInterp(i); 
+         freq_lsq    = aRun->GetPulseFrequencyZeroCrossingLeastSquares(i); 
+         freq_mid_ph = aRun->GetPulseFrequencyZeroCrossingMidpointPhaseFit(i); 
+         freq_lin_ph = aRun->GetPulseFrequencyZeroCrossingLinearInterpPhaseFit(i); 
+         freq_lsq_ph = aRun->GetPulseFrequencyZeroCrossingLeastSquaresPhaseFit(i); 
+         freq_fit    = aRun->GetPulseFrequencyFit(i); 
+         freq_ph     = aRun->GetPulseFrequencyPhaseFit(i); 
+         fprintf(outfile,"%d,%d,%llu,%d,%.1lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf,%.7lf\n",
+                         pulse,ch,time,zc,nc,ampl,rms_noise,t2_time,temp,freq_mid,freq_lin,freq_lsq,freq_mid_ph,freq_lin_ph,freq_lsq_ph);
+      }
+      fclose(outfile);
+   }
+
+   delete[] outpath;
+}
+//______________________________________________________________________________
 void NMRFileManager::PrintRunToFileField(NMRRun *aRun){
  
    int N   = aRun->GetNumPulses(); 
@@ -636,7 +699,8 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    }
  
    aPulse->SetTimeStamp(myEvent.timestamp);
-   aPulse->SetTemperature(myEvent.temperature); 
+   aPulse->SetTemperature(myEvent.temperature);
+   aPulse->SetChannelNumber(myEvent.chNum); 
    aPulse->SetXCoordinate(myEvent.x);   
    aPulse->SetYCoordinate(myEvent.y);   
    aPulse->SetZCoordinate(myEvent.z);   
@@ -703,7 +767,7 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    int OffsetOrder = InputManager->GetOffsetOrder();
    DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax);
    
-   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
+   double t2Time = NMRMath::GetT2Time_v3a(0,aPulse,1);  // index zero = 500 ms. last index is verbosity  
    InputManager->SetT2Time(t2Time); 
    aPulse->SetT2Time(t2Time); 
    
@@ -1066,7 +1130,7 @@ void NMRFileManager::DoOffsetCorrectionAndRMSNoiseVMax(int order,double t_thr,NM
       if(fVerbosity>=2) std::cout << "[NMRFileManager]: Offset2 = " << offset2 << std::endl;
    }
    
-   double t2Time = NMRMath::GetT2Time_v3(0,aPulse);  // index zero = 500 ms  
+   double t2Time = NMRMath::GetT2Time_v3a(0,aPulse);  // index zero = 500 ms  
 
    char testFile[200],header[200];
    sprintf(testFile,"characteristics.csv");
