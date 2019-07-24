@@ -109,6 +109,8 @@ class NMRRun{
       double GetPulseNumCycles(int i)                                 const {return fPulse[i]->GetNumCycles();                                 }  
       double GetPulseT2Time(int i)                                    const {return fPulse[i]->GetT2Time();                                    }
       double GetPulseTemperature(int i)                               const {return fPulse[i]->GetTemperature();                               } 
+      double GetPulseLOFrequency(int i)                               const {return fPulse[i]->GetLOFrequency();                               } 
+      double GetPulsePi2Frequency(int i)                              const {return fPulse[i]->GetPi2Frequency();                              } 
 
       unsigned long long GetPulseTimeStamp(int i)                     const {return fPulse[i]->GetTimeStamp();                                 }
 
