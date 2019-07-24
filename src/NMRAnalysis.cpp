@@ -82,6 +82,8 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
    double ts        = aPulse->GetTimeStamp();
    double t2_time   = aPulse->GetT2Time();
    double temp      = aPulse->GetTemperature();
+   double freq_lo   = aPulse->GetLOFrequency(); 
+   double freq_pi2  = aPulse->GetPi2Frequency(); 
 
    aPulseAnalyzed->SetPulseNumber(pulse_num);
    aPulseAnalyzed->SetChannelNumber(ch_num); 
@@ -91,6 +93,8 @@ void NMRAnalysis::CalculateFrequency(NMRPulse *aPulse,NMRPulseAnalyzed *aPulseAn
    aPulseAnalyzed->SetTimeStamp(ts);
    aPulseAnalyzed->SetT2Time(t2_time); 
    aPulseAnalyzed->SetTemperature(temp); 
+   aPulseAnalyzed->SetLOFrequency(freq_lo); 
+   aPulseAnalyzed->SetPi2Frequency(freq_pi2); 
 
    // frequency analyses 
 

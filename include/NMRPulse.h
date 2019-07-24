@@ -13,7 +13,8 @@ class NMRPulse{
       int fVerbosity; 
       int fNumPoints; 
       int fPulseNumber;
-      int fChannelNumber; 
+      int fChannelNumber;
+      double fFreq_LO,fFreq_PI2; 
       double fAmpl,fNoiseRMS,fSNR;
       double fTemperature,fXCoordinate,fYCoordinate,fZCoordinate; 
       double fT2Time;
@@ -41,6 +42,8 @@ class NMRPulse{
       void SetDataPoint(int i,double t,double v,double ev);
       void SetChannelNumber(int c)                           { fChannelNumber = c;    }
       void SetPulseNumber(int p)                             { fPulseNumber   = p;    } 
+      void SetLOFrequency(double f)                          { fFreq_LO       = f;    } 
+      void SetPi2Frequency(double f)                         { fFreq_PI2      = f;    } 
       void SetTimeStamp(unsigned long long t)                { fTimeStamp     = t;    } 
       void SetTemperature(double temp)                       { fTemperature   = temp; } 
       void SetXCoordinate(double x)                          { fXCoordinate   = x;    } 
@@ -57,6 +60,8 @@ class NMRPulse{
       int GetChannelNumber()                           const { return fChannelNumber; } 
 
       double GetT2Time()                               const { return fT2Time;        }
+      double GetLOFrequency()                          const { return fFreq_LO;       } 
+      double GetPi2Frequency()                         const { return fFreq_PI2;      } 
       double GetTemperature()                          const { return fTemperature;   } 
       double GetXCoordinate()                          const { return fXCoordinate;   } 
       double GetYCoordinate()                          const { return fYCoordinate;   } 

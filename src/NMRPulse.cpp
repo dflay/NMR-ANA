@@ -7,6 +7,8 @@ NMRPulse::NMRPulse(int PulseNumber,int NPTS){
    fAmpl             = 0.; 
    fNoiseRMS         = 0.; 
    fTemperature      = 0.;
+   fFreq_LO          = 0.;
+   fFreq_PI2         = 0.;
    fT2Time           = 0.; 
    fVerbosity        = 0;
    fChannelNumber    = 0; 
@@ -26,6 +28,8 @@ NMRPulse::NMRPulse(const NMRPulse &aPulse){
    fAmpl             = aPulse.GetAmplitude();
    fT2Time           = aPulse.GetT2Time(); 
    fNoiseRMS         = aPulse.GetNoiseRMS();
+   fFreq_LO          = aPulse.GetLOFrequency(); 
+   fFreq_PI2         = aPulse.GetPi2Frequency(); 
    fTemperature      = aPulse.GetTemperature(); 
    fChannelNumber    = aPulse.GetChannelNumber(); 
    // deep copy 
@@ -51,6 +55,8 @@ NMRPulse::NMRPulse(const NMRPulse *aPulse){
    fAmpl             = aPulse->GetAmplitude(); 
    fT2Time           = aPulse->GetT2Time(); 
    fNoiseRMS         = aPulse->GetNoiseRMS(); 
+   fFreq_LO          = aPulse->GetLOFrequency(); 
+   fFreq_PI2         = aPulse->GetPi2Frequency(); 
    fTemperature      = aPulse->GetTemperature(); 
    fChannelNumber    = aPulse->GetChannelNumber(); 
    // deep copy 
@@ -69,8 +75,6 @@ NMRPulse::NMRPulse(const NMRPulse *aPulse){
       fVoltage    = 0;
       fVoltageErr = 0;
    }
-
-
 }
 //______________________________________________________________________________
 NMRPulse& NMRPulse::operator=(const NMRPulse &aPulse){
@@ -88,6 +92,8 @@ NMRPulse& NMRPulse::operator=(const NMRPulse &aPulse){
    fAmpl             = aPulse.GetAmplitude(); 
    fT2Time           = aPulse.GetT2Time(); 
    fNoiseRMS         = aPulse.GetNoiseRMS(); 
+   fFreq_LO          = aPulse.GetLOFrequency(); 
+   fFreq_PI2         = aPulse.GetPi2Frequency(); 
    fTemperature      = aPulse.GetTemperature(); 
    fChannelNumber    = aPulse.GetChannelNumber(); 
    // deep copy 
@@ -106,7 +112,6 @@ NMRPulse& NMRPulse::operator=(const NMRPulse &aPulse){
       fVoltage    = 0;
       fVoltageErr = 0;
    }
-
    return *this; 
 }
 //______________________________________________________________________________
@@ -124,7 +129,9 @@ NMRPulse* NMRPulse::operator=(const NMRPulse* aPulse){
    fTimeStamp     = aPulse->GetTimeStamp(); 
    fAmpl          = aPulse->GetAmplitude(); 
    fT2Time        = aPulse->GetT2Time(); 
-   fNoiseRMS      = aPulse->GetNoiseRMS(); 
+   fNoiseRMS      = aPulse->GetNoiseRMS();
+   fFreq_LO       = aPulse->GetLOFrequency(); 
+   fFreq_PI2      = aPulse->GetPi2Frequency(); 
    fTemperature   = aPulse->GetTemperature(); 
    fChannelNumber = aPulse->GetChannelNumber(); 
    // deep copy 
@@ -143,7 +150,6 @@ NMRPulse* NMRPulse::operator=(const NMRPulse* aPulse){
       fVoltage    = 0;
       fVoltageErr = 0;
    }
-
    return this; 
 }
 //______________________________________________________________________________
@@ -210,6 +216,8 @@ void NMRPulse::Print(){
    printf("TimeStamp        = %llu    \n"  ,fTimeStamp  );
    printf("Amplitude        = %.3lf V \n"  ,fAmpl       );
    printf("Noise RMS        = %.3lf mV \n" ,fNoiseRMS/1E-3);
+   printf("LO frequency     = %.7lf Hz\n"  ,fFreq_LO); 
+   printf("pi/2 frequency   = %.7lf Hz\n"  ,fFreq_PI2); 
    printf("T2 time          = %.3lf ms\n"  ,fT2Time/1E-3); 
    printf("Temperature      = %.3lf Ohms\n",fTemperature); 
    // for(int i=0;i<fNumPoints;i++){
