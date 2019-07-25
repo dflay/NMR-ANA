@@ -27,7 +27,7 @@ NMRInputManager::NMRInputManager(){
    fNTypeVoltage     = 0;
    fNumRuns          = 0;
    fPhaseFitFunc     = 0; 
-   const int N       = 1E+3; 
+   const int N       = 5E+3; 
    fRunList          = new int[N]; 
    for(int i=0;i<N;i++) fRunList[i] = 0; 
 }
