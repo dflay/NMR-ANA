@@ -325,6 +325,12 @@ void NMRInputManager::ReadRunSummary(int RunNumber){
    delete[] inpath;
    // delete prefix; 
 
+   // check on the anticipated IF
+   if(fExpFreq==0){
+      std::cout << "[NMRInputManager::ReadRunSummary]: IF = 0? Assuming 10 kHz." << std::endl;
+      fExpFreq = 10E+3; 
+   }
+
 }
 //______________________________________________________________________________
 void NMRInputManager::Print(){

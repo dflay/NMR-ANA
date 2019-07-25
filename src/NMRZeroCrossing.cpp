@@ -66,9 +66,6 @@ void NMRZeroCrossing::UpdateParameters(){
    // step_size  = number of points to skip after finding a zero crossing
    // NPTS       = number of points to use in fitting for zero crossing 
 
-   // check expected frequency.  if invalid, make a guess of 10 kHz 
-   if(fExpFreq<1E+3) fExpFreq = 10E+3;   
-
    double T_exp  = 1./fExpFreq;
    double N_exp  = T_exp*fSampleFreq;       // number of points for one period 
    int step_size = (int)( (1./16.)*N_exp );  // skip 1/8 of a period 
