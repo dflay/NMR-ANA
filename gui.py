@@ -332,7 +332,7 @@ class daq(Tkinter.Tk):
        line7            = "offset_correction_order %s"   %(offset)
        line8            = "t2_time                 %d"   %(t2_status)
        line9            = "t2_pct                  %s"   %(t2_pct)  
-       line10            = "zero_crossing          %d"   %(zc_status)
+       line10           = "zero_crossing           %d"   %(zc_status)
        line11           = "time_fit                %d"   %(time_fit_status)
        line12           = "phase_fit               %d"   %(phase_fit_status)
        line13           = "phase_fit_func          %d"   %(phase_fit_index)
