@@ -40,6 +40,8 @@ class daq(Tkinter.Tk):
       RowOffset          = 0 
       ColumnOffset       = 0
 
+      self.t2_pct_str    = "1.0"
+
       self.Month        = ['Month','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
       self.Day          = ['Day',1,2,3,4,5,6,7,8,9,10,
                            11,12,13,14,15,16,17,18,19,20,
@@ -136,10 +138,20 @@ class daq(Tkinter.Tk):
       self.T2Label_str.set("Use T2 time") 
       self.T2Label     = Tkinter.Label(self,textvariable=self.T2Label_str,anchor="w") 
       self.T2Label.grid(column=ColumnOffset+0,row=RowOffset+12) 
+      # T2 pct   
+      self.t2_pct_label_str = Tkinter.StringVar()
+      self.t2_pct_label_str.set("T2 Percentage")
+      self.t2_pct_label     = Tkinter.Label(self,textvariable=self.t2_pct_label_str) 
+      self.t2_pct_label.grid(column=ColumnOffset+3,row=RowOffset+12)
+
       # check box  
       self.t2_chk_var = Tkinter.IntVar()
       self.t2_chk = Tkinter.Checkbutton(self,text=TickBox,variable=self.t2_chk_var) 
       self.t2_chk.grid(column=ColumnOffset+1,row=RowOffset+12)
+      # T2 pct   
+      self.t2_pct_var = Tkinter.StringVar()
+      self.t2_pct = Tkinter.Entry(self,textvariable=self.t2_pct_var) 
+      self.t2_pct.grid(column=ColumnOffset+4,row=RowOffset+12)
 
       # ----------------------------------------------------------------------------------
       # Zero crossing (check box)  
@@ -312,17 +324,19 @@ class daq(Tkinter.Tk):
 	 phase_fit_index = 9
        # T2 time 
        t2_status        = self.t2_chk_var.get()    
+       t2_pct           = self.t2_pct_var.get() 
        # build strings for parameter file 
        line4            = "t_start                 %.2E" %(t_start_dbl)
        line5            = "t_end                   %.2E" %(t_end_dbl)
        line6            = "verbosity               %s"   %(verb)
        line7            = "offset_correction_order %s"   %(offset)
        line8            = "t2_time                 %d"   %(t2_status)
-       line9            = "zero_crossing           %d"   %(zc_status)
-       line10           = "time_fit                %d"   %(time_fit_status)
-       line11           = "phase_fit               %d"   %(phase_fit_status)
-       line12           = "phase_fit_func          %d"   %(phase_fit_index)
-       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,line11,line12,eof_str] 
+       line9            = "t2_pct                  %s"   %(t2_pct)  
+       line10            = "zero_crossing          %d"   %(zc_status)
+       line11           = "time_fit                %d"   %(time_fit_status)
+       line12           = "phase_fit               %d"   %(phase_fit_status)
+       line13           = "phase_fit_func          %d"   %(phase_fit_index)
+       paramList        = [header,line4,line5,line6,line7,line8,line9,line10,line11,line12,line13,eof_str] 
        # get file names ready  
        param_fn         = "parameters.dat"
        run_fn           = "runlist.dat"

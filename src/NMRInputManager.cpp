@@ -26,7 +26,8 @@ NMRInputManager::NMRInputManager(){
    fBNCVoltage       = 0;
    fNTypeVoltage     = 0;
    fNumRuns          = 0;
-   fPhaseFitFunc     = 0; 
+   fPhaseFitFunc     = 0;
+   fT2_pct           = 1.0; 
    const int N       = 5E+3; 
    fRunList          = new int[N]; 
    for(int i=0;i<N;i++) fRunList[i] = 0; 
@@ -64,7 +65,8 @@ NMRInputManager::NMRInputManager(const NMRInputManager &a){
    fADCNumSamples    = a.GetNumSamples(); 
    fADCSignalLength  = a.GetSignalLength();
    fBNCVoltage       = a.GetBNCVoltage();     
-   fNTypeVoltage     = a.GetNTypeVoltage();     
+   fNTypeVoltage     = a.GetNTypeVoltage();    
+   fT2_pct           = a.GetT2Percentage(); 
 }
 //______________________________________________________________________________
 NMRInputManager::NMRInputManager(const NMRInputManager *a){
@@ -96,6 +98,7 @@ NMRInputManager::NMRInputManager(const NMRInputManager *a){
    fADCSignalLength  = a->GetSignalLength();
    fBNCVoltage       = a->GetBNCVoltage();     
    fNTypeVoltage     = a->GetNTypeVoltage();     
+   fT2_pct           = a->GetT2Percentage(); 
 }
 //______________________________________________________________________________
 void NMRInputManager::Update(const NMRInputManager &a){
@@ -126,6 +129,7 @@ void NMRInputManager::Update(const NMRInputManager &a){
    fADCSignalLength  = a.GetSignalLength();
    fBNCVoltage       = a.GetBNCVoltage();     
    fNTypeVoltage     = a.GetNTypeVoltage();     
+   fT2_pct           = a.GetT2Percentage(); 
 }
 //______________________________________________________________________________
 void NMRInputManager::Update(const NMRInputManager *a){
@@ -156,6 +160,7 @@ void NMRInputManager::Update(const NMRInputManager *a){
    fADCSignalLength  = a->GetSignalLength();
    fBNCVoltage       = a->GetBNCVoltage();     
    fNTypeVoltage     = a->GetNTypeVoltage();     
+   fT2_pct           = a->GetT2Percentage(); 
 }
 //______________________________________________________________________________
 void NMRInputManager::GetInputParameters(const char *inpath){
@@ -179,6 +184,7 @@ void NMRInputManager::GetInputParameters(const char *inpath){
    const char *phase_fit_func       = "phase_fit_func"; 
    const char *integer_cycle_status = "integer_cycles"; 
    const char *t2_time_status       = "t2_time"; 
+   const char *t2_pct               = "t2_pct"; 
    const char *eof                  = "end_of_file";  
  
    std::ifstream infile;
@@ -201,7 +207,16 @@ void NMRInputManager::GetInputParameters(const char *inpath){
                if( NMRUtility::AreEquivStrings(itag,tstart)      ) fStartTimeZC  = ivalue;  
                if( NMRUtility::AreEquivStrings(itag,tend)        ) fEndTimeZC    = ivalue;  
                if( NMRUtility::AreEquivStrings(itag,verb)        ) fVerbosity    = (int)ivalue;  
-               if( NMRUtility::AreEquivStrings(itag,offset)      ) fOffsetOrder  = (int)ivalue;  
+               if( NMRUtility::AreEquivStrings(itag,offset)      ) fOffsetOrder  = (int)ivalue; 
+	       if( NMRUtility::AreEquivStrings(itag,t2_pct)      ){
+		 if( ivalue>0. && ivalue<=1. ){
+		   // require the percentage to be between 0 and 1 
+		   fT2_pct = ivalue;
+		 }else{
+		   std::cout << "[NMRInputManager::GetInputParameters]: Invalid T2 percentage!  Using 1.0" << std::endl;
+		   fT2_pct = 1.0;
+		 }
+	       }
                if( NMRUtility::AreEquivStrings(itag,zc_status)   ){
                   ival = (int)ivalue;
                   if(ival==1) fUseZeroCrossing = true;  
@@ -345,6 +360,7 @@ void NMRInputManager::Print(){
    printf("Zero Crossing Status = %d     \n",(int)fUseZeroCrossing );
    printf("Time Fit Status      = %d     \n",(int)fUseTimeFit      );
    printf("T2 Time Status       = %d     \n",(int)fUseT2Time       );
+   printf("T2 Percentage        = %.3lf  \n",fT2_pct               );
    printf("Phase Fit Status     = %d     \n",(int)fUsePhaseFit     );
    printf("Integer Cycle Status = %d     \n",(int)fUseIntegerCycles);
    printf("Phase Fit Function   = pol-%d \n",fPhaseFitFunc         ); 

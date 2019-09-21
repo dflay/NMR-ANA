@@ -771,7 +771,14 @@ void NMRFileManager::Load(int RunNumber,int PulseNumber,NMRPulse *aPulse){
    int OffsetOrder = InputManager->GetOffsetOrder();
    DoOffsetCorrectionAndRMSNoiseVMax(OffsetOrder,tnoise,aPulse,RMSNoise,VMax);
    
-   double t2Time = NMRMath::GetT2Time_v3a(0,aPulse,1);  // index zero = 500 ms. last index is verbosity  
+   double t2PCT  = InputManager->GetT2Percentage();
+   double t2Time = NMRMath::GetT2Time_v3a(0,aPulse,1);  // index zero = 500 ms. last index is verbosity
+
+   if(t2PCT!=1){
+     t2Time *= t2PCT; // NOTE: We're artificially shortening the T2 time based on analysis choices  
+     printf("[NMRFileManager]: Using T2 pct = %.3lf; will analyze until t = %.3lf ms \n",t2PCT,t2Time/1E-3); 
+   }
+
    InputManager->SetT2Time(t2Time); 
    aPulse->SetT2Time(t2Time); 
    

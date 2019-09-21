@@ -5,7 +5,8 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <fstream> 
+#include <fstream>
+#include <cmath> 
 
 #include "NMRUtility.h"
 
@@ -26,6 +27,7 @@ class NMRInputManager{
       double fExpFreq,fSampleFreq,fLOFreq,fPi2Freq; 
       double fBNCVoltage,fNTypeVoltage;
       double fADCSignalLength;
+      double fT2_pct;
 
       int *fRunList;
 
@@ -77,7 +79,8 @@ class NMRInputManager{
       void SetADCNumSamples       (int v)    { fADCNumSamples    = v; } 
       void SetADCSignalLength     (double v) { fADCSignalLength  = v; } 
       void SetBNCVoltage          (double v) { fBNCVoltage       = v; } 
-      void SetNTypeVoltage        (double v) { fNTypeVoltage     = v; } 
+      void SetNTypeVoltage        (double v) { fNTypeVoltage     = v; }
+      void SetT2Percentage        (double v) { fT2_pct           = v; }
 
       bool GetZeroCrossingStatus()  const { return fUseZeroCrossing;  } 
       bool GetTimeFitStatus()       const { return fUseTimeFit;       } 
@@ -109,6 +112,7 @@ class NMRInputManager{
       double GetSignalLength()      const { return fADCSignalLength;  } 
       double GetBNCVoltage()        const { return fBNCVoltage;       } 
       double GetNTypeVoltage()      const { return fNTypeVoltage;     } 
+      double GetT2Percentage()      const { return fT2_pct;           }
 
 };
 

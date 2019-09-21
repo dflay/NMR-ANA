@@ -59,6 +59,7 @@ class FileReader:
    #_______________________________________________________________________ 
    def ReadCSV(self,fileName,field): 
       csvFile = csv.DictReader( open(fileName) ) 
-      for row in csvFile: 
+      for row in csvFile:
+	 print row
          self.List.append(row[field]) 
 
