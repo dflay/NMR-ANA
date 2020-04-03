@@ -16,6 +16,7 @@ class NMRRun{
       int fRunNumber;
       int fMeanNumZeroCrossings;  
 
+      double fMeanT2,fSigT2;
       double fMeanNoiseRMS,fMeanAmpl ,fMeanSNR  ,fMeanNumCycles;   
       double fSigNoiseRMS ,fSigAmpl  ,fSigSNR   ,fSigNumCycles;   
       double *fFreqMeanZC,*fFreqSigZC;  
@@ -80,7 +81,9 @@ class NMRRun{
       void SetSigmaAmplitude(double x)                                 {fSigAmpl              = x;}  
       void SetSigmaNoiseRMS(double x)                                  {fSigNoiseRMS          = x;}  
       void SetSigmaNumCycles(double x)                                 {fSigNumCycles         = x;}  
-      void SetSigmaSignalToNoiseRatio(double x)                        {fSigSNR               = x;}  
+      void SetSigmaSignalToNoiseRatio(double x)                        {fSigSNR               = x;} 
+      void SetMeanT2Time(double x)                                     {fMeanT2               = x;} 
+      void SetSigmaT2Time(double x)                                    {fSigT2                = x;} 
       
       // data from a specific pulse  
       int GetPulseNumZeroCrossings(int i)                             const {return fPulse[i]->GetNumZeroCrossings();                          }                     
@@ -110,7 +113,7 @@ class NMRRun{
       double GetPulseT2Time(int i)                                    const {return fPulse[i]->GetT2Time();                                    }
       double GetPulseTemperature(int i)                               const {return fPulse[i]->GetTemperature();                               } 
       double GetPulseLOFrequency(int i)                               const {return fPulse[i]->GetLOFrequency();                               } 
-      double GetPulsePi2Frequency(int i)                              const {return fPulse[i]->GetPi2Frequency();                              } 
+      double GetPulsePi2Frequency(int i)                              const {return fPulse[i]->GetPi2Frequency();                              }
 
       unsigned long long GetPulseTimeStamp(int i)                     const {return fPulse[i]->GetTimeStamp();                                 }
 
@@ -164,7 +167,10 @@ class NMRRun{
       double GetSigmaAmplitude()                                      const {return fSigAmpl;          }  
       double GetSigmaNoiseRMS()                                       const {return fSigNoiseRMS;      }  
       double GetSigmaNumCycles()                                      const {return fSigNumCycles;     }  
-      double GetSigmaSignalToNoiseRatio()                             const {return fSigSNR;           }  
+      double GetSigmaSignalToNoiseRatio()                             const {return fSigSNR;           } 
+
+      double GetMeanT2Time()                                          const {return fMeanT2;           } 
+      double GetSigmaT2Time()                                         const {return fSigT2;            } 
 
 };
 

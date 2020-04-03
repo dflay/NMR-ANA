@@ -317,7 +317,13 @@ void NMRAnalysis::CalculateStatistics(NMRRun *aRun){
    double mean_b_ph = NMRMath::GetMean(N,value); 
    double sig_b_ph  = NMRMath::GetStandardDeviation(N,value); 
    aRun->SetMeanFieldPhaseFit(mean_b_ph); 
-   aRun->SetSigmaFieldPhaseFit(sig_b_ph); 
+   aRun->SetSigmaFieldPhaseFit(sig_b_ph);
+   // get mean T2 time 
+   for(int i=0;i<N;i++) value[i] = aRun->GetPulseT2Time(i);
+   double mean_t2 = NMRMath::GetMean(N,value);
+   double sig_t2  = NMRMath::GetStandardDeviation(N,value);
+   aRun->SetMeanT2(mean_T2);
+   aRun->SetSigmaT2(mean_T2);
 
    delete[] value; 
 

@@ -20,7 +20,9 @@ NMRRun::NMRRun(int NumPulses){
    fSigNoiseRMS          = 0;              
    fSigAmpl              = 0;               
    fSigSNR               = 0;            
-   fSigNumCycles         = 0;      
+   fSigNumCycles         = 0;     
+   fMeanT2               = 0; 
+   fSigT2                = 0; 
    fVerbosity            = 0; 
    const int N           = fNumPulses; 
    fPulse                = new NMRPulseAnalyzed*[N];
@@ -115,6 +117,7 @@ void NMRRun::PrintStatistics() const{
    printf("Ampl:                      mean = %12.7lf std. dev. = %.7lf \n",fMeanAmpl,fSigAmpl);
    printf("Noise RMS:                 mean = %12.7lf std. dev. = %.7lf \n",fMeanNoiseRMS,fSigNoiseRMS);
    printf("SNR:                       mean = %12.7lf std. dev. = %.7lf \n",fMeanSNR,fSigSNR);
+   printf("T2:                        mean = %12.3lf std. dev. = %.3lf \n",fMeanT2,fSigT2);
    printf("Freq (ZC, midpoint):       mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[0],fFreqSigZC[0]);
    printf("Freq (ZC, linear):         mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[1],fFreqSigZC[1]);
    printf("Freq (ZC, least sq):       mean = %12.7lf std. dev. = %.7lf \n",fFreqMeanZC[2],fFreqSigZC[2]);
@@ -148,7 +151,9 @@ void NMRRun::ClearData(){
    fMeanNoiseRMS         = 0;              
    fMeanAmpl             = 0;               
    fMeanSNR              = 0;            
-   fMeanNumCycles        = 0;       
+   fMeanNumCycles        = 0;      
+   fMeanT2               = 0;
+   fSigT2                = 0;
    fSigNoiseRMS          = 0;              
    fSigAmpl              = 0;               
    fSigSNR               = 0;            
