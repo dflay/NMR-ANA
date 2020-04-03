@@ -322,8 +322,8 @@ void NMRAnalysis::CalculateStatistics(NMRRun *aRun){
    for(int i=0;i<N;i++) value[i] = aRun->GetPulseT2Time(i);
    double mean_t2 = NMRMath::GetMean(N,value);
    double sig_t2  = NMRMath::GetStandardDeviation(N,value);
-   aRun->SetMeanT2(mean_T2);
-   aRun->SetSigmaT2(mean_T2);
+   aRun->SetMeanT2Time(mean_t2);
+   aRun->SetSigmaT2Time(sig_t2);
 
    delete[] value; 
 
